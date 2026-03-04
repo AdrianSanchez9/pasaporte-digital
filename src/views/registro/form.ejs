@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro</title>
+  <style>
+
+    body        { font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 16px; }
+    h1          { font-size: 1.4rem; margin-bottom: 24px; }
+    label       { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.9rem; }
+    input, select { width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    button      { width: 100%; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+    button:hover { background: #1d4ed8; }
+    .resultado  { margin-top: 24px; padding: 12px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 4px; display: none; }
+    .resultado img { margin-top: 12px; width: 180px; display: block; }
+  </style>
+</head>
+<body>
+
+  <h1>Formulario de Registro</h1>
+
+  <!--
+    action apunta a POST /registro
+    Los campos de abajo son de PRUEBA — modificalos según tus necesidades
+  -->
+  <form id="formRegistro" action="/registro" method="POST">
+
+    <!-- Campo de prueba 1: texto libre -->
+    <label for="nombre">Nombre y apellido</label>
+    <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" required />
+
+    <!-- Campo de prueba 2: email -->
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Ej: juan@email.com" required />
+
+    <!-- Campo de prueba 3: select (podés cambiar las opciones) -->
+    <label for="rol">Rol</label>
+    <select id="rol" name="rol">
+      <option value="asistente">Asistente</option>
+      <option value="expositor">Expositor</option>
+      <option value="organizador">Organizador</option>
+    </select>
+
+    <!-- Campo de prueba 4: texto libre adicional -->
+    <label for="institucion">Institución (opcional)</label>
+    <input type="text" id="institucion" name="institucion" placeholder="Ej: UNLP" />
+
+    <button type="submit">Registrar y generar QR</button>
+  </form>
+
+  <!-- Zona donde se muestra el QR luego del submit (manejado con JS) -->
+  <div class="resultado" id="resultado">
+    <p><strong>¡Registro exitoso!</strong></p>
+    <p id="mensajeLink"></p>
+    <img id="qrImg" src="" alt="Código QR" />
+  </div>
+
+  <script>
+    // Interceptamos el submit para mostrar el QR sin recargar la página.
+    // Cuando quieras redirigir directamente, eliminá este script y dejá el form normal.
+    document.getElementById('formRegistro').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const body     = Object.fromEntries(formData.entries());
+
+      const res  = await fetch('/registro', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Mostramos el QR devuelto por el servidor
+        document.getElementById('mensajeLink').textContent = `ID de registro: ${data.id}`;
+        document.getElementById('qrImg').src = data.qr;   // data URL base64 o ruta PNG
+        document.getElementById('resultado').style.display = 'block';
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    });
+  </script>
+
+</body>
+</html>

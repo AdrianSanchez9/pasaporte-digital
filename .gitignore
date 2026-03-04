@@ -1,0 +1,30 @@
+# ─── Dependencias ───────────────────────────────────────────
+node_modules/
+
+# ─── Variables de entorno y configuración personal ──────────
+.env
+.env.local
+.env.*.local
+
+# ─── Datos generados en runtime ─────────────────────────────
+data/registros.json   # Simulación de DB, no va al repo
+public/qr/            # QRs generados dinámicamente
+
+# ─── Logs ───────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+
+# ─── Sistema operativo ──────────────────────────────────────
+.DS_Store             # macOS
+Thumbs.db             # Windows
+
+# ─── Editores e IDEs ────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Coverage y testing ─────────────────────────────────────
+coverage/
+.nyc_output/

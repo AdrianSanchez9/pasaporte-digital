@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  nombre    String
+  apellido  String
+  email     String   @unique
+  password  String // hasheado con bcrypt
+  activo    Boolean  @default(true) // Para deshabilitar usuarios sin eliminarlos
+  rolId     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  rol           Role           @relation(fields: [rolId], references: [id])
+  refreshTokens RefreshToken[]
+  pacientes     Paciente[]
+  medicos       Medico[]
+  acompanantes Acompanante[]
+
+  @@index([email])
+  @@index([rolId])
+}
+
+// ─── Modelo de Rol ────────────────────────────────────────────────────────────
+model Role {
+  id          String   @id @default(uuid())
+  nombre      String   @unique // "PACIENTE", "MEDICO", "ACOMPANANTE", "USUARIO_EXTERNO", "ADMIN"
+  descripcion String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  users    User[]
+  permisos RolePermission[]
+
+  @@index([nombre])
+}
+
+// ─── Modelo de Permiso ────────────────────────────────────────────────────────
+model Permission {
+  id          String   @id @default(uuid())
+  accion      String   @unique // "ver_pacientes", "editar_paciente", etc.
+  descripcion String?  @db.Text
+  modulo      String? // "pacientes", "usuarios", "sistema" (para agrupar en UI)
+  createdAt   DateTime @default(now())
+
+  // Relaciones
+  roles RolePermission[]
+
+  @@index([accion])
+  @@index([modulo])
+}
+
+// ─── Tabla intermedia: Roles <-> Permisos (N:N) ──────────────────────────────
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+}
+
+// ─── Modelo de Paciente ───────────────────────────────────────────────────────
+model Paciente {
+  userId    String    @id // PK compartida con User (relación 1:1)
+  dni       String    @unique
+  telefono  String?
+  fechaNac  DateTime?
+  direccion String?   @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relaciones
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  acompanantes Acompanante[] // Un paciente puede tener varios acompanantes
+
+  @@index([dni])
+}
+
+// ─── Modelo de Médico ─────────────────────────────────────────────────────────
+model Medico {
+  userId       String   @id // PK compartida con User (relación 1:1)
+  matricula    String   @unique // Número de matrícula profesional
+  especialidad String? // "Cardiología", "Pediatría", etc.
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relaciones
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([matricula])
+}
+
+// ─── Modelo de Acompañante ────────────────────────────────────────────────────
+model Acompanante {
+  userId     String   @id // PK compartida con User (relación 1:1)
+  dni        String?  @unique
+  relacion   String? // "Familiar", "Tutor legal", "Cuidador"
+  pacienteId String // FK hacia el paciente asociado
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relaciones
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
+
+  @@index([pacienteId])
+  @@index([dni])
+}
+
+// ─── Modelo de RefreshToken (JWT) ─────────────────────────────────────────────
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique @db.VarChar(512)
+  userId    String
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
