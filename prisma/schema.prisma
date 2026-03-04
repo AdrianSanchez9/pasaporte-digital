@@ -12,18 +12,18 @@ model User {
   nombre    String
   apellido  String
   email     String   @unique
-  password  String // hasheado con bcrypt
-  activo    Boolean  @default(true) // Para deshabilitar usuarios sin eliminarlos
+  password  String
+  activo    Boolean  @default(true)
   rolId     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relaciones
-  rol           Role           @relation(fields: [rolId], references: [id])
-  refreshTokens RefreshToken[]
-  pacientes     Paciente[]
-  medicos       Medico[]
-  acompanantes Acompanante[]
+  rol              Role           @relation(fields: [rolId], references: [id])
+  refreshTokens    RefreshToken[]
+  datosPaciente    Paciente?
+  datosMedico      Medico?
+  datosAcompanante Acompanante?
 
   @@index([email])
   @@index([rolId])
@@ -74,50 +74,42 @@ model RolePermission {
 
 // ─── Modelo de Paciente ───────────────────────────────────────────────────────
 model Paciente {
-  userId    String    @id // PK compartida con User (relación 1:1)
-  dni       String    @unique
-  telefono  String?
-  fechaNac  DateTime?
-  direccion String?   @db.Text
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  userId                String        @id
+  dni                   String?
+  apodo                 String?
+  nroObraSocial         String?
+  fechaNacimiento       DateTime?
+  direccion             String?       @db.Text
+  telefono              String?
+  necesidadesReligiosas String?       @db.Text
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
 
-  // Relaciones
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  acompanantes Acompanante[] // Un paciente puede tener varios acompanantes
-
-  @@index([dni])
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  acompanantes  Acompanante[]
 }
 
 // ─── Modelo de Médico ─────────────────────────────────────────────────────────
 model Medico {
-  userId       String   @id // PK compartida con User (relación 1:1)
-  matricula    String   @unique // Número de matrícula profesional
-  especialidad String? // "Cardiología", "Pediatría", etc.
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  userId String   @id
+  especialidad String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Relaciones
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([matricula])
 }
 
 // ─── Modelo de Acompañante ────────────────────────────────────────────────────
 model Acompanante {
-  userId     String   @id // PK compartida con User (relación 1:1)
-  dni        String?  @unique
-  relacion   String? // "Familiar", "Tutor legal", "Cuidador"
-  pacienteId String // FK hacia el paciente asociado
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  userId      String   @id
+  pacienteId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  // Relaciones
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
 
   @@index([pacienteId])
-  @@index([dni])
 }
 
 // ─── Modelo de RefreshToken (JWT) ─────────────────────────────────────────────

@@ -18,6 +18,35 @@ const verifyPassword = async (password, hashedPassword) => {
   return await bcrypt.compare(password, hashedPassword);
 };
 
+const crearUsuarioCompleto = async (data) => {
+  const { email, nombre, apellido, hashedPassword, rolId, rolNombre, especialidad, pacienteId } = data;
+
+  let datosPerfil = {};
+
+  if (rolNombre === 'PACIENTE') {
+    datosPerfil = { datosPaciente: { create: {} } };
+  } else if (rolNombre === 'MEDICO') {
+    datosPerfil = { datosMedico: { create: { especialidad } } };
+  } else if (rolNombre === 'ACOMPANANTE') {
+    datosPerfil = { datosAcompanante: { create: { pacienteId } } };
+  }
+
+  return await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      nombre,
+      apellido,
+      rolId,
+      ...datosPerfil
+    },
+    include: {
+      rol: true
+    }
+  });
+};
+
+
 const crearUsuario = async ({ email, hashedPassword, rolId }) => {
   const user = await prisma.user.create({
     data: {
@@ -204,6 +233,7 @@ module.exports = {
   hashPassword,
   verifyPassword,
   crearUsuario,
+  crearUsuarioCompleto,
   crearPaciente,
   crearMedico,
   crearAcompañante,

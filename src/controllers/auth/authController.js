@@ -5,6 +5,39 @@ const {
   verificarPacienteExiste,
 } = require('../../utils/authValidations');
 
+
+const registroNuevo = async (req, res) => {
+  try {
+    const { email, nombre, apellido, password, rolNombre, especialidad, pacienteId } = req.body;
+
+    await verificarEmailDisponible(email);
+    const rol = await verificarRolExiste(rolNombre);
+
+    if (rolNombre === 'ACOMPANANTE') {
+      await verificarPacienteExiste(pacienteId);
+    }
+
+    const hashedPassword = await authService.hashPassword(password);
+
+    const user = await authService.crearUsuarioCompleto({
+      email, nombre, apellido, hashedPassword, rolId: rol.id, rolNombre, especialidad, pacienteId
+    });
+
+    res.status(201).json({
+      mensaje: 'Usuario registrado exitosamente',
+      user: {
+        id: user.id,
+        email: user.email,
+        rol: user.rol.nombre,
+      },
+    });
+
+  } catch (error) {
+    console.error('Error en registro:', error);
+    res.status(400).json({ error: 'Error en el registro', mensaje: error.message });
+  }
+};
+
 const registro = async (req, res) => {
   try {
     const { email,nombre, apellido, password, rolNombre, pacienteId } = req.body;
@@ -86,6 +119,7 @@ const login = async (req, res) => {
     res.json({
       mensaje: 'Login exitoso',
       user,
+      accessToken
     });
 
   } catch (error) {
@@ -210,6 +244,7 @@ const me = async (req, res) => {
 
 module.exports = {
   registro,
+  registroNuevo,
   login,
   refresh,
   logout,

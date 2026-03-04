@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const {
   registro,
+  registroNuevo,
   login,
   refresh,
   logout,
@@ -20,7 +21,7 @@ const {
 // ─── Rutas públicas (sin autenticación) ───────────────────────────────────────
 
 // POST /auth/registro - Crear nueva cuenta
-router.post('/registro', validateSchema(registroSchema), registro);
+router.post('/registro', validateSchema(registroSchema), registroNuevo);
 
 // POST /auth/login - Iniciar sesión
 router.post('/login', validateSchema(loginSchema), login);

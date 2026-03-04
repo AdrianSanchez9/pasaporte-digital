@@ -16,56 +16,23 @@ const loginSchema = z.object({
     .min(1, 'La contraseña no puede estar vacía'),
 });
 
-
 const registroSchema = z.object({
-  email: z
-    .string({
-      required_error: 'El email es obligatorio',
-    })
-    .email('Email inválido')
-    .toLowerCase()
-    .trim(),
-
+  email: z.string().email('Email inválido').toLowerCase().trim(),
+  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+  apellido: z.string().min(2, 'El apellido debe tener al menos 2 caracteres'),
   password: z
-    .string({
-      required_error: 'La contraseña es obligatoria',
-    })
+    .string()
     .min(8, 'La contraseña debe tener al menos 8 caracteres')
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'La contraseña debe contener al menos una mayúscula, una minúscula y un número'
+      'Debe contener mayúscula, minúscula y número'
     ),
+  confirmPassword: z.string(),
+  rolNombre: z.enum(['PACIENTE', 'MEDICO', 'ACOMPAÑANTE', 'ENFERMERO', 'USUARIO_EXTERNO', 'ADMIN']),
 
-  confirmPassword: z
-    .string({
-      required_error: 'Confirmar contraseña es obligatorio',
-    }),
-
-  nombre: z
-    .string({
-      required_error: 'El nombre es obligatorio',
-    })
-    .toLowerCase()
-    .trim(),
-
-  apellido: z
-    .string({
-      required_error: 'El apellido es obligatorio',
-    })
-    .toLowerCase()
-    .trim(),
-
-  rolNombre: z
-    .string({
-      required_error: 'El rol es obligatorio',
-    })
-    .refine(
-      (val) => ['PACIENTE', 'MEDICO', 'ACOMPAnANTE'].includes(val),
-      'Rol inválido. Debe ser PACIENTE, MEDICO o ACOMPAÑANTE'
-    ),
-
-  // Campo opcional: ID del paciente (solo para ACOMPAÑANTE)
-  pacienteId: z.string().uuid('ID de paciente inválido').optional(),
+  // Campos condicionales (opcionales, se validan en el controller)
+  especialidad: z.string().optional(),
+  pacienteId: z.string().uuid().optional(),
 
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Las contraseñas no coinciden',
