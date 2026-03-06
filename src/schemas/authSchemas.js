@@ -28,7 +28,7 @@ const registroSchema = z.object({
       'Debe contener mayúscula, minúscula y número'
     ),
   confirmPassword: z.string(),
-  rolNombre: z.enum(['PACIENTE', 'MEDICO', 'ACOMPAÑANTE', 'ENFERMERO', 'USUARIO_EXTERNO', 'ADMIN']),
+  rolNombre: z.enum(['PACIENTE', 'MEDICO', 'ACOMPANANTE', 'ENFERMERO', 'USUARIO_EXTERNO', 'ADMIN']),
 
   // Campos condicionales (opcionales, se validan en el controller)
   especialidad: z.string().optional(),

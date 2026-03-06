@@ -13,7 +13,22 @@ const registroNuevo = async (req, res) => {
     await verificarEmailDisponible(email);
     const rol = await verificarRolExiste(rolNombre);
 
+    if (rolNombre === 'MEDICO') {
+      if (!especialidad || especialidad.trim() === '') {
+        return res.status(400).json({
+          error: 'Validación fallida',
+          mensaje: 'La especialidad es obligatoria para médicos'
+        });
+        }
+    }
+
     if (rolNombre === 'ACOMPANANTE') {
+      if (!pacienteId) {
+        return res.status(400).json({
+          error: 'Validación fallida',
+          mensaje: 'Debe seleccionar un paciente para el acompañante'
+        });
+      }
       await verificarPacienteExiste(pacienteId);
     }
 
@@ -38,59 +53,6 @@ const registroNuevo = async (req, res) => {
   }
 };
 
-const registro = async (req, res) => {
-  try {
-    const { email,nombre, apellido, password, rolNombre, pacienteId } = req.body;
-
-    // 1. Validaciones de negocio
-    await verificarEmailDisponible(email);
-
-    const rol = await verificarRolExiste(rolNombre);
-
-    if (rolNombre === 'ACOMPAÑANTE') {
-      await verificarPacienteExiste(pacienteId);
-    }
-
-    const hashedPassword = await authService.hashPassword(password);
-
-    const user = await authService.crearUsuario({
-      email,
-      nombre,
-      apellido,
-      hashedPassword,
-      rolId: rol.id,
-    });
-
-    if (rolNombre === 'PACIENTE') {
-      await authService.crearPaciente(user.id);
-    }
-
-    if (rolNombre === 'MEDICO') {
-      await authService.crearMedico(user.id);
-    }
-
-    if (rolNombre === 'ACOMPAÑANTE') {
-      await authService.crearAcompañante(user.id, pacienteId);
-    }
-
-    res.status(201).json({
-      mensaje: 'Usuario registrado exitosamente',
-      user: {
-        id: user.id,
-        email: user.email,
-        rol: user.rol.nombre,
-      },
-    });
-
-  } catch (error) {
-    console.error('Error en registro:', error);
-
-    res.status(400).json({
-      error: 'Error en el registro',
-      mensaje: error.message,
-    });
-  }
-};
 
 const login = async (req, res) => {
   try {
