@@ -6,6 +6,9 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 
 const authRoutes = require('./src/routes/authRoutes');
+const pacienteRoutes = require('./src/routes/pacienteRoutes');
+const medicoCabeceraRoutes = require('./src/routes/medicoCabeceraRoutes');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +30,9 @@ app.use(express.static('public'));
 // ─── Rutas ────────────────────────────────────────────────────────────────────
 
 app.use('/auth', authRoutes);
+app.use('/pacientes', pacienteRoutes);
+app.use('/medicos-cabecera', medicoCabeceraRoutes);
+
 
 app.get('/', (req, res) => {
   res.json({

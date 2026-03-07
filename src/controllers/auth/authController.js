@@ -97,7 +97,6 @@ const login = async (req, res) => {
 // ─── Renovar access token ─────
 const refresh = async (req, res) => {
   try {
-    // 1. Leer refresh token de las cookies
     const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken) {
@@ -109,7 +108,6 @@ const refresh = async (req, res) => {
 
     const { accessToken } = await authService.renovarToken(refreshToken);
 
-    // 3. Actualizar cookie del access token
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -187,10 +185,9 @@ const logoutAll = async (req, res) => {
   }
 };
 
-// ─── Obtener información del usuario actual ────────────
+
 const me = async (req, res) => {
   try {
-    // req.user viene del middleware auth.js
     res.json({
       user: req.user,
     });
@@ -205,7 +202,6 @@ const me = async (req, res) => {
 };
 
 module.exports = {
-  registro,
   registroNuevo,
   login,
   refresh,

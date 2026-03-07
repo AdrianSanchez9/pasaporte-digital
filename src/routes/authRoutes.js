@@ -30,6 +30,8 @@ router.post('/login', validateSchema(loginSchema), login);
 router.post('/refresh', refresh);
 
 
+router.post('/logout', auth ,logout);
+
 // Probando tema de roles y auth
 router.get('/me', auth, requireRole('PACIENTE') , me);
 

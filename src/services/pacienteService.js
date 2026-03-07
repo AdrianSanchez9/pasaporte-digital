@@ -1,0 +1,159 @@
+const prisma = require('../config/database');
+
+const listarPacientes = async ({ search, limit = 10, offset = 0 }) => {
+  const where = search
+    ? {
+        OR: [
+          { user: { nombre: { contains: search } } },
+          { user: { apellido: { contains: search } } },
+          { user: { email: { contains: search } } },
+          { apodo: { contains: search } },
+          { telefono: { contains: search } },
+        ],
+      }
+    : {};
+
+  const [pacientes, total] = await Promise.all([
+    prisma.paciente.findMany({
+      where,
+      include: {
+        user: {
+          select: {
+            id: true,
+            nombre: true,
+            apellido: true,
+            email: true,
+          },
+        },
+        medicoCabecera: {
+          select: {
+            id: true,
+            nombre: true,
+            apellido: true,
+          },
+        },
+      },
+      take: limit,
+      skip: offset,
+      orderBy: {
+        user: {
+          apellido: 'asc',
+        },
+      },
+    }),
+    prisma.paciente.count({ where }),
+  ]);
+
+  return { pacientes, total };
+};
+
+const buscarPacientePorId = async (userId) => {
+  return await prisma.paciente.findUnique({
+    where: { userId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          email: true,
+          createdAt: true,
+        },
+      },
+      medicoCabecera: true,
+      contactos: {
+        orderBy: { createdAt: 'desc' },
+      },
+      acompanantes: {
+        include: {
+          user: {
+            select: {
+              nombre: true,
+              apellido: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+};
+
+const actualizarPerfil = async (userId, datos) => {
+  return await prisma.paciente.update({
+    where: { userId },
+    data: datos,
+    include: {
+      user: {
+        select: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          email: true,
+        },
+      },
+      medicoCabecera: true,
+    },
+  });
+};
+
+const listarContactos = async (pacienteId) => {
+  return await prisma.contactoPaciente.findMany({
+    where: { pacienteId },
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+const crearContacto = async (pacienteId, datos) => {
+  return await prisma.contactoPaciente.create({
+    data: {
+      ...datos,
+      pacienteId,
+    },
+  });
+};
+
+const eliminarContacto = async (contactoId, pacienteId) => {
+  const contacto = await prisma.contactoPaciente.findFirst({
+    where: {
+      id: contactoId,
+      pacienteId,
+    },
+  });
+
+  if (!contacto) {
+    throw new Error('Contacto no encontrado');
+  }
+
+  return await prisma.contactoPaciente.delete({
+    where: { id: contactoId },
+  });
+};
+
+const asignarMedicoCabecera = async (pacienteId, medicoCabeceraId) => {
+  const medico = await prisma.medicoCabecera.findUnique({
+    where: { id: medicoCabeceraId },
+  });
+
+  if (!medico) {
+    throw new Error('Médico de cabecera no encontrado');
+  }
+
+  return await prisma.paciente.update({
+    where: { userId: pacienteId },
+    data: { medicoCabeceraId },
+    include: {
+      medicoCabecera: true,
+    },
+  });
+};
+
+module.exports = {
+  listarPacientes,
+  buscarPacientePorId,
+  actualizarPerfil,
+  listarContactos,
+  crearContacto,
+  eliminarContacto,
+  asignarMedicoCabecera,
+};

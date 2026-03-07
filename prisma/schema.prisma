@@ -81,12 +81,45 @@ model Paciente {
   fechaNacimiento       DateTime?
   direccion             String?       @db.Text
   telefono              String?
+  medicoCabeceraId      String?             // FK hacia MedicoCabecera (opcional)
   necesidadesReligiosas String?       @db.Text
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contactos ContactoPaciente[]
+  medicoCabecera        MedicoCabecera?     @relation(fields: [medicoCabeceraId], references: [id])
   acompanantes  Acompanante[]
+}
+
+model ContactoPaciente {
+  id          String   @id @default(uuid())
+  nombre      String
+  telefono    String?
+  direccion   String?  @db.Text
+  relacion    String?
+  pacienteId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  paciente Paciente[]
+
+  @@index([pacienteId])
+}
+
+model MedicoCabecera {
+  id         String   @id @default(uuid())
+  nombre     String
+  apellido   String
+  telefono   String?
+  direccion  String?  @db.Text
+  pacienteId String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  paciente Paciente[]
+
+  @@index([pacienteId])
 }
 
 // ─── Modelo de Médico ─────────────────────────────────────────────────────────
