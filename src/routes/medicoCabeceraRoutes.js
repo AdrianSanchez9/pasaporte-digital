@@ -20,10 +20,12 @@ router.get( '/', auth, listarMedicosCabecera );
 
 router.get( '/:id', auth, verMedicoCabecera );
 
+// Crear un nuevo medico de cabecera
 router.post( '/', auth, requireRole('ADMIN','PACIENTE'), validateSchema(crearMedicoCabeceraSchema),
   crearMedicoCabecera
 );
 
+// Actualizar medico de cabecera
 router.put( '/:id', auth, requireRole('ADMIN'), validateSchema(actualizarMedicoCabeceraSchema),
   actualizarMedicoCabecera
 );

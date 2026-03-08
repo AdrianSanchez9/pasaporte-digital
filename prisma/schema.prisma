@@ -90,6 +90,8 @@ model Paciente {
   contactos ContactoPaciente[]
   medicoCabecera        MedicoCabecera?     @relation(fields: [medicoCabeceraId], references: [id])
   acompanantes  Acompanante[]
+  historial  HistorialPaciente?
+
 }
 
 model ContactoPaciente {
@@ -113,13 +115,12 @@ model MedicoCabecera {
   apellido   String
   telefono   String?
   direccion  String?  @db.Text
-  pacienteId String   @unique
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   paciente Paciente[]
 
-  @@index([pacienteId])
+  @@index([nombre])
 }
 
 // ─── Modelo de Médico ─────────────────────────────────────────────────────────
@@ -159,4 +160,62 @@ model RefreshToken {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
+}
+
+
+model Medicamento {
+  id                        String                     @id @default(uuid())
+  nombre                    String                     @unique  // "Paracetamol", "Ibuprofeno"
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+
+  informacionMedicamentos   InformacionMedicamento[]
+
+  @@index([nombre])
+}
+
+
+// ─── Tabla Intermedia: Historial <-> Medicamento ─────────────────────────────
+model InformacionMedicamento {
+  id                      String            @id @default(uuid())
+  historialId             String
+  medicamentoId           String?
+  medicamentoPersonalizado String?
+
+  dosis                   String?
+  horarios                String?
+  formaMedicamento        String?
+  tipoMedicamento         String?
+  momentoIngesta          String?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+
+  historial               HistorialPaciente @relation(fields: [historialId], references: [id], onDelete: Cascade)
+  medicamento             Medicamento?      @relation(fields: [medicamentoId], references: [id])
+
+  // Constraint: Debe tener AL MENOS UNO (medicamentoId O medicamentoPersonalizado)
+  // No se puede hacer a nivel de Prisma, lo validamos en el controller
+
+  @@index([historialId])
+  @@index([medicamentoId])
+}
+
+
+
+model HistorialPaciente {
+  id                    String                     @id @default(uuid())
+  pacienteId            String                     @unique  // 1:1 con Paciente
+  alergias              String?                    @db.Text
+  metodosIntervencion   String?                    @db.Text
+  metodoLiquidosSolidos String?                    @db.Text
+  datosExtras           String?                    @db.Text
+  tieneEpilepsia        Boolean                    @default(false)
+  tipoCrisis            String?
+  createdAt             DateTime                   @default(now())
+  updatedAt             DateTime                   @updatedAt
+
+  paciente              Paciente                   @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
+  medicamentos          InformacionMedicamento[]
+
+  @@index([pacienteId])
 }

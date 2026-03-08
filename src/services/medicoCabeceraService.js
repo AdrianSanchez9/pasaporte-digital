@@ -13,11 +13,6 @@ const listarMedicosCabecera = async ({ search, limit = 10, offset = 0 }) => {
   const [medicos, total] = await Promise.all([
     prisma.medicoCabecera.findMany({
       where,
-      include: {
-        _count: {
-          select: { pacientes: true }, // Contar cuántos pacientes tiene
-        },
-      },
       take: limit,
       skip: offset,
       orderBy: {

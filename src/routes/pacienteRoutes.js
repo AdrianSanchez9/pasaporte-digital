@@ -57,7 +57,7 @@ router.delete( '/:id/contactos/:contactoId',auth,
 
 // Asignar medico de cabecera a un paciente
 router.put( '/:id/medico-cabecera', auth,
-  requireRole('ADMIN'),
+  requireRole('ADMIN', 'PACIENTE'),
   asignarMedicoCabecera
 );
 
