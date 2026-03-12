@@ -77,12 +77,12 @@ const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
     });
 
-    // 3. Responder con información del usuario
     res.json({
       mensaje: 'Login exitoso',
       user,
       accessToken
     });
+
 
   } catch (error) {
     console.error('Error en login:', error);

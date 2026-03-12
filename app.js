@@ -4,20 +4,38 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
-
+const path = require('path');
 const authRoutes = require('./src/routes/authRoutes');
 const pacienteRoutes = require('./src/routes/pacienteRoutes');
 const medicoCabeceraRoutes = require('./src/routes/medicoCabeceraRoutes');
 const historialPacienteRoutes = require('./src/routes/historialRoutes');
+const perfilCompletoRoutes = require('./src/routes/perfilCompletoRoutes');
+const perfilRoutes = require('./src/routes/perfilRoutes');
+const viewRoutes = require('./src/routes/viewRoutes'); // ← NUEVO
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src', 'views'));
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev')); // Logs: GET /auth/login 200 15ms
+  app.use(morgan('dev'));
 }
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
+  })
+);
 
 app.use(express.json());
 
@@ -29,11 +47,13 @@ app.use(express.static('public'));
 
 // ─── Rutas ────────────────────────────────────────────────────────────────────
 
+app.use('/', viewRoutes);
 app.use('/auth', authRoutes);
 app.use('/pacientes', pacienteRoutes);
 app.use('/medicos-cabecera', medicoCabeceraRoutes);
 app.use('/historial', historialPacienteRoutes);
-
+app.use('/perfil-paciente', perfilCompletoRoutes);
+app.use('/perfil', perfilRoutes);
 
 app.get('/', (req, res) => {
   res.json({

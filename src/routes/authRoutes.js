@@ -20,11 +20,15 @@ const {
   refreshTokenSchema,
 } = require('../schemas/authSchemas');
 
+
 // ─── Rutas públicas (sin autenticación) ───────────────────────────────────────
 
 router.post('/registro', validateSchema(registroSchema), registroNuevo);
 
+
+// Post -> procesa los datos del login
 router.post('/login', validateSchema(loginSchema), login);
+
 
 // POST /auth/refresh - Renovar access token (usa cookie automáticamente)
 router.post('/refresh', refresh);

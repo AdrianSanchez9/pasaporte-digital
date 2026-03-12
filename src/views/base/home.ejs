@@ -1,0 +1,194 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+      <div class="position-sticky pt-3">
+        <div class="text-center mb-4">
+          <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
+            <%= user.nombre.charAt(0) %><%= user.apellido.charAt(0) %>
+          </div>
+          <h6 class="mt-3 mb-0"><%= user.nombre %> <%= user.apellido %></h6>
+          <small class="text-muted"><%= user.rol %></small>
+        </div>
+
+        <hr>
+
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="/dashboard">
+              <span>🏠</span> Inicio
+            </a>
+          </li>
+
+          <% if (user.rol === 'PACIENTE') { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/mi-perfil-completo">
+                <span>👤</span> Mi Perfil
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/mi-historial">
+                <span>📋</span> Historial Médico
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/mis-medicamentos">
+                <span>💊</span> Medicamentos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/mi-qr">
+                <span>📱</span> Mi Código QR
+              </a>
+            </li>
+          <% } %>
+
+          <% if (user.rol === 'MEDICO' || user.rol === 'ENFERMERO') { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/pacientes">
+                <span>👥</span> Mis Pacientes
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/escanear-qr">
+                <span>📷</span> Escanear QR
+              </a>
+            </li>
+          <% } %>
+
+          <% if (user.rol === 'ACOMPAÑANTE') { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/mi-paciente">
+                <span>🤝</span> Mi Paciente
+              </a>
+            </li>
+          <% } %>
+
+          <% if (user.rol === 'ADMIN') { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/usuarios">
+                <span>👥</span> Usuarios
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/medicamentos">
+                <span>💊</span> Medicamentos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/medicos-cabecera">
+                <span>👨‍⚕️</span> Médicos de Cabecera
+              </a>
+            </li>
+          <% } %>
+
+          <li class="nav-item mt-4">
+            <a class="nav-link text-danger" href="#" id="logoutBtn">
+              <span>🚪</span> Cerrar Sesión
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+          <% if (user.rol === 'PACIENTE') { %>
+            Bienvenido a tu Pasaporte Médico
+          <% } else if (user.rol === 'MEDICO') { %>
+            Panel de Médico
+          <% } else if (user.rol === 'ENFERMERO') { %>
+            Panel de Enfermería
+          <% } else if (user.rol === 'ACOMPAÑANTE') { %>
+            Panel de Acompañante
+          <% } else if (user.rol === 'ADMIN') { %>
+            Panel de Administración
+          <% } %>
+        </h1>
+      </div>
+
+      <!-- Contenido según el rol -->
+      <% if (user.rol === 'PACIENTE') { %>
+        <%- include('./partials/dashboard-paciente') %>
+      <% } else if (user.rol === 'MEDICO') { %>
+        <%- include('./partials/dashboard-medico') %>
+      <% } else if (user.rol === 'ENFERMERO') { %>
+        <%- include('./partials/dashboard-enfermero') %>
+      <% } else if (user.rol === 'ACOMPAÑANTE') { %>
+        <%- include('./partials/dashboard-acompanante') %>
+      <% } else if (user.rol === 'ADMIN') { %>
+        <%- include('./partials/dashboard-admin') %>
+      <% } %>
+
+    </main>
+  </div>
+</div>
+
+<style>
+  .sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    overflow-y: auto;
+  }
+
+  .sidebar .nav-link {
+    color: #333;
+    padding: 0.75rem 1rem;
+  }
+
+  .sidebar .nav-link:hover {
+    background-color: #f8f9fa;
+  }
+
+  .sidebar .nav-link.active {
+    color: var(--primary-color);
+    background-color: #e7f3ff;
+  }
+
+  .sidebar .nav-link span {
+    margin-right: 0.5rem;
+  }
+
+  main {
+    padding-top: 48px;
+  }
+
+  @media (max-width: 767.98px) {
+    .sidebar {
+      top: 56px;
+    }
+  }
+</style>
+
+<script>
+  // Manejar cierre de sesión
+  document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    if (confirm('¿Estás seguro que querés cerrar sesión?')) {
+      try {
+        const response = await fetch('/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          window.location.href = '/login';
+        } else {
+          alert('Error al cerrar sesión');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error de conexión');
+      }
+    }
+  });
+</script>

@@ -91,6 +91,12 @@ model Paciente {
   medicoCabecera        MedicoCabecera?     @relation(fields: [medicoCabeceraId], references: [id])
   acompanantes  Acompanante[]
   historial  HistorialPaciente?
+  cuidadoPersonal       CuidadoPersonal?
+  perfilComunicacion    PerfilComunicacion?
+  emociones             Emociones?
+  gustos                GustoPaciente[]
+
+  @@index([userId])
 
 }
 
@@ -216,6 +222,72 @@ model HistorialPaciente {
 
   paciente              Paciente                   @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
   medicamentos          InformacionMedicamento[]
+
+  @@index([pacienteId])
+}
+
+
+
+model CuidadoPersonal {
+  id                String   @id @default(uuid())
+  pacienteId        String   @unique  // 1:1 con Paciente
+  tipoMovilidad     String?  // "Independiente", "Silla de ruedas", "Bastón", "Andador"
+  cuidadoPersonal   String?  @db.Text
+  maneraParaComer   String?  @db.Text
+  maneraParaBeber   String?  @db.Text
+  miSeguridad       String?  @db.Text
+  usoBano           String?  @db.Text
+  rutinaDescanso    String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
+
+  @@index([pacienteId])
+}
+
+// ─── Modelo de Perfil de Comunicación (1:1) ──────────────────────────────────
+model PerfilComunicacion {
+  id                      String   @id @default(uuid())
+  pacienteId              String   @unique  // 1:1 con Paciente
+  asistenteComunicacion   String?  // "Tablero de comunicación", "SAAC", "Lenguaje de señas"
+  ayudaComunicacion       String?  @db.Text
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
+
+  @@index([pacienteId])
+}
+
+// ─── Modelo de Emociones (1:1) ────────────────────────────────────────────────
+model Emociones {
+  id                    String   @id @default(uuid())
+  pacienteId            String   @unique  // 1:1 con Paciente
+  descripcionAnsioso    String?  @db.Text
+  descripcionDolor      String?  @db.Text
+  descripcionAsustado   String?  @db.Text
+  descripcionEnojado    String?  @db.Text
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
+
+  @@index([pacienteId])
+}
+
+// ─── Modelo de Gustos del Paciente (1:N) ─────────────────────────────────────
+model GustoPaciente {
+  id          String   @id @default(uuid())
+  pacienteId  String
+  tipo        String?  // "Comida favorita", "Música preferida", "Actividad favorita"
+  descripcion String?  @db.Text
+  notas       String?  @db.Text
+  sitios      String?  @db.Text  // "Lugares que le gusta visitar"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
 
   @@index([pacienteId])
 }
