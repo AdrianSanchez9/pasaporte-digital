@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const path = require('path');
+const expressLayouts = require('express-ejs-layouts');
 const authRoutes = require('./src/routes/authRoutes');
 const pacienteRoutes = require('./src/routes/pacienteRoutes');
 const medicoCabeceraRoutes = require('./src/routes/medicoCabeceraRoutes');
@@ -37,6 +38,10 @@ app.use(
   })
 );
 
+app.use(expressLayouts);
+app.use(express.static(path.join(__dirname, 'src', 'public')));
+app.set('layout', 'layouts/main');
+
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
@@ -55,15 +60,7 @@ app.use('/historial', historialPacienteRoutes);
 app.use('/perfil-paciente', perfilCompletoRoutes);
 app.use('/perfil', perfilRoutes);
 
-app.get('/', (req, res) => {
-  res.json({
-    mensaje: '🏥 API de Pasaporte Médico',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/auth',
-    },
-  });
-});
+
 
 // ─── Manejo de rutas no encontradas (404) ─────────────────────────────────────
 app.use((req, res) => {

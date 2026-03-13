@@ -1,8 +1,8 @@
 
 
 const renderHome = (req, res) => {
-  res.render('index', {
-    title: 'Pasaporte Médico Digital',
+  res.render('base/home', {
+    user: req.user || null
   });
 };
 
@@ -10,6 +10,7 @@ const renderLogin = (req, res) => {
   res.render('auth/login', {
     title: 'Iniciar Sesión',
     error: null,
+    user: null,
   });
 };
 

@@ -77,20 +77,16 @@ const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
     });
 
-    res.json({
-      mensaje: 'Login exitoso',
-      user,
-      accessToken
-    });
-
+    return res.redirect('/');
 
   } catch (error) {
     console.error('Error en login:', error);
 
-    res.status(401).json({
-      error: 'Error de autenticación',
-      mensaje: error.message,
-    });
+    return res.status(401).render('auth/login', {
+            title: 'Iniciar Sesión',
+            error: error.message || 'Credenciales inválidas',
+            user: null // Siempre pasamos user: null para que el header no explote
+        });
   }
 };
 
@@ -201,6 +197,22 @@ const me = async (req, res) => {
   }
 };
 
+const renderLoginForm = (req, res) => {
+  res.render('auth/login', {
+    title: 'Iniciar Sesión',
+    error: null,
+    query: req.query, // Para mensajes tipo ?registrado=true
+  });
+};
+
+const renderRegistroForm = (req, res) => {
+  res.render('auth/registro', {
+    title: 'Registrarse',
+    error: null,
+    formData: {}, // Datos vacíos al principio
+  });
+};
+
 module.exports = {
   registroNuevo,
   login,
@@ -208,4 +220,6 @@ module.exports = {
   logout,
   logoutAll,
   me,
+  renderLoginForm,
+  renderRegistroForm
 };

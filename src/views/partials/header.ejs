@@ -1,66 +1,59 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="<%= typeof user !== 'undefined' ? '/home' : '/' %>">
-      🏥 Pasaporte Médico
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <% if (typeof user !== 'undefined') { %>
-          <!-- Usuario logueado -->
-          <li class="nav-item">
-            <a class="nav-link" href="/dashboard">
-              <span>🏠</span> Dashboard
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-              <strong><%= user.nombre %> <%= user.apellido %></strong>
-              <small class="text-muted ms-1">(<%= user.rol %>)</small>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="/mi-perfil">Mi Perfil</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="#" id="logoutNavBtn">Cerrar Sesión</a></li>
-            </ul>
-          </li>
-        <% } else { %>
-          <!-- Usuario NO logueado -->
-          <li class="nav-item">
-            <a class="nav-link" href="/">Inicio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Iniciar Sesión</a>
-          </li>
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+
+      <div class="flex-shrink-0 flex items-center">
+        <a href="/" class="text-xl font-semibold text-slate-800 tracking-tight">Pasaporte Médico</a>
+      </div>
+
+      <nav class="hidden md:flex space-x-8">
+        <% if (locals.user) { %>
+          <a href="/" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Inicio</a>
         <% } %>
-      </ul>
+
+        <% if (locals.user && locals.user.rolNombre === 'PACIENTE') { %>
+          <a href="/perfil" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi Perfil</a>
+          <a href="/historial" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Historial</a>
+          <a href="/qr" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi QR</a>
+        <% } %>
+
+        <% if (locals.user && (locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
+          <a href="/pacientes" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Pacientes</a>
+          <a href="/escanear" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Escanear QR</a>
+        <% } %>
+
+        <% if (locals.user && locals.user.rolNombre === 'ADMIN') { %>
+          <a href="/admin/usuarios" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Usuarios</a>
+        <% } %>
+      </nav>
+
+      <div class="flex items-center space-x-6">
+        <% if (locals.user && locals.user.nombre) { %>
+          <div class="text-sm text-slate-600 hidden sm:block text-right">
+            <span class="font-medium text-slate-800 block"><%= locals.user.nombre %> <%= locals.user.apellido %></span>
+            <span class="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-500 rounded font-semibold uppercase tracking-wider"><%= locals.user.rolNombre %></span>
+          </div>
+          <button id="logoutBtn" class="text-sm font-medium text-slate-500 hover:text-red-600 transition-colors">Salir</button>
+        <% } else { %>
+          <a href="/auth/login" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">Iniciar Sesión</a>
+        <% } %>
+      </div>
+
     </div>
   </div>
-</nav>
+</header>
 
-<% if (typeof user !== 'undefined') { %>
 <script>
-  // Logout desde navbar
-  const logoutNavBtn = document.getElementById('logoutNavBtn');
-  if (logoutNavBtn) {
-    logoutNavBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      if (confirm('¿Estás seguro que querés cerrar sesión?')) {
-        try {
-          const response = await fetch('/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-          });
-          if (response.ok) {
-            window.location.href = '/login';
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        }
+  // Script para manejar el cierre de sesión
+  document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (confirm('¿Cerrar sesión?')) {
+      try {
+        const res = await fetch('/auth/logout', { method: 'POST' });
+        if (res.ok) window.location.href = '/auth/login';
+      } catch (error) {
+        console.error('Error al salir');
       }
-    });
-  }
+    }
+  });
 </script>
-<% } %>

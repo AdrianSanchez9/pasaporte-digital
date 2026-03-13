@@ -9,6 +9,8 @@ const {
   logout,
   logoutAll,
   me,
+  renderLoginForm,
+  renderRegistroForm
 } = require('../controllers/auth/authController');
 const { auth } = require('../middleware/auth');
 const { requireRole } = require('../middleware/authorize');
@@ -20,19 +22,23 @@ const {
   refreshTokenSchema,
 } = require('../schemas/authSchemas');
 
+const {
+  renderHome,
+  renderLogin,
+  renderRegistro,
+} = require('../controllers/viewController');
 
-// ─── Rutas públicas (sin autenticación) ───────────────────────────────────────
+
 
 router.post('/registro', validateSchema(registroSchema), registroNuevo);
 
+router.get('/login', renderLogin);
 
 // Post -> procesa los datos del login
 router.post('/login', validateSchema(loginSchema), login);
 
-
 // POST /auth/refresh - Renovar access token (usa cookie automáticamente)
 router.post('/refresh', refresh);
-
 
 router.post('/logout', auth ,logout);
 

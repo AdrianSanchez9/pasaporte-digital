@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const { auth } = require('../middleware/auth');
 const {
   renderHome,
   renderLogin,
   renderRegistro,
 } = require('../controllers/viewController');
 
-router.get('/', renderHome);
-
-router.get('/login', renderLogin);
+router.get('/', auth, renderHome);
 
 router.get('/registro', renderRegistro);
 

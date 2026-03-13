@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "clean" : "node cleanDb.js" ,
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "node cleanDb.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tailwind": "npx tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "dotenv": "^17.3.1",
     "ejs": "^4.0.1",
     "express": "^5.2.1",
+    "express-ejs-layouts": "^2.5.1",
     "express-validator": "^7.3.1",
     "helmet": "^8.1.0",
     "html5-qrcode": "^2.3.8",
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "tailwindcss": "^3.4.19"
   }
 }
