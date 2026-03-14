@@ -27,16 +27,11 @@ const registroSchema = z.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
       'Debe contener mayúscula, minúscula y número'
     ),
-  confirmPassword: z.string(),
   rolNombre: z.enum(['PACIENTE', 'MEDICO', 'ACOMPANANTE', 'ENFERMERO', 'USUARIO_EXTERNO', 'ADMIN']),
 
-  // Campos condicionales (opcionales, se validan en el controller)
   especialidad: z.string().optional(),
   pacienteId: z.string().uuid().optional(),
 
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Las contraseñas no coinciden',
-  path: ['confirmPassword'],
 });
 
 const refreshTokenSchema = z.object({

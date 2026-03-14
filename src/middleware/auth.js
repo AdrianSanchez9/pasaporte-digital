@@ -7,17 +7,13 @@ const auth = async (req, res, next) => {
 
     if (!token) { return res.redirect('/auth/login'); }
 
-    let payload;
-
     try {
-      payload = verifyAccessToken(token);
+      req.user = verifyAccessToken(token);
     } catch (error) {
         return res.redirect('/auth/login');
     }
-
-    req.user = payload;
+    res.locals.user = req.user;
     next();
-
   } catch (error) {
     return res.redirect('/auth/login');
   }
@@ -25,4 +21,12 @@ const auth = async (req, res, next) => {
 };
 
 
-module.exports = { auth };
+const isAuthenticated = (req, res, next) => {
+  const token = req.cookies?.accessToken;
+  if (!token) return next();
+  return res.redirect('/');
+};
+
+
+
+module.exports = { auth, isAuthenticated };

@@ -24,6 +24,7 @@
 
         <% if (locals.user && locals.user.rolNombre === 'ADMIN') { %>
           <a href="/admin/usuarios" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Usuarios</a>
+          <a href="/auth/registro" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Registrar usuarios</a>
         <% } %>
       </nav>
 
@@ -31,7 +32,6 @@
         <% if (locals.user && locals.user.nombre) { %>
           <div class="text-sm text-slate-600 hidden sm:block text-right">
             <span class="font-medium text-slate-800 block"><%= locals.user.nombre %> <%= locals.user.apellido %></span>
-            <span class="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-500 rounded font-semibold uppercase tracking-wider"><%= locals.user.rolNombre %></span>
           </div>
           <button id="logoutBtn" class="text-sm font-medium text-slate-500 hover:text-red-600 transition-colors">Salir</button>
         <% } else { %>

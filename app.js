@@ -64,9 +64,9 @@ app.use('/perfil', perfilRoutes);
 
 // ─── Manejo de rutas no encontradas (404) ─────────────────────────────────────
 app.use((req, res) => {
-  res.status(404).json({
-    error: 'Ruta no encontrada',
-    mensaje: `La ruta ${req.method} ${req.originalUrl} no existe`,
+  res.status(404).render('error/404', {
+    title: 'Página no encontrada',
+    user: req.user || null // Por si querés mostrar el header con el usuario
   });
 });
 

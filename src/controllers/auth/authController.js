@@ -1,33 +1,34 @@
+const { z } = require('zod');
 const authService = require('../../services/authService');
 const {
   verificarEmailDisponible,
   verificarRolExiste,
   verificarPacienteExiste,
 } = require('../../utils/authValidations');
-
+const {
+  registroSchema,
+  loginSchema,
+  refreshTokenSchema,
+} = require('../../schemas/authSchemas');
 
 const registroNuevo = async (req, res) => {
   try {
-    const { email, nombre, apellido, password, rolNombre, especialidad, pacienteId } = req.body;
+    const datosValidados = registroSchema.parse(req.body);
+
+    const { email, nombre, apellido, password, rolNombre, especialidad, pacienteId } = datosValidados;
 
     await verificarEmailDisponible(email);
     const rol = await verificarRolExiste(rolNombre);
 
     if (rolNombre === 'MEDICO') {
       if (!especialidad || especialidad.trim() === '') {
-        return res.status(400).json({
-          error: 'Validación fallida',
-          mensaje: 'La especialidad es obligatoria para médicos'
-        });
-        }
+        throw new Error('La especialidad es obligatoria para médicos.');
+      }
     }
 
     if (rolNombre === 'ACOMPANANTE') {
       if (!pacienteId) {
-        return res.status(400).json({
-          error: 'Validación fallida',
-          mensaje: 'Debe seleccionar un paciente para el acompañante'
-        });
+        throw new Error('Debe seleccionar un paciente para el acompañante.');
       }
       await verificarPacienteExiste(pacienteId);
     }
@@ -38,21 +39,27 @@ const registroNuevo = async (req, res) => {
       email, nombre, apellido, hashedPassword, rolId: rol.id, rolNombre, especialidad, pacienteId
     });
 
-    res.status(201).json({
-      mensaje: 'Usuario registrado exitosamente',
-      user: {
-        id: user.id,
-        email: user.email,
-        rol: user.rol.nombre,
-      },
-    });
+    return res.redirect('/auth/registro?success=true');
 
   } catch (error) {
     console.error('Error en registro:', error);
-    res.status(400).json({ error: 'Error en el registro', mensaje: error.message });
+
+    let mensajeError = 'Ocurrió un error al procesar el registro.';
+
+    if (error && error.errors && error.errors[0]) {
+      mensajeError = error.errors[0].message;
+    } else if (error && error.issues && error.issues[0]) {
+      mensajeError = error.issues[0].message;
+    } else if (error && error.message) {
+      mensajeError = error.message;
+    }
+
+    return res.status(400).render('auth/registro', {
+      error: mensajeError,
+      formData: req.body
+    });
   }
 };
-
 
 const login = async (req, res) => {
   try {
