@@ -104,32 +104,6 @@ const listarContactos = async (pacienteId) => {
   });
 };
 
-const crearContacto = async (pacienteId, datos) => {
-  return await prisma.contactoPaciente.create({
-    data: {
-      ...datos,
-      pacienteId,
-    },
-  });
-};
-
-const eliminarContacto = async (contactoId, pacienteId) => {
-  const contacto = await prisma.contactoPaciente.findFirst({
-    where: {
-      id: contactoId,
-      pacienteId,
-    },
-  });
-
-  if (!contacto) {
-    throw new Error('Contacto no encontrado');
-  }
-
-  return await prisma.contactoPaciente.delete({
-    where: { id: contactoId },
-  });
-};
-
 const asignarMedicoCabecera = async (pacienteId, medicoCabeceraId) => {
   const medico = await prisma.medicoCabecera.findUnique({
     where: { id: medicoCabeceraId },
@@ -148,6 +122,64 @@ const asignarMedicoCabecera = async (pacienteId, medicoCabeceraId) => {
   });
 };
 
+const actualizarMiMedicoCabecera = async (pacienteId, datos) => {
+  const medico = await prisma.medicoCabecera.create({
+    data: datos,
+  });
+
+  return await prisma.paciente.update({
+    where: { userId: pacienteId },
+    data: { medicoCabeceraId: medico.id },
+    include: { medicoCabecera: true },
+  });
+};
+
+const actualizarMiContacto = async (pacienteId, datos) => {
+  const contactoPaciente = await prisma.contactos.create({
+    data: datos,
+  });
+
+  return await prisma.paciente.update({
+    where: { userId: pacienteId },
+    data: { medicoCabeceraId: medico.id },
+    include: { contactos: true },
+  });
+};
+
+
+const crearContacto = async (pacienteId, datos) => {
+  return await prisma.contactoPaciente.create({
+    data: {
+      ...datos,
+      pacienteId
+
+    }
+  });
+};
+
+const actualizarContacto = async (contactoId, pacienteId, datos) => {
+  const contacto = await prisma.contactoPaciente.findFirst({
+    where: { id: contactoId, pacienteId } // ← directo
+  });
+  if (!contacto) throw new Error('Contacto no encontrado');
+
+  return await prisma.contactoPaciente.update({
+    where: { id: contactoId },
+    data: datos
+  });
+};
+
+const eliminarContacto = async (contactoId, pacienteId) => {
+  const contacto = await prisma.contactoPaciente.findFirst({
+    where: { id: contactoId, pacienteId }
+  });
+  if (!contacto) throw new Error('Contacto no encontrado');
+
+  return await prisma.contactoPaciente.delete({
+    where: { id: contactoId }
+  });
+};
+
 module.exports = {
   listarPacientes,
   buscarPacientePorId,
@@ -156,4 +188,8 @@ module.exports = {
   crearContacto,
   eliminarContacto,
   asignarMedicoCabecera,
+  actualizarMiMedicoCabecera,
+  crearContacto,
+  actualizarContacto,
+  eliminarContacto
 };

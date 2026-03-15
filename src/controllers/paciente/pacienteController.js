@@ -175,6 +175,60 @@ const asignarMedicoCabecera = async (req, res) => {
   }
 };
 
+const actualizarMiMedicoCabecera = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+    const datos = req.body;
+
+    const paciente = await pacienteService.actualizarMiMedicoCabecera(pacienteId, datos);
+
+    res.json({
+      mensaje: 'Médico de cabecera guardado exitosamente',
+      medicoCabecera: paciente.medicoCabecera,
+    });
+  } catch (error) {
+    console.error('Error al guardar médico de cabecera:', error);
+    res.status(500).json({
+      error: 'Error al guardar médico de cabecera',
+      mensaje: error.message,
+    });
+  }
+};
+const crearMiContacto = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+    const contacto = await pacienteService.crearContacto(pacienteId, req.body);
+    res.status(201).json({ mensaje: 'Contacto creado exitosamente', contacto });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear contacto', mensaje: error.message });
+  }
+};
+
+const actualizarMiContacto = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+    const { contactoId } = req.params;
+    const contacto = await pacienteService.actualizarContacto(contactoId, pacienteId, req.body);
+    res.json({ mensaje: 'Contacto actualizado exitosamente', contacto });
+  } catch (error) {
+    const status = error.message === 'Contacto no encontrado' ? 404 : 500;
+    res.status(status).json({ error: 'Error al actualizar contacto', mensaje: error.message });
+  }
+};
+
+const eliminarMiContacto = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+    const { contactoId } = req.params;
+    await pacienteService.eliminarContacto(contactoId, pacienteId);
+    res.json({ mensaje: 'Contacto eliminado exitosamente' });
+  } catch (error) {
+    const status = error.message === 'Contacto no encontrado' ? 404 : 500;
+    res.status(status).json({ error: 'Error al eliminar contacto', mensaje: error.message });
+  }
+};
+
+
 module.exports = {
   listarPacientes,
   verPaciente,
@@ -183,4 +237,8 @@ module.exports = {
   crearContacto,
   eliminarContacto,
   asignarMedicoCabecera,
+  actualizarMiMedicoCabecera,
+  crearMiContacto,
+  actualizarMiContacto,
+  eliminarMiContacto,
 };

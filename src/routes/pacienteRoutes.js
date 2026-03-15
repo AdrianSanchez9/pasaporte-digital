@@ -15,6 +15,10 @@ const {
   crearContacto,
   eliminarContacto,
   asignarMedicoCabecera,
+  actualizarMiMedicoCabecera,
+  crearMiContacto,
+  actualizarMiContacto,
+  eliminarMiContacto
 } = require('../controllers/paciente/pacienteController');
 
 // Listar todos los pacientes
@@ -22,6 +26,18 @@ router.get('/', auth,
   requireRole('MEDICO', 'ENFERMERO', 'ADMIN'),
   listarPacientes
 );
+
+router.put('/mi-medico-cabecera', auth, requireRole('PACIENTE'),
+  actualizarMiMedicoCabecera
+);
+
+router.put('/mi-contacto', auth, requireRole('PACIENTE'),
+  actualizarMiMedicoCabecera
+);
+router.post('/mis-contactos', auth, requireRole('PACIENTE'), crearMiContacto);
+router.put('/mis-contactos/:contactoId', auth, requireRole('PACIENTE'), actualizarMiContacto);
+router.delete('/mis-contactos/:contactoId', auth, requireRole('PACIENTE'), eliminarMiContacto);
+
 
 // Ver paciente especifico
 router.get( '/:id', auth,
@@ -60,5 +76,7 @@ router.put( '/:id/medico-cabecera', auth,
   requireRole('ADMIN', 'PACIENTE'),
   asignarMedicoCabecera
 );
+
+
 
 module.exports = router;

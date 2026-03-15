@@ -127,6 +127,30 @@
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Calle, número, ciudad">
               </div>
               <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-slate-700 mb-2">Religión</label>
+                <select name="religion" id="selectReligion"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all cursor-pointer">
+                  <option value="">Seleccioná una opción...</option>
+                  <option value="Católica"                <%= locals.paciente?.religion === 'Católica' ? 'selected' : '' %>>Católica</option>
+                      <option value="Cristiana evangélica"    <%= locals.paciente?.religion === 'Cristiana evangélica' ? 'selected' : '' %>>Cristiana evangélica</option>
+                      <option value="Cristiana protestante"   <%= locals.paciente?.religion === 'Cristiana protestante' ? 'selected' : '' %>>Cristiana protestante</option>
+                      <option value="Judía"                   <%= locals.paciente?.religion === 'Judía' ? 'selected' : '' %>>Judía</option>
+                      <option value="Islámica"                <%= locals.paciente?.religion === 'Islámica' ? 'selected' : '' %>>Islámica</option>
+                      <option value="Budista"                 <%= locals.paciente?.religion === 'Budista' ? 'selected' : '' %>>Budista</option>
+                      <option value="Hinduista"               <%= locals.paciente?.religion === 'Hinduista' ? 'selected' : '' %>>Hinduista</option>
+                      <option value="Testigos de Jehová"      <%= locals.paciente?.religion === 'Testigos de Jehová' ? 'selected' : '' %>>Testigos de Jehová</option>
+                      <option value="Mormona"                 <%= locals.paciente?.religion === 'Mormona' ? 'selected' : '' %>>Mormona</option>
+                      <option value="Adventista"              <%= locals.paciente?.religion === 'Adventista' ? 'selected' : '' %>>Adventista</option>
+                      <option value="Sin religión"            <%= locals.paciente?.religion === 'Sin religión' ? 'selected' : '' %>>Sin religión</option>
+                      <option value="Otra"                    <%= locals.paciente?.religion === 'Otra' ? 'selected' : '' %>>Otra...</option>
+                </select>
+
+                <input type="text" name="religionPersonalizada" id="religionPersonalizada"
+                  class="hidden mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all"
+                  placeholder="Escribí tu religión...">
+              </div>
+
+              <div class="md:col-span-2">
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Necesidades religiosas</label>
                 <textarea name="necesidadesReligiosas" rows="3"
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all resize-none"
@@ -216,6 +240,130 @@
           </form>
         </div>
       </div>
+
+      <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
+              <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center border border-orange-100">
+                    <svg class="w-6 h-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                  </div>
+                  <span class="text-lg font-bold text-slate-800">Contactos de emergencia</span>
+                </div>
+                <svg class="accordion-chevron w-6 h-6 shrink-0 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div class="accordion-content hidden px-6 pb-8 pt-2">
+
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                  <h3 class="text-xl font-bold text-slate-800">Directorio de contactos</h3>
+                  <button id="btn-agregar-contacto" class="w-full sm:w-auto px-5 py-2.5 bg-orange-50 text-orange-700 font-bold border border-orange-100 rounded-xl hover:bg-orange-100 transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Agregar contacto
+                  </button>
+                </div>
+
+                <div id="lista-contactos" class="grid grid-cols-1 gap-4 mb-4">
+                  <% if (locals.paciente?.contactos?.length > 0) { %>
+                    <% locals.paciente.contactos.forEach(c => { %>
+                      <div class="contacto-item relative bg-white rounded-2xl p-5 md:p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow" data-id="<%= c.id %>">
+
+                        <div class="contacto-vista">
+                          <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-5">
+                            <h4 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                                <span class="text-2xl">📞</span> <%= c.nombre %> (<%= c.relacion || '' %>)
+                            </h4>
+                            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                              <button class="btn-editar-contacto px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold rounded-lg text-sm border border-slate-200 transition-all">Editar</button>
+                              <button class="btn-eliminar-contacto group flex items-center gap-2 px-3 py-2 rounded-lg bg-red-50 hover:bg-red-500 text-red-600 hover:text-white transition-all text-sm font-bold border border-red-100" data-id="<%= c.id %>" title="Eliminar contacto">
+                                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                <span class="hidden sm:inline">Eliminar</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <div>
+                              <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Teléfono</span>
+                              <span class="font-semibold text-slate-800 text-base"><%= c.telefono || '-' %></span>
+                            </div>
+                            <div>
+                              <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Dirección</span>
+                              <span class="font-semibold text-slate-800 text-base"><%= c.direccion || '-' %></span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="contacto-form-editar hidden mt-4 pt-4 border-t-2 border-dashed border-slate-200">
+                          <p class="text-sm font-bold text-slate-800 mb-4">Editando información</p>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label class="block text-sm font-semibold text-slate-700 mb-2">Nombre</label>
+                              <input type="text" class="edit-nombre w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" value="<%= c.nombre %>">
+                            </div>
+                            <div>
+                              <label class="block text-sm font-semibold text-slate-700 mb-2">Relación</label>
+                              <input type="text" class="edit-relacion w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" value="<%= c.relacion || '' %>">
+                            </div>
+                            <div>
+                              <label class="block text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
+                              <input type="tel" class="edit-telefono w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" value="<%= c.telefono || '' %>">
+                            </div>
+                            <div>
+                              <label class="block text-sm font-semibold text-slate-700 mb-2">Dirección</label>
+                              <input type="text" class="edit-direccion w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" value="<%= c.direccion || '' %>">
+                            </div>
+                          </div>
+                          <div class="flex justify-end gap-3 mt-5">
+                            <button class="btn-cancelar-editar-contacto px-5 py-2.5 text-sm font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all">Cancelar</button>
+                            <button class="btn-confirmar-editar-contacto px-5 py-2.5 text-sm font-bold text-white bg-slate-800 rounded-xl hover:bg-slate-900 transition-all shadow-sm active:scale-95" data-id="<%= c.id %>">Guardar cambios</button>
+                          </div>
+                        </div>
+                      </div>
+                    <% }) %>
+                  <% } else { %>
+                    <div class="bg-slate-50 rounded-2xl p-8 text-center border-2 border-dashed border-slate-200">
+                      <p class="text-base font-medium text-slate-500" id="sin-contactos">No hay contactos de emergencia registrados.</p>
+                    </div>
+                  <% } %>
+                </div>
+
+                <div id="form-nuevo-contacto" class="hidden mt-6 bg-slate-800 rounded-2xl p-1 shadow-lg">
+                  <div class="bg-white rounded-[14px] p-6 md:p-8">
+                    <h4 class="text-xl font-bold text-slate-800 mb-6">Agregar Nuevo Contacto</h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Nombre completo *</label>
+                        <input type="text" id="nuevo-contacto-nombre" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" placeholder="Ej: María Gómez">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Relación</label>
+                        <input type="text" id="nuevo-contacto-relacion" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" placeholder="Ej: Madre, Hermano, Pareja...">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
+                        <input type="tel" id="nuevo-contacto-telefono" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" placeholder="Ej: +54 9 11 1234-5678">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Dirección</label>
+                        <input type="text" id="nuevo-contacto-direccion" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-orange-50 focus:border-orange-400 outline-none transition-all" placeholder="Calle, número, ciudad...">
+                      </div>
+                    </div>
+
+                    <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-slate-100">
+                      <button id="btn-cancelar-contacto" class="px-6 py-3.5 text-base font-bold text-slate-600 border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition-all">Cancelar</button>
+                      <button id="btn-confirmar-contacto" class="px-6 py-3.5 text-base font-bold text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-all shadow-md shadow-orange-200 active:scale-95">Guardar contacto</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
 
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
@@ -650,7 +798,6 @@ document.getElementById('btn-confirmar-medicamento')?.addEventListener('click', 
     bodyData.medicamentoPersonalizado = textoBuscador;
   }
 
-  // LIMPIAR CAMPOS VACIOS PARA ZOD EN MEDICAMENTOS
   Object.keys(bodyData).forEach(key => {
     if (bodyData[key] === '') {
       delete bodyData[key];
@@ -676,7 +823,6 @@ document.getElementById('btn-confirmar-medicamento')?.addEventListener('click', 
   }
 });
 
-// ── Eliminar medicamento ───────────────────────────────────────────
 document.querySelectorAll('.btn-eliminar-medicamento').forEach(btn => {
   btn.addEventListener('click', async () => {
     const medId = btn.dataset.id;
@@ -705,7 +851,6 @@ document.querySelectorAll('.btn-eliminar-medicamento').forEach(btn => {
   });
 });
 
-// ── Formularios Generales (PUT) ────────────────────────────────────
 const pacienteId = '<%= locals.paciente?.userId ?? "" %>';
 
 const endpoints = {
@@ -777,10 +922,10 @@ if (formMedicoCabecera) {
     btn.disabled = true;
 
     const data = Object.fromEntries(new FormData(form).entries());
-    const url = medicoId ? `/api/medico-cabecera/${medicoId}` : '/api/medico-cabecera';
-    const method = medicoId ? 'PATCH' : 'POST';
+    const url = medicoId ? `/pacientes/mi-medico-cabecera${medicoId}` : '/pacientes/mi-medico-cabecera';
+    const method = medicoId ? 'PUT' : 'POST';
 
-    // LIMPIEZA PARA ZOD
+
     Object.keys(data).forEach(key => {
       if (data[key] === '') {
         delete data[key];
@@ -788,12 +933,12 @@ if (formMedicoCabecera) {
     });
 
     try {
-      const res = await fetch(url, {
-        method,
+      const res = await fetch(`/pacientes/mi-medico-cabecera`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-
+      console.log(res)
       if (!res.ok) {
         const errorDelBackend = await res.json();
         throw new Error(errorDelBackend.mensaje || 'Error al guardar el médico');
@@ -809,4 +954,109 @@ if (formMedicoCabecera) {
     }
   });
 }
+
+
+document.getElementById('btn-agregar-contacto').addEventListener('click', () => {
+  document.getElementById('form-nuevo-contacto').classList.remove('hidden');
+});
+document.getElementById('btn-cancelar-contacto').addEventListener('click', () => {
+  document.getElementById('form-nuevo-contacto').classList.add('hidden');
+});
+
+// Agregar contacto
+document.getElementById('btn-confirmar-contacto').addEventListener('click', async () => {
+  const nombre = document.getElementById('nuevo-contacto-nombre').value.trim();
+  if (!nombre) return showToast('El nombre es obligatorio', 'error');
+
+  try {
+    const res = await fetch('/pacientes/mis-contactos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre,
+        relacion: document.getElementById('nuevo-contacto-relacion').value,
+        telefono: document.getElementById('nuevo-contacto-telefono').value,
+        direccion: document.getElementById('nuevo-contacto-direccion').value,
+      })
+    });
+    if (!res.ok) throw new Error();
+    showToast('Contacto agregado');
+    document.getElementById('form-nuevo-contacto').classList.add('hidden');
+    setTimeout(() => location.reload(), 1200);
+  } catch {
+    showToast('Error al agregar contacto', 'error');
+  }
+});
+
+// Editar / cancelar edición
+document.querySelectorAll('.btn-editar-contacto').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.contacto-item');
+    item.querySelector('.contacto-vista').classList.add('hidden');
+    item.querySelector('.contacto-form-editar').classList.remove('hidden');
+  });
+});
+
+document.querySelectorAll('.btn-cancelar-editar-contacto').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.contacto-item');
+    item.querySelector('.contacto-vista').classList.remove('hidden');
+    item.querySelector('.contacto-form-editar').classList.add('hidden');
+  });
+});
+
+// Confirmar edición
+document.querySelectorAll('.btn-confirmar-editar-contacto').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const contactoId = btn.dataset.id;
+    const item = btn.closest('.contacto-item');
+
+    try {
+      const res = await fetch(`/pacientes/mis-contactos/${contactoId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: item.querySelector('.edit-nombre').value,
+          relacion: item.querySelector('.edit-relacion').value,
+          telefono: item.querySelector('.edit-telefono').value,
+          direccion: item.querySelector('.edit-direccion').value,
+        })
+      });
+      if (!res.ok) throw new Error();
+      showToast('Contacto actualizado');
+      setTimeout(() => location.reload(), 1200);
+    } catch {
+      showToast('Error al actualizar contacto', 'error');
+    }
+  });
+});
+
+// Eliminar contacto
+document.querySelectorAll('.btn-eliminar-contacto').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const contactoId = btn.dataset.id;
+    if (!confirm('¿Eliminar este contacto?')) return;
+    try {
+      const res = await fetch(`/pacientes/mis-contactos/${contactoId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error();
+      btn.closest('.contacto-item').remove();
+      showToast('Contacto eliminado');
+    } catch {
+      showToast('Error al eliminar contacto', 'error');
+    }
+  });
+});
+
+
+document.getElementById('selectReligion').addEventListener('change', function() {
+  const input = document.getElementById('religionPersonalizada');
+  if (this.value === 'Otra') {
+    input.classList.remove('hidden');
+    input.required = true;
+  } else {
+    input.classList.add('hidden');
+    input.required = false;
+    input.value = '';
+  }
+});
 </script>

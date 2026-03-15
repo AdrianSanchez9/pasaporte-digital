@@ -81,7 +81,8 @@ model Paciente {
   fechaNacimiento       DateTime?
   direccion             String?       @db.Text
   telefono              String?
-  medicoCabeceraId      String?             // FK hacia MedicoCabecera (opcional)
+  medicoCabeceraId      String?
+  religion              String?
   necesidadesReligiosas String?       @db.Text
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
@@ -110,7 +111,7 @@ model ContactoPaciente {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  paciente Paciente[]
+  paciente Paciente @relation(fields: [pacienteId], references: [userId])
 
   @@index([pacienteId])
 }

@@ -7,6 +7,7 @@ const actualizarPerfilPacienteSchema = z.object({
   fechaNacimiento: z.string().datetime().optional().or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()),
   direccion: z.string().optional(),
   telefono: z.string().optional(),
+  religion: z.string().optional(),
   necesidadesReligiosas: z.string().optional(),
   medicoCabeceraId: z.string().uuid('ID de médico inválido').optional().nullable(),
 });
