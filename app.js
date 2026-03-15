@@ -12,7 +12,8 @@ const medicoCabeceraRoutes = require('./src/routes/medicoCabeceraRoutes');
 const historialPacienteRoutes = require('./src/routes/historialRoutes');
 const perfilCompletoRoutes = require('./src/routes/perfilCompletoRoutes');
 const perfilRoutes = require('./src/routes/perfilRoutes');
-const viewRoutes = require('./src/routes/viewRoutes'); // ← NUEVO
+const viewRoutes = require('./src/routes/viewRoutes');
+const medicamentoRoutes = require('./src/routes/medicamentoRoute');
 
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'"],
       },
     },
   })
@@ -59,7 +61,7 @@ app.use('/medicos-cabecera', medicoCabeceraRoutes);
 app.use('/historial', historialPacienteRoutes);
 app.use('/perfil-paciente', perfilCompletoRoutes);
 app.use('/perfil', perfilRoutes);
-
+app.use('/medicamento', medicamentoRoutes);
 
 
 // ─── Manejo de rutas no encontradas (404) ─────────────────────────────────────

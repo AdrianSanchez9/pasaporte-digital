@@ -3,12 +3,12 @@ const router = express.Router();
 const { auth } = require('../middleware/auth');
 const {
   renderHome,
-  renderLogin,
-  renderRegistro,
 } = require('../controllers/viewController');
+const {renderPerfil } = require('../controllers/perfilController');
+const { requireRole } = require('../middleware/authorize');
 
 router.get('/', auth, renderHome);
 
-router.get('/registro', renderRegistro);
+router.get('/perfil', auth, requireRole('PACIENTE'), renderPerfil);
 
 module.exports = router;
