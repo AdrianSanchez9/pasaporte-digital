@@ -44,6 +44,7 @@ router.get( '/:id', auth,
   requireRole('MEDICO', 'ENFERMERO', 'PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
   verPaciente
 );
+
 // Actualizar informacion del paciente
 router.put( '/:id', auth,
   requireRole('PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),

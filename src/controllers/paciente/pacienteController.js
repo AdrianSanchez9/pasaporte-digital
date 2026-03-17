@@ -1,43 +1,48 @@
 const pacienteService = require('../../services/pacienteService');
+const perfilService = require('../../services/perfilService');
+
 
 const listarPacientes = async (req, res) => {
-  try {
-    const { search, limit, offset } = req.query;
+  const { search, page = 1 } = req.query;
+  const porPagina = 5;
+  const offset = (page - 1) * porPagina;
 
-    const resultado = await pacienteService.listarPacientes({
-      search,
-      limit: limit ? parseInt(limit) : 10,
-      offset: offset ? parseInt(offset) : 0,
-    });
+  const resultado = await pacienteService.listarPacientes({
+    search,
+    limit: porPagina,
+    offset,
+  });
 
-    res.json({
-      pacientes: resultado.pacientes,
-      total: resultado.total,
-      limit: limit ? parseInt(limit) : 10,
-      offset: offset ? parseInt(offset) : 0,
-    });
-  } catch (error) {
-    console.error('Error al listar pacientes:', error);
-    res.status(500).json({
-      error: 'Error al listar pacientes',
-      mensaje: error.message,
-    });
-  }
+  res.render('pacientes/listado-pacientes', {
+    pacientes: resultado.pacientes,
+    total: resultado.total,
+    totalPaginas: Math.ceil(resultado.total / porPagina),
+    paginaActual: parseInt(page),
+    porPagina,
+    searchQuery: search || '',
+  });
 };
 
 const verPaciente = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const paciente = await pacienteService.buscarPacientePorId(id);
+    const data = await perfilService.obtenerPerfilCompleto(id);
 
-    if (!paciente) {
+    if (!data) {
       return res.status(404).json({
         error: 'Paciente no encontrado',
       });
     }
 
-    res.json({ paciente });
+    res.render('pacientes/vistaPasaporte', {
+          usuarioPaciente: data.usuario,
+          paciente: data.paciente,
+          historial: data.paciente.historial,
+          cuidadoPersonal: data.paciente.cuidadoPersonal,
+          perfilComunicacion: data.paciente.perfilComunicacion,
+          emociones: data.paciente.emociones
+        });
   } catch (error) {
     console.error('Error al obtener paciente:', error);
     res.status(500).json({
