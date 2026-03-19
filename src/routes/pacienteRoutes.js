@@ -18,7 +18,8 @@ const {
   actualizarMiMedicoCabecera,
   crearMiContacto,
   actualizarMiContacto,
-  eliminarMiContacto
+  eliminarMiContacto,
+  verQRPaciente
 } = require('../controllers/paciente/pacienteController');
 
 // Listar todos los pacientes
@@ -40,6 +41,11 @@ router.put('/mis-contactos/:contactoId', auth, requireRole('PACIENTE'), actualiz
 
 router.delete('/mis-contactos/:contactoId', auth, requireRole('PACIENTE'), eliminarMiContacto);
 
+router.get('/qr-paciente',
+  auth,
+  requireRole('PACIENTE', 'ACOMPAÑANTE'),
+  verQRPaciente
+);
 
 // Ver paciente especifico
 router.get( '/:id', auth,

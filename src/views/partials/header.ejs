@@ -14,7 +14,7 @@
         <% if (locals.user && locals.user.rolNombre === 'PACIENTE') { %>
           <a href="/perfil" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi Perfil</a>
           <a href="/historial" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Historial</a>
-          <a href="/qr" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi QR</a>
+          <a href="/pacientes/qr-paciente" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi QR</a>
         <% } %>
 
         <% if (locals.user && (locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>

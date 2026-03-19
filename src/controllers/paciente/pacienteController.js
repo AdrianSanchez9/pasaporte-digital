@@ -1,6 +1,6 @@
 const pacienteService = require('../../services/pacienteService');
 const perfilService = require('../../services/perfilService');
-
+const qrcode = require('qrcode');
 
 const listarPacientes = async (req, res) => {
   const { search, page = 1 } = req.query;
@@ -233,6 +233,42 @@ const eliminarMiContacto = async (req, res) => {
   }
 };
 
+const verQRPaciente = async (req, res) => {
+  try {
+    const id  = req.user.id;
+
+    console.log ("ID PACIENTE " , id)
+
+    const data = await pacienteService.buscarPacientePorId(id);
+        if (!data) {
+          return res.status(404).send('Paciente no encontrado');
+    }
+
+    console.log ("data" , data)
+
+    const urlPasaporte = `${req.protocol}://${req.get('host')}/perfil/${id}/perfil-paciente/`;
+
+    const qrImage = await qrcode.toDataURL(urlPasaporte, {
+      width: 400,
+      margin: 2,
+      color: {
+        dark: '#0f172a',
+        light: '#ffffff'
+      }
+    });
+
+
+    res.render('pacientes/qr-paciente', {
+      usuarioPaciente: data,
+      qrImage: qrImage
+    });
+
+  } catch (error) {
+    console.error('Error al generar QR:', error);
+    res.status(500).send('Error interno al generar el código QR');
+  }
+};
+
 
 module.exports = {
   listarPacientes,
@@ -246,4 +282,5 @@ module.exports = {
   crearMiContacto,
   actualizarMiContacto,
   eliminarMiContacto,
+  verQRPaciente
 };
