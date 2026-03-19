@@ -30,6 +30,10 @@
         <% if (locals.user && (locals.user.rolNombre === 'ADMIN'|| locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
           <a href="/pacientes" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Listado pacientes</a>
         <% } %>
+
+        <% if (locals.user && locals.user.rolNombre === 'ACOMPAÑANTE') { %>
+          <a href="/perfil/paciente-asociado" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Perfil Paciente asociado</a>
+        <% } %>
       </nav>
 
       <div class="flex items-center space-x-6">

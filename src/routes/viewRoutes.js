@@ -9,6 +9,7 @@ const { requireRole } = require('../middleware/authorize');
 
 router.get('/', auth, renderHome);
 
-router.get('/perfil', auth, requireRole('PACIENTE'), renderPerfil);
+router.get('/perfil', auth, requireRole('PACIENTE' , 'ACOMPAÑANTE'), renderPerfil);
+
 
 module.exports = router;

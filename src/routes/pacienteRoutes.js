@@ -35,7 +35,9 @@ router.put('/mi-contacto', auth, requireRole('PACIENTE'),
   actualizarMiMedicoCabecera
 );
 router.post('/mis-contactos', auth, requireRole('PACIENTE'), crearMiContacto);
+
 router.put('/mis-contactos/:contactoId', auth, requireRole('PACIENTE'), actualizarMiContacto);
+
 router.delete('/mis-contactos/:contactoId', auth, requireRole('PACIENTE'), eliminarMiContacto);
 
 

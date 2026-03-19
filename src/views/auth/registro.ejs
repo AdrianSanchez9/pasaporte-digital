@@ -14,6 +14,7 @@
 
     <form action="/auth/registro" method="POST" class="space-y-6">
 
+      <!-- Grid nombre + apellido -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="nombre" class="block text-sm font-medium text-slate-700 mb-2">Nombre</label>
@@ -22,7 +23,6 @@
             class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all"
             placeholder="Ej: Juan">
         </div>
-
         <div>
           <label for="apellido" class="block text-sm font-medium text-slate-700 mb-2">Apellido</label>
           <input type="text" id="apellido" name="apellido" required
@@ -30,117 +30,164 @@
             class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all"
             placeholder="Ej: Pérez">
         </div>
+      </div>
+      <!-- Fin grid -->
 
-        <div class="md:col-span-2">
-          <label for="rolNombre" class="block text-sm font-medium text-slate-700 mb-2">Rol del Usuario</label>
-          <select id="rolNombre" name="rolNombre" required
-            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all cursor-pointer">
-            <option value="" disabled selected>Selecciona un rol</option>
-            <option value="PACIENTE">Paciente</option>
-            <option value="MEDICO">Médico</option>
-            <option value="ACOMPANANTE">Acompañante</option>
-            <option value="ADMIN">Administrador</option>
-            <option value="USUARIO_EXTERNO">Usuario externo</option>
-          </select>
-        </div>
+      <!-- Rol -->
+      <div>
+        <label for="rolNombre" class="block text-sm font-medium text-slate-700 mb-2">Rol del Usuario</label>
+        <select id="rolNombre" name="rolNombre" required
+          class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all cursor-pointer">
+          <option value="" disabled selected>Selecciona un rol</option>
+          <option value="PACIENTE">Paciente</option>
+          <option value="MEDICO">Médico</option>
+          <option value="ACOMPANANTE">Acompañante</option>
+          <option value="ADMIN">Administrador</option>
+          <option value="USUARIO_EXTERNO">Usuario externo</option>
+        </select>
+      </div>
 
-        <div id="campo-especialidad" style="display:none">
-          <label for="especialidad" class="block text-sm font-medium text-slate-700 mb-2">Especialidad Médica</label>
-          <input type="text" id="especialidad" name="especialidad"
-            value="<%= locals.formData ? locals.formData.especialidad : '' %>"
-            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all"
-            placeholder="Ej: Cardiología, Pediatría...">
-        </div>
+      <!-- Campo especialidad (solo MEDICO) -->
+      <div id="campo-especialidad" style="display:none">
+        <label for="especialidad" class="block text-sm font-medium text-slate-700 mb-2">Especialidad Médica</label>
+        <input type="text" id="especialidad" name="especialidad"
+          value="<%= locals.formData ? locals.formData.especialidad : '' %>"
+          class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all"
+          placeholder="Ej: Cardiología, Pediatría...">
+      </div>
 
-        <div id="campo-paciente" style="display:none">
-          <label for="pacienteInput" class="block text-sm font-medium text-slate-700 mb-2">Asignar Paciente</label>
-          <input list="pacientesList" id="pacienteInput" name="pacienteAsignado"
-            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all"
-            placeholder="Escribe para buscar por nombre o apellido...">
-          <datalist id="pacientesList">
-            <% if (locals.pacientes) { %>
-              <% pacientes.forEach(p => { %>
-                <option value="<%= p.nombre %> <%= p.apellido %>">
-              <% }) %>
-            <% } %>
-          </datalist>
+      <!-- Campo paciente (solo ACOMPANANTE) -->
+      <div id="campo-paciente" style="display:none">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Asignar Paciente</label>
+        <div class="relative">
+          <input type="text" id="pacienteBusqueda"
+            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 outline-none transition-all"
+            placeholder="Escribí para buscar paciente..."
+            autocomplete="off">
+          <div id="pacienteDropdown"
+            class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-2xl shadow-lg max-h-52 overflow-y-auto">
+          </div>
         </div>
+        <input type="hidden" id="pacienteId" name="pacienteId">
+        <p id="pacienteSeleccionado" class="text-xs text-emerald-600 mt-1.5 hidden"></p>
       </div>
 
       <hr class="border-slate-100">
 
-      <div class="space-y-6">
-        <div>
-          <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Correo Electrónico</label>
-          <input type="email" id="email" name="email" required
-            value="<%= locals.formData ? locals.formData.email : '' %>"
-            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all"
-            placeholder="ejemplo@correo.com">
-        </div>
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Correo Electrónico</label>
+        <input type="email" id="email" name="email" required
+          value="<%= locals.formData ? locals.formData.email : '' %>"
+          class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all"
+          placeholder="ejemplo@correo.com">
+      </div>
 
-        <div>
-          <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
-          <div class="relative">
-            <input type="password" id="password" name="password" required
-              class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all pr-12"
-              placeholder="Mínimo 8 caracteres">
-            <button type="button" id="togglePassword"
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
-              <svg id="iconoOjo" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-            </button>
-          </div>
+      <!-- Contraseña -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
+        <div class="relative">
+          <input type="password" id="password" name="password" required
+            class="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition-all pr-12"
+            placeholder="Mínimo 8 caracteres">
+          <button type="button" id="togglePassword"
+            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+            <svg id="iconoOjo" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
         </div>
       </div>
 
       <button type="submit"
-        class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-4 rounded-2xl transition-all shadow-md active:scale-[0.98] mt-4">
+        class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-4 rounded-2xl transition-all shadow-md active:scale-[0.98]">
         Finalizar Registro
       </button>
+
     </form>
   </div>
+
+  <!-- Modal éxito -->
   <div id="modalExito" class="fixed inset-0 z-50 flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
-
-    <div class="relative bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-sm text-center animate-in fade-in zoom-in duration-300">
+    <div class="relative bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-sm text-center">
       <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full mb-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
       </div>
-
       <h3 class="text-xl font-bold text-slate-800 mb-2">¡Usuario Creado!</h3>
       <p class="text-slate-500 text-sm mb-6">El registro se completó con éxito. Puedes continuar cargando más usuarios.</p>
-
       <button id="btnCerrarModal"
         class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-3 rounded-xl transition-all shadow-sm active:scale-95">
         Entendido
       </button>
     </div>
   </div>
+
 </div>
 
 <script>
+const pacientes = <%- JSON.stringify(locals.pacientes || []) %>;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('modalExito');
+const inputBusqueda = document.getElementById('pacienteBusqueda');
+const dropdown = document.getElementById('pacienteDropdown');
+const inputOculto = document.getElementById('pacienteId');
+const textoSeleccionado = document.getElementById('pacienteSeleccionado');
 
-    if (new URLSearchParams(window.location.search).get('success') === 'true') {
-      modal.classList.remove('hidden');
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
+inputBusqueda.addEventListener('input', function() {
+  const query = this.value.toLowerCase().trim();
+  dropdown.innerHTML = '';
 
-    document.getElementById('btnCerrarModal')?.addEventListener('click', () => {
-      modal.classList.add('hidden');
+  if (!query) {
+    dropdown.classList.add('hidden');
+    return;
+  }
+
+  const resultados = pacientes.filter(p =>
+    `${p.user.nombre} ${p.user.apellido}`.toLowerCase().includes(query)
+  );
+
+  if (resultados.length === 0) {
+    dropdown.innerHTML = '<p class="px-4 py-3 text-sm text-slate-400">Sin resultados</p>';
+    dropdown.classList.remove('hidden');
+    return;
+  }
+
+  resultados.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors';
+    item.textContent = `${p.user.nombre} ${p.user.apellido}`;
+    item.addEventListener('click', () => {
+      inputBusqueda.value = `${p.user.nombre} ${p.user.apellido}`;
+      inputOculto.value = p.userId;
+      textoSeleccionado.textContent = `✓ ${p.user.nombre} ${p.user.apellido} seleccionado`;
+      textoSeleccionado.classList.remove('hidden');
+      dropdown.classList.add('hidden');
     });
+    dropdown.appendChild(item);
   });
 
+  dropdown.classList.remove('hidden');
+});
 
+document.addEventListener('click', (e) => {
+  if (!inputBusqueda.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.classList.add('hidden');
+  }
+});
 
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('modalExito');
+  if (new URLSearchParams(window.location.search).get('success') === 'true') {
+    modal.classList.remove('hidden');
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+  document.getElementById('btnCerrarModal')?.addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+});
 
 document.getElementById('rolNombre').addEventListener('change', function() {
   const rol = this.value;
@@ -165,11 +212,9 @@ document.getElementById('togglePassword').addEventListener('click', function() {
   input.type = esPassword ? 'text' : 'password';
 
   icono.innerHTML = esPassword
-    ?
-      `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+    ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.071-3.293M6.7 6.7A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.97 9.97 0 01-1.337 2.463M6.7 6.7L3 3m3.7 3.7l10.6 10.6M3 3l18 18" />`
-    :
-      `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+    : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;

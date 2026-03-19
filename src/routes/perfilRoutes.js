@@ -4,14 +4,21 @@ const { auth } = require('../middleware/auth');
 const { requireRole } = require('../middleware/authorize');
 const {
   obtenerMiPerfil,
-  verPerfilCompletoPaciente
+  verPerfilCompletoPaciente,
+  renderPerfilPaciente
 } = require('../controllers/perfilController');
-
 
 router.get(
   '/',
   auth,
   obtenerMiPerfil
+);
+
+router.get(
+  '/paciente-asociado',
+  auth,
+  requireRole( 'ACOMPAÑANTE'),
+  renderPerfilPaciente
 );
 
 router.get(

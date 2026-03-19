@@ -1,5 +1,6 @@
 const { z } = require('zod');
 const authService = require('../../services/authService');
+const pacienteService = require('../../services/pacienteService');
 const {
   verificarEmailDisponible,
   verificarRolExiste,
@@ -212,11 +213,14 @@ const renderLoginForm = (req, res) => {
   });
 };
 
-const renderRegistroForm = (req, res) => {
+const renderRegistroForm = async  (req, res) => {
+  const pacientes = await pacienteService.mostrarPacientes({})
+  console.log ('Pacientes ' , pacientes)
   res.render('auth/registro', {
     title: 'Registrarse',
     error: null,
-    formData: {}, // Datos vacíos al principio
+    formData: {},
+    pacientes
   });
 };
 

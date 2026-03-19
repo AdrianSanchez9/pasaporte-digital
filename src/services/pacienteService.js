@@ -47,6 +47,26 @@ const listarPacientes = async ({ search, limit = 10, offset = 0 }) => {
   return { pacientes, total };
 };
 
+const mostrarPacientes = async ({ search }) => {
+  return await prisma.paciente.findMany({
+    where: { user: { activo: true } },
+    select: {
+      userId: true,
+      user: {
+        select: {
+          nombre: true,
+          apellido: true,
+        }
+      }
+    },
+    orderBy: {
+      user: { nombre: 'asc' }
+    }
+  });
+};
+
+
+
 const buscarPacientePorId = async (userId) => {
   return await prisma.paciente.findUnique({
     where: { userId },
@@ -191,5 +211,6 @@ module.exports = {
   actualizarMiMedicoCabecera,
   crearContacto,
   actualizarContacto,
-  eliminarContacto
+  eliminarContacto,
+  mostrarPacientes
 };

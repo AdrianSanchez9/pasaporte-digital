@@ -27,7 +27,7 @@ const {
 } = require('../controllers/viewController');
 
 
-router.get('/registro', auth ,requireRole('ADMIN'), renderRegistro);
+router.get('/registro', auth ,requireRole('ADMIN'), renderRegistroForm);
 
 router.post('/registro', auth , requireRole('ADMIN'),registroNuevo);
 

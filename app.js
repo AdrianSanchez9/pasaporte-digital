@@ -61,7 +61,7 @@ app.use('/medicos-cabecera', medicoCabeceraRoutes);
 app.use('/historial', historialPacienteRoutes);
 app.use('/perfil-paciente', perfilCompletoRoutes);
 app.use('/perfil', perfilRoutes);
-app.use('/medicamento', medicamentoRoutes);
+app.use('/medicamentos', medicamentoRoutes);
 
 
 // ─── Manejo de rutas no encontradas (404) ─────────────────────────────────────
