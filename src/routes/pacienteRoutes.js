@@ -19,8 +19,12 @@ const {
   crearMiContacto,
   actualizarMiContacto,
   eliminarMiContacto,
-  verQRPaciente
+  verQRPaciente,
+  mostrarEscaner
 } = require('../controllers/paciente/pacienteController');
+
+// Ojo: ponela ARRIBA de la ruta /:id para que Express no confunda la palabra "escanear" con un ID
+router.get('/escanear', auth, requireRole('MEDICO', 'ADMIN', 'ENFERMERO'), mostrarEscaner);
 
 // Listar todos los pacientes
 router.get('/', auth,

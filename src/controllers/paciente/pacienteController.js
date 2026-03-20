@@ -246,7 +246,7 @@ const verQRPaciente = async (req, res) => {
 
     console.log ("data" , data)
 
-    const urlPasaporte = `${req.protocol}://${req.get('host')}/perfil/${id}/perfil-paciente/`;
+    const urlPasaporte = `${req.protocol}://${req.get('host')}/pacientes/${id}`;
 
     const qrImage = await qrcode.toDataURL(urlPasaporte, {
       width: 400,
@@ -269,6 +269,10 @@ const verQRPaciente = async (req, res) => {
   }
 };
 
+const mostrarEscaner = (req, res) => {
+  res.render('pacientes/escaner');
+};
+
 
 module.exports = {
   listarPacientes,
@@ -282,5 +286,6 @@ module.exports = {
   crearMiContacto,
   actualizarMiContacto,
   eliminarMiContacto,
-  verQRPaciente
+  verQRPaciente,
+  mostrarEscaner
 };

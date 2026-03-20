@@ -1,0 +1,80 @@
+<div class="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4">
+  <div class="max-w-xl w-full">
+
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Escanear Paciente</h1>
+      <p class="text-slate-500 mt-2">Acercá el código QR del paciente a la cámara web para abrir su Pasaporte Médico.</p>
+    </div>
+
+    <div id="mensaje-error" class="hidden mb-4 p-4 bg-red-50 text-red-600 border border-red-200 rounded-xl text-center font-bold text-sm shadow-sm transition-all">
+          QR no reconocido. Escaneá un QR válido de la ONG.
+    </div>
+
+    <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200">
+
+      <div id="lector-qr" class="w-full rounded-2xl overflow-hidden border-2 border-slate-100"></div>
+
+      <div class="mt-6 flex justify-center">
+        <a href="/pacientes" class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
+          Volver al directorio manual
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+<script>
+
+  let mostrandoError =false;
+  let escaneoCompletado = false;
+
+  function alEscanearConExito(textoDecodificado) {
+    if (escaneoCompletado) return;
+
+    const urlLimpia = textoDecodificado.trim();
+
+    const dominioActual = window.location.origin;
+
+    const dominioValido = dominioActual + '/pacientes';
+
+    if(!urlLimpia.startsWith(dominioValido)){
+
+      if(!mostrandoError){
+          mostrandoError = true;
+          const divError = document.getElementById('mensaje-error');
+          divError.classList.remove('hidden');
+
+          setTimeout(() => {
+          divError.classList.add('hidden');
+                mostrandoError = false;
+          }, 3000);
+      }
+      return;
+    }
+    escaneoCompletado = true;
+    console.log("¡QR Válido! Redirigiendo a:", urlLimpia);
+    html5QrcodeScanner.clear().then(() => {
+          window.location.href = urlLimpia;
+    }).catch(error => {
+      window.location.href = urlLimpia;
+    });
+  }
+
+  function alFallarEscaneo(error) {}
+
+
+  let html5QrcodeScanner = new Html5QrcodeScanner(
+    "lector-qr",
+    {
+      fps: 10,
+      qrbox: { width: 250, height: 250 },
+      rememberLastUsedCamera: true
+    },
+    false
+  );
+
+  html5QrcodeScanner.render(alEscanearConExito, alFallarEscaneo);
+</script>
