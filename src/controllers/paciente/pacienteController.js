@@ -1,6 +1,7 @@
 const pacienteService = require('../../services/pacienteService');
 const perfilService = require('../../services/perfilService');
 const qrcode = require('qrcode');
+const { eliminarArchivoBd } = require('../../services/historialPaciente');
 
 const listarPacientes = async (req, res) => {
   const { search, page = 1 } = req.query;
@@ -273,6 +274,102 @@ const mostrarEscaner = (req, res) => {
   res.render('pacientes/escaner');
 };
 
+const mostrarFormularioArchivo = (req, res) => {
+  res.render('archivos/cargar-archivos', {
+    title: 'Carga de archivos',
+    error: null,
+    user: null,
+  });
+}
+
+
+// Pasar la logica de BD a service
+const subirArchivo = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+    const { nombreOriginal } = req.body;
+
+    if (!req.file) {
+      return res.status(400).send('No se detectó ningún archivo.');
+    }
+
+    const historial = await prisma.historialPaciente.findUnique({
+      where: { pacienteId: pacienteId }
+    });
+
+    if (!historial) {
+      return res.status(404).send('Error: El paciente no tiene un historial creado.');
+    }
+
+    const urlDescarga = req.file.secure_url;
+    const uuidGenerado = req.file.public_id;
+
+    await prisma.archivoAdjunto.create({
+      data: {
+        nombreArchivo: nombreOriginal,
+        uuid: uuidGenerado,
+        url: urlDescarga,
+        historialId: historial.id
+      }
+    });
+
+    res.redirect(`/`);
+
+  } catch (error) {
+    console.error('Error al subir archivo:', error);
+    res.status(500).send('Hubo un problema al guardar el archivo.');
+  }
+};
+
+
+
+const listarArchivosHistorial = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+
+    const paciente = await prisma.paciente.findUnique({
+      where: { userId: pacienteId },
+      include: {
+        historial: {
+          include: {
+            archivosAdjuntos: {
+              orderBy: { fechaCarga: 'desc' }
+            }
+          }
+        }
+      }
+    });
+
+    if (!paciente) {
+      return res.status(404).send('Paciente no encontrado');
+    }
+
+    console.log ("Paciente datos" , paciente.historial.archivosAdjuntos)
+
+    res.render('pacientes/historial-archivos', {
+      paciente,
+      title: `Historial de Archivos - ${paciente.nombre}`
+    });
+
+  } catch (error) {
+    console.error('Error al listar archivos:', error);
+    res.status(500).send('Error al cargar el historial de archivos');
+  }
+};
+
+
+const eliminarArchivo = async (req, res) => {
+  try {
+    const archivoId = req.params.archivoId;
+    const pacienteId = await eliminarArchivoBd(archivoId);
+    res.redirect(`/pacientes/historial-archivos`);
+
+  } catch (error) {
+    console.error('Error en el controlador al eliminar archivo:', error);
+    res.status(500).send('Hubo un problema al intentar eliminar el archivo permanentemente.');
+  }
+};
+
 
 module.exports = {
   listarPacientes,
@@ -287,5 +384,9 @@ module.exports = {
   actualizarMiContacto,
   eliminarMiContacto,
   verQRPaciente,
-  mostrarEscaner
+  mostrarEscaner,
+  mostrarFormularioArchivo,
+  subirArchivo,
+  listarArchivosHistorial,
+  eliminarArchivo
 };

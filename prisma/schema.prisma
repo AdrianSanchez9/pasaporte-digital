@@ -223,10 +223,24 @@ model HistorialPaciente {
 
   paciente              Paciente                   @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
   medicamentos          InformacionMedicamento[]
+  archivosAdjuntos    ArchivoAdjunto[]
 
   @@index([pacienteId])
 }
 
+
+model ArchivoAdjunto {
+  id                  String            @id @default(uuid()) @map("UniqueID")
+  nombreArchivo       String            @map("nombre_archivo")
+  uuid                String            @map("UUID")
+  url                 String            @map("url")
+  fechaCarga          DateTime          @default(now()) @map("fecha_carga")
+
+  historialId         String               @map("historial_paciente")
+  historial           HistorialPaciente @relation(fields: [historialId], references: [id], onDelete: Cascade)
+
+  @@map("Archivos_adjuntos")
+}
 
 
 model CuidadoPersonal {

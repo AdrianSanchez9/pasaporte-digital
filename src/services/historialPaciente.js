@@ -1,5 +1,6 @@
 const prisma = require('../config/database');
 const { buscarMedicamentoId } = require('./medicamentoService');
+const cloudinary = require('cloudinary');
 
 const obtenerHistorial = async (pacienteId) => {
 
@@ -124,10 +125,51 @@ const eliminarMedicamento = async (informacionId, pacienteId) => {
   });
 };
 
+
+const eliminarArchivoNube = async (uuid) => {
+  try {
+    const resultado = await cloudinary.uploader.destroy(uuid);
+
+    if (resultado.result !== 'ok' && resultado.result !== 'not found') {
+      throw new Error('Cloudinary no pudo procesar la eliminación');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error interno de Cloudinary:', error);
+    throw new Error('Fallo la comunicación con la nube al eliminar');
+  }
+};
+
+const eliminarArchivoBd = async (archivoId) => {
+  const archivo = await prisma.archivoAdjunto.findUnique({
+    where: { id: archivoId },
+    include: { historial: true }
+  });
+
+  if (!archivo) {
+    throw new Error('El archivo no existe en la base de datos');
+  }
+
+  const pacienteId = archivo.historial.pacienteId;
+
+
+  await prisma.$transaction(async (tx) => {
+    await tx.archivoAdjunto.delete({
+      where: { id: archivoId }
+    });
+    await eliminarArchivoNube(archivo.uuid);
+  });
+
+  return pacienteId;
+};
+
 module.exports = {
   obtenerHistorial,
   actualizarHistorial,
   agregarMedicamento,
   actualizarMedicamento,
   eliminarMedicamento,
+  eliminarArchivoBd,
+  eliminarArchivoNube,
 };

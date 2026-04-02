@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../config/cloudinary');
 const { auth } = require('../middleware/auth');
 const { requireRole } = require('../middleware/authorize');
 const { validateSchema } = require('../middleware/validateSchema');
@@ -8,6 +9,7 @@ const {
   contactoPacienteSchema,
 } = require('../schemas/pacienteSchemas');
 const {
+  eliminarArchivo,
   listarPacientes,
   verPaciente,
   actualizarPerfil,
@@ -20,13 +22,14 @@ const {
   actualizarMiContacto,
   eliminarMiContacto,
   verQRPaciente,
-  mostrarEscaner
+  mostrarEscaner,
+  mostrarFormularioArchivo,
+  subirArchivo,
+  listarArchivosHistorial
 } = require('../controllers/paciente/pacienteController');
 
-// Ojo: ponela ARRIBA de la ruta /:id para que Express no confunda la palabra "escanear" con un ID
 router.get('/escanear', auth, requireRole('MEDICO', 'ADMIN', 'ENFERMERO'), mostrarEscaner);
 
-// Listar todos los pacientes
 router.get('/', auth,
   requireRole('MEDICO', 'ENFERMERO', 'ADMIN'),
   listarPacientes
@@ -50,8 +53,19 @@ router.get('/qr-paciente',
   requireRole('PACIENTE', 'ACOMPAÑANTE'),
   verQRPaciente
 );
+router.get('/historial-archivos', auth , requireRole('PACIENTE') , listarArchivosHistorial);
 
-// Ver paciente especifico
+// Ruta para la carga de archivos del paciente
+router.get('/archivos', auth, mostrarFormularioArchivo);
+router.post('/archivos', auth, upload.single('archivoPdf'), subirArchivo);
+
+router.post('/archivos/:archivoId/eliminar',
+  auth,
+  requireRole('PACIENTE'),
+  eliminarArchivo
+);
+
+
 router.get( '/:id', auth,
   requireRole('MEDICO', 'ENFERMERO', 'PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
   verPaciente

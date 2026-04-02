@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "seeds" : "node prisma/seedMedicamentos.js",
+    "seeds": "node prisma/seedMedicamentos.js",
     "clean": "node cleanDb.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tailwind": "npx tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css --watch"
@@ -18,6 +18,7 @@
   "dependencies": {
     "@prisma/client": "5.22.0",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
@@ -29,8 +30,11 @@
     "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
+    "multer": "^2.1.1",
+    "multer-storage-cloudinary": "^2.2.1",
     "prisma": "5.22.0",
     "qrcode": "^1.5.4",
+    "uuid": "^13.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
