@@ -1,13 +1,32 @@
-<div class="flex items-center justify-between mb-6 mt-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 mt-4 gap-4">
   <h2 class="text-xl font-bold text-slate-800 tracking-tight">Historial de Archivos</h2>
 
-  <a href="/pacientes<%= paciente.id %>/archivos" class="px-5 py-2.5 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 transition-all shadow-sm">
+  <a href="/pacientes<%= paciente.id %>/archivos" class="px-5 py-2.5 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 transition-all shadow-sm text-center">
     Subir archivo
   </a>
 </div>
 
-<div class="bg-white border border-slate-200 rounded-2xl shadow-sm min-h-[400px] relative">
+<% if (paciente.historial && paciente.historial.archivosAdjuntos && paciente.historial.archivosAdjuntos.length > 0) { %>
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 mb-4 flex flex-col sm:flex-row gap-4 items-center justify-between">
 
+    <div class="relative w-full sm:w-96">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <input type="text" id="inputBuscador" placeholder="Buscar por nombre..." class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors">
+    </div>
+
+    <div class="flex items-center gap-3 w-full sm:w-auto">
+      <span class="text-sm font-medium text-slate-500 whitespace-nowrap">Ordenar por fecha de carga:</span>
+      <select id="selectOrden" class="block w-full sm:w-auto pl-3 pr-10 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors cursor-pointer">
+        <option value="desc">Más recientes</option>
+        <option value="asc">Más antiguos</option>
+      </select>
+    </div>
+  </div>
+<% } %>
+
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm min-h-[400px] relative">
   <div class="w-full overflow-x-auto rounded-2xl">
     <table class="w-full text-left border-collapse whitespace-nowrap">
 
@@ -20,10 +39,12 @@
         </tr>
       </thead>
 
-      <tbody class="divide-y divide-slate-100">
+      <tbody id="tablaArchivosBody" class="divide-y divide-slate-100">
         <% if (paciente.historial && paciente.historial.archivosAdjuntos && paciente.historial.archivosAdjuntos.length > 0) { %>
           <% paciente.historial.archivosAdjuntos.forEach(archivo => { %>
-            <tr class="hover:bg-slate-50/70 transition-colors">
+            <tr class="hover:bg-slate-50/70 transition-colors fila-archivo"
+                data-nombre="<%= archivo.nombreArchivo.toLowerCase() %>"
+                data-fecha="<%= new Date(archivo.fechaCarga).getTime() %>">
 
               <td class="px-6 py-4">
                 <div class="flex items-center gap-4">
@@ -48,33 +69,35 @@
 
               <td class="px-6 py-4 text-right">
                 <div class="inline-block text-left dropdown-container">
-
                   <button type="button" class="dropdown-btn inline-flex items-center justify-center border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors bg-white shadow-sm focus:outline-none">
                     Opciones
                     <svg class="ml-2 -mr-1 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                   </button>
 
                   <div class="dropdown-menu hidden fixed z-[150] w-48 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
-
-                      <a href="<%= archivo.url %>" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 border-b border-slate-50">
-                            Visualizar archivo
-                        </a>
-
+                    <a href="<%= archivo.url %>" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 border-b border-slate-50">
+                      Visualizar archivo
+                    </a>
                     <a href="<%= archivo.url.replace('/upload/', '/upload/fl_attachment/') %>" class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 border-b border-slate-50">
                       Descargar PDF
                     </a>
-
                     <form action="/pacientes/archivos/<%= archivo.id %>/eliminar" method="POST" onsubmit="return confirm('¿Eliminar este archivo permanentemente?');" class="m-0">
-                        <button type="button" data-id="<%= archivo.id %>" class="btn-abrir-modal-eliminar w-full text-left block px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
-                          Eliminar
-                        </button>
+                      <button type="button" data-id="<%= archivo.id %>" class="btn-abrir-modal-eliminar w-full text-left block px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                        Eliminar
+                      </button>
                     </form>
-
                   </div>
                 </div>
               </td>
             </tr>
           <% }) %>
+
+          <tr id="filaSinResultados" class="hidden">
+            <td colspan="4" class="px-6 py-16 text-center">
+              <span class="text-sm font-medium text-slate-500">No se encontraron archivos con ese nombre.</span>
+            </td>
+          </tr>
+
         <% } else { %>
           <tr>
             <td colspan="4" class="px-6 py-24 text-center">
@@ -92,37 +115,81 @@
 </div>
 
 <div id="modalEliminar" class="hidden fixed inset-0 z-[200] flex items-center justify-center">
-
   <div id="backdropModal" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity cursor-pointer"></div>
-
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 relative z-10 p-6 transform transition-all">
-
     <div class="mb-6 text-center">
       <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-2">¿Desea eliminar el archivo?</h3>
-      <p class="text-sm text-slate-500 leading-relaxed">
-          El documento será eliminado permanentemente.
-      </p>
+      <p class="text-sm text-slate-500 leading-relaxed">El documento será eliminado permanentemente.</p>
     </div>
-
     <div class="flex gap-3">
-      <button type="button" id="btnCancelarModal" class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors focus:outline-none">
-        Cancelar
-      </button>
-
+      <button type="button" id="btnCancelarModal" class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors focus:outline-none">Cancelar</button>
       <form id="formEliminar" method="POST" class="flex-1 m-0">
-        <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm focus:outline-none">
-            Aceptar
-        </button>
+        <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm focus:outline-none">Aceptar</button>
       </form>
     </div>
-
   </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
 
+    const inputBuscador = document.getElementById('inputBuscador');
+    const selectOrden = document.getElementById('selectOrden');
+    const tablaBody = document.getElementById('tablaArchivosBody');
+    const filaSinResultados = document.getElementById('filaSinResultados');
+
+    if (inputBuscador && selectOrden && tablaBody) {
+      const filasOriginales = Array.from(tablaBody.querySelectorAll('.fila-archivo'));
+
+      const aplicarFiltros = () => {
+        const busqueda = inputBuscador.value.toLowerCase().trim();
+        const orden = selectOrden.value;
+        let filasVisibles = 0;
+
+
+        const filasFiltradas = filasOriginales.filter(fila => {
+          const nombreArchivo = fila.getAttribute('data-nombre');
+          if (nombreArchivo.includes(busqueda)) {
+            fila.style.display = '';
+            filasVisibles++;
+            return true;
+          } else {
+            fila.style.display = 'none';
+            return false;
+          }
+        });
+
+        filasFiltradas.sort((a, b) => {
+          const fechaA = parseInt(a.getAttribute('data-fecha'));
+          const fechaB = parseInt(b.getAttribute('data-fecha'));
+
+          if (orden === 'desc') {
+            return fechaB - fechaA;
+          } else {
+            return fechaA - fechaB;
+          }
+        });
+
+        filasFiltradas.forEach(fila => tablaBody.appendChild(fila));
+
+        if (filaSinResultados) {
+          tablaBody.appendChild(filaSinResultados);
+          if (filasVisibles === 0 && busqueda !== '') {
+            filaSinResultados.classList.remove('hidden');
+          } else {
+            filaSinResultados.classList.add('hidden');
+          }
+        }
+      };
+
+      inputBuscador.addEventListener('input', aplicarFiltros);
+      selectOrden.addEventListener('change', aplicarFiltros);
+
+      aplicarFiltros();
+    }
+
+
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
     dropdownBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -134,14 +201,13 @@
 
         if (isHidden) {
           menu.classList.remove('hidden');
-
           const rect = btn.getBoundingClientRect();
-
           menu.style.top = `${rect.bottom + 4}px`;
           menu.style.left = `${rect.right - menu.offsetWidth}px`;
         }
       });
     });
+
     document.addEventListener('click', () => {
       document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.classList.add('hidden');
