@@ -1,7 +1,6 @@
 const prisma = require('../config/database');
 
 const obtenerPerfilCompleto = async (userId) => {
-  // 1. Buscar el usuario base
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: {
@@ -13,7 +12,6 @@ const obtenerPerfilCompleto = async (userId) => {
     throw new Error('Usuario no encontrado');
   }
 
-  // 2. Estructura base del perfil
   let perfilCompleto = {
     usuario: {
       id: user.id,
@@ -26,20 +24,16 @@ const obtenerPerfilCompleto = async (userId) => {
     },
   };
 
-  // 3. Si es PACIENTE, traer toda su información médica
   if (user.rol.nombre === 'PACIENTE') {
     const paciente = await prisma.paciente.findUnique({
       where: { userId },
       include: {
-        // Contactos de emergencia
         contactos: {
           orderBy: { createdAt: 'desc' },
         },
 
-        // Médico de cabecera
         medicoCabecera: true,
 
-        // Historial médico con medicamentos
         historial: {
           include: {
             medicamentos: {
@@ -48,24 +42,22 @@ const obtenerPerfilCompleto = async (userId) => {
               },
               orderBy: { createdAt: 'desc' },
             },
+            archivosAdjuntos: {
+              orderBy: { fechaCarga: 'desc' }
+            }
           },
         },
 
-        // Cuidado personal
         cuidadoPersonal: true,
 
-        // Perfil de comunicación
         perfilComunicacion: true,
 
-        // Emociones
         emociones: true,
 
-        // Gustos y preferencias
         gustos: {
           orderBy: { createdAt: 'desc' },
         },
 
-        // Acompañantes asignados
         acompanantes: {
           include: {
             user: {

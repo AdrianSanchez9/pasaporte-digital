@@ -13,7 +13,7 @@
 
         <% if (locals.user && locals.user.rolNombre === 'PACIENTE') { %>
           <a href="/perfil" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi Perfil</a>
-          <a href="/pacientes/historial-archivos" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Historial</a>
+          <a href="/pacientes/historial-archivos" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Documentos</a>
           <a href="/pacientes/qr-paciente" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi QR</a>
         <% } %>
 
@@ -36,7 +36,7 @@
         <% } %>
       </nav>
 
-      <div class="flex items-center space-x-6">
+      <div class="flex items-center space-x-4 md:space-x-6">
         <% if (locals.user && locals.user.nombre) { %>
           <div class="text-sm text-slate-600 hidden sm:block text-right">
             <span class="font-medium text-slate-800 block"><%= locals.user.nombre %> <%= locals.user.apellido %></span>
@@ -45,23 +45,120 @@
         <% } else { %>
           <a href="/auth/login" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">Iniciar Sesión</a>
         <% } %>
+
+        <button id="btnMenuMovil" class="md:hidden text-slate-500 hover:text-slate-700 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
       </div>
 
     </div>
   </div>
+
+  <div id="menuMovil" class="hidden md:hidden border-t border-slate-100 bg-white shadow-lg absolute w-full">
+    <nav class="px-4 pt-2 pb-4 space-y-1">
+      <% if (locals.user) { %>
+        <a href="/" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Inicio</a>
+      <% } %>
+
+      <% if (locals.user && locals.user.rolNombre === 'PACIENTE') { %>
+        <a href="/perfil" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi Perfil</a>
+        <a href="/pacientes/historial-archivos" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Documentos</a>
+        <a href="/pacientes/qr-paciente" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi QR</a>
+      <% } %>
+
+      <% if (locals.user && (locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
+        <a href="/pacientes" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Pacientes</a>
+        <a href="/escanear" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Escanear QR</a>
+      <% } %>
+
+      <% if (locals.user && locals.user.rolNombre === 'ADMIN') { %>
+        <a href="/admin/usuarios" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Usuarios</a>
+        <a href="/auth/registro" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Registrar usuarios</a>
+      <% } %>
+
+      <% if (locals.user && (locals.user.rolNombre === 'ADMIN'|| locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
+        <a href="/pacientes" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Listado pacientes</a>
+      <% } %>
+
+      <% if (locals.user && locals.user.rolNombre === 'ACOMPAÑANTE') { %>
+        <a href="/perfil/paciente-asociado" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Perfil Paciente asociado</a>
+      <% } %>
+    </nav>
+  </div>
 </header>
 
+
+<div id="modalLogout" class="hidden fixed inset-0 z-[100] flex items-center justify-center">
+  <div id="backdropLogout" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity cursor-pointer"></div>
+
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 relative z-10 p-6 transform transition-all">
+    <div class="mb-6 text-center">
+      <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-2">¿Cerrar sesión?</h3>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="button" id="btnCancelarLogout" class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors focus:outline-none">
+        Cancelar
+      </button>
+      <button type="button" id="btnConfirmarLogout" class="flex-1 px-4 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm focus:outline-none">
+        Salir
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Script para manejar el cierre de sesión
-  document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    if (confirm('¿Cerrar sesión?')) {
-      try {
-        const res = await fetch('/auth/logout', { method: 'POST' });
-        if (res.ok) window.location.href = '/auth/login';
-      } catch (error) {
-        console.error('Error al salir');
-      }
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnMenuMovil = document.getElementById('btnMenuMovil');
+    const menuMovil = document.getElementById('menuMovil');
+
+    if (btnMenuMovil && menuMovil) {
+      btnMenuMovil.addEventListener('click', () => {
+        menuMovil.classList.toggle('hidden');
+      });
+    }
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    const modalLogout = document.getElementById('modalLogout');
+    const btnCancelarLogout = document.getElementById('btnCancelarLogout');
+    const btnConfirmarLogout = document.getElementById('btnConfirmarLogout');
+    const backdropLogout = document.getElementById('backdropLogout');
+
+    const cerrarModalLogout = () => {
+      if (modalLogout) modalLogout.classList.add('hidden');
+    };
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        modalLogout.classList.remove('hidden');
+      });
+    }
+
+    if (btnCancelarLogout) btnCancelarLogout.addEventListener('click', cerrarModalLogout);
+    if (backdropLogout) backdropLogout.addEventListener('click', cerrarModalLogout);
+
+    if (btnConfirmarLogout) {
+      btnConfirmarLogout.addEventListener('click', async () => {
+        try {
+          btnConfirmarLogout.textContent = 'Saliendo...';
+          btnConfirmarLogout.disabled = true;
+
+          const res = await fetch('/auth/logout', { method: 'POST' });
+          if (res.ok) {
+            window.location.href = '/auth/login';
+          } else {
+            btnConfirmarLogout.textContent = 'Salir';
+            btnConfirmarLogout.disabled = false;
+          }
+        } catch (error) {
+          console.error('Error al salir:', error);
+          btnConfirmarLogout.textContent = 'Salir';
+          btnConfirmarLogout.disabled = false;
+        }
+      });
     }
   });
 </script>

@@ -8,8 +8,8 @@
 
 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm min-h-[400px] relative">
 
-  <div class="w-full">
-    <table class="w-full text-left border-collapse">
+  <div class="w-full overflow-x-auto rounded-2xl">
+    <table class="w-full text-left border-collapse whitespace-nowrap">
 
       <thead>
         <tr class="border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -27,10 +27,10 @@
 
               <td class="px-6 py-4">
                 <div class="flex items-center gap-4">
-                  <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold uppercase">
+                  <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold uppercase shrink-0">
                     <%= archivo.url.split('.').pop() %>
                   </div>
-                  <span class="text-sm font-bold text-slate-800"><%= archivo.nombreArchivo %></span>
+                  <span class="text-sm font-bold text-slate-800 truncate max-w-[200px] md:max-w-xs"><%= archivo.nombreArchivo %></span>
                 </div>
               </td>
 
@@ -47,14 +47,14 @@
               </td>
 
               <td class="px-6 py-4 text-right">
-                <div class="relative inline-block text-left dropdown-container">
+                <div class="inline-block text-left dropdown-container">
 
                   <button type="button" class="dropdown-btn inline-flex items-center justify-center border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors bg-white shadow-sm focus:outline-none">
                     Opciones
                     <svg class="ml-2 -mr-1 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                   </button>
 
-                  <div class="dropdown-menu hidden absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
+                  <div class="dropdown-menu hidden fixed z-[150] w-48 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
 
                       <a href="<%= archivo.url %>" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 border-b border-slate-50">
                             Visualizar archivo
@@ -78,7 +78,7 @@
         <% } else { %>
           <tr>
             <td colspan="4" class="px-6 py-24 text-center">
-              <div class="flex flex-col items-center justify-center">
+              <div class="flex flex-col items-center justify-center whitespace-normal">
                 <span class="text-sm font-medium text-slate-500 mb-1">Aún no hay documentos adjuntos.</span>
                 <span class="text-xs text-slate-400">Hacé clic en "Subir archivo" para empezar.</span>
               </div>
@@ -91,8 +91,7 @@
   </div>
 </div>
 
-
-<div id="modalEliminar" class="hidden fixed inset-0 z-[100] flex items-center justify-center">
+<div id="modalEliminar" class="hidden fixed inset-0 z-[200] flex items-center justify-center">
 
   <div id="backdropModal" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity cursor-pointer"></div>
 
@@ -101,7 +100,7 @@
     <div class="mb-6 text-center">
       <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-2">¿Desea eliminar el archivo?</h3>
       <p class="text-sm text-slate-500 leading-relaxed">
-          El documento sera eliminado permanentemente.
+          El documento será eliminado permanentemente.
       </p>
     </div>
 
@@ -128,62 +127,57 @@
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
 
-        // Cierra los otros menús
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-          if (menu !== btn.nextElementSibling) menu.classList.add('hidden');
-        });
-
-        // Alterna el menú actual
         const menu = btn.nextElementSibling;
-        menu.classList.toggle('hidden');
+        const isHidden = menu.classList.contains('hidden');
+
+        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+
+        if (isHidden) {
+          menu.classList.remove('hidden');
+
+          const rect = btn.getBoundingClientRect();
+
+          menu.style.top = `${rect.bottom + 4}px`;
+          menu.style.left = `${rect.right - menu.offsetWidth}px`;
+        }
       });
     });
-
-    // Cierra al hacer clic afuera
     document.addEventListener('click', () => {
       document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.classList.add('hidden');
       });
     });
-  });
 
-  const modalEliminar = document.getElementById('modalEliminar');
-      const formEliminar = document.getElementById('formEliminar');
-      const btnCancelarModal = document.getElementById('btnCancelarModal');
-      const backdropModal = document.getElementById('backdropModal');
-
-      // Agarramos TODOS los botones de eliminar de la tabla
-      const botonesEliminar = document.querySelectorAll('.btn-abrir-modal-eliminar');
-
-      // Le agregamos el evento a cada botón de la tabla
-      botonesEliminar.forEach(boton => {
-        boton.addEventListener('click', (e) => {
-          // Obtenemos el ID que guardamos en el data-id del botón
-          const archivoId = boton.getAttribute('data-id');
-
-          // Actualizamos la ruta del formulario
-          formEliminar.action = `/pacientes/archivos/${archivoId}/eliminar`;
-
-          // Mostramos el modal
-          modalEliminar.classList.remove('hidden');
-
-          // Cerramos el menú de los 3 puntitos para que quede prolijo
-          const menuPadre = boton.closest('.dropdown-menu');
-          if(menuPadre) menuPadre.classList.add('hidden');
-        });
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.add('hidden');
       });
-
-      // Arrow function para ocultar el modal
-      const cerrarModal = () => {
-        modalEliminar.classList.add('hidden');
-        formEliminar.action = ''; // Limpiamos la ruta por seguridad
-      };
-
-      // Cerramos el modal si tocan "Cancelar" o el fondo gris
-      if (btnCancelarModal) btnCancelarModal.addEventListener('click', cerrarModal);
-      if (backdropModal) backdropModal.addEventListener('click', cerrarModal);
+    }, true);
 
 
+    const modalEliminar = document.getElementById('modalEliminar');
+    const formEliminar = document.getElementById('formEliminar');
+    const btnCancelarModal = document.getElementById('btnCancelarModal');
+    const backdropModal = document.getElementById('backdropModal');
+    const botonesEliminar = document.querySelectorAll('.btn-abrir-modal-eliminar');
 
+    botonesEliminar.forEach(boton => {
+      boton.addEventListener('click', (e) => {
+        const archivoId = boton.getAttribute('data-id');
+        formEliminar.action = `/pacientes/archivos/${archivoId}/eliminar`;
+        modalEliminar.classList.remove('hidden');
 
+        const menuPadre = boton.closest('.dropdown-menu');
+        if(menuPadre) menuPadre.classList.add('hidden');
+      });
+    });
+
+    const cerrarModal = () => {
+      modalEliminar.classList.add('hidden');
+      formEliminar.action = '';
+    };
+
+    if (btnCancelarModal) btnCancelarModal.addEventListener('click', cerrarModal);
+    if (backdropModal) backdropModal.addEventListener('click', cerrarModal);
+  });
 </script>
