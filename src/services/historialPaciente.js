@@ -126,6 +126,39 @@ const eliminarMedicamento = async (informacionId, pacienteId) => {
 };
 
 
+const crearNuevoArchivo = async (nombreArchivo, uuid, url, historialId) => {
+  return await prisma.archivoAdjunto.create({
+    data: {
+      nombreArchivo: nombreArchivo,
+      uuid: uuid,
+      url: url,
+      historialId: historialId
+    }
+  });
+}
+
+const obtenerArchivosPaciente = async (pacienteId) => {
+  const paciente = await prisma.paciente.findUnique({
+    where: { userId: pacienteId },
+    include: {
+      historial: {
+        include: {
+          archivosAdjuntos: {
+            orderBy: { fechaCarga: 'desc' }
+          }
+        }
+      }
+    }
+  });
+  if (!paciente) {
+    throw new Error('No se encontro al paciente');
+  }
+  return paciente;
+}
+
+
+
+
 const eliminarArchivoNube = async (uuid) => {
   try {
     const resultado = await cloudinary.uploader.destroy(uuid);
@@ -172,4 +205,6 @@ module.exports = {
   eliminarMedicamento,
   eliminarArchivoBd,
   eliminarArchivoNube,
+  obtenerArchivosPaciente,
+  crearNuevoArchivo,
 };

@@ -1,9 +1,13 @@
 <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 mt-4 gap-4">
   <h2 class="text-xl font-bold text-slate-800 tracking-tight">Historial de Archivos</h2>
 
-  <a href="/pacientes<%= paciente.id %>/archivos" class="px-5 py-2.5 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 transition-all shadow-sm text-center">
-    Subir archivo
-  </a>
+  <% if (locals.user && (locals.user.rolNombre === 'PACIENTE' || locals.user.rolNombre === 'ACOMPAÑANTE')) { %>
+      <a href="/pacientes/archivos" class="px-5 py-2.5 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 transition-all shadow-sm text-center">
+        Subir archivo
+      </a>
+  <% } %>
+
+
 </div>
 
 <% if (paciente.historial && paciente.historial.archivosAdjuntos && paciente.historial.archivosAdjuntos.length > 0) { %>
@@ -81,11 +85,13 @@
                     <a href="<%= archivo.url.replace('/upload/', '/upload/fl_attachment/') %>" class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 border-b border-slate-50">
                       Descargar PDF
                     </a>
-                    <form action="/pacientes/archivos/<%= archivo.id %>/eliminar" method="POST" onsubmit="return confirm('¿Eliminar este archivo permanentemente?');" class="m-0">
-                      <button type="button" data-id="<%= archivo.id %>" class="btn-abrir-modal-eliminar w-full text-left block px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
-                        Eliminar
-                      </button>
-                    </form>
+                    <% if (locals.user && (locals.user.rolNombre === 'PACIENTE' || locals.user.rolNombre === 'ACOMPAÑANTE')) { %>
+                      <form action="/pacientes/archivos/<%= archivo.id %>/eliminar" method="POST" onsubmit="return confirm('¿Eliminar este archivo permanentemente?');" class="m-0">
+                        <button type="button" data-id="<%= archivo.id %>" class="btn-abrir-modal-eliminar w-full text-left block px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                          Eliminar
+                        </button>
+                      </form>
+                    <% } %>
                   </div>
                 </div>
               </td>

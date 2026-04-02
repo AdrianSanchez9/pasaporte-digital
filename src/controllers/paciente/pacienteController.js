@@ -1,7 +1,9 @@
 const pacienteService = require('../../services/pacienteService');
 const perfilService = require('../../services/perfilService');
 const qrcode = require('qrcode');
-const { eliminarArchivoBd } = require('../../services/historialPaciente');
+const { eliminarArchivoBd,obtenerArchivosPaciente,obtenerHistorial,crearNuevoArchivo } = require('../../services/historialPaciente');
+const { obtenerInformacionAcompanante } = require('../../services/acompananteService');
+
 
 const listarPacientes = async (req, res) => {
   const { search, page = 1 } = req.query;
@@ -283,37 +285,32 @@ const mostrarFormularioArchivo = (req, res) => {
 }
 
 
-// Pasar la logica de BD a service
 const subirArchivo = async (req, res) => {
   try {
-    const pacienteId = req.user.id;
+
+    let pacienteId;
+    const rol = req.user.rolNombre;
     const { nombreOriginal } = req.body;
+
+    if (rol === 'PACIENTE') {
+      pacienteId = req.user.id;
+    } else if (rol === 'ACOMPAÑANTE') {
+      const acompanante = await obtenerInformacionAcompanante(req.user.id);
+      pacienteId = acompanante.pacienteId;
+    }
 
     if (!req.file) {
       return res.status(400).send('No se detectó ningún archivo.');
     }
 
-    const historial = await prisma.historialPaciente.findUnique({
-      where: { pacienteId: pacienteId }
-    });
-
-    if (!historial) {
-      return res.status(404).send('Error: El paciente no tiene un historial creado.');
-    }
+    const historial = await obtenerHistorial(pacienteId);
 
     const urlDescarga = req.file.secure_url;
     const uuidGenerado = req.file.public_id;
 
-    await prisma.archivoAdjunto.create({
-      data: {
-        nombreArchivo: nombreOriginal,
-        uuid: uuidGenerado,
-        url: urlDescarga,
-        historialId: historial.id
-      }
-    });
+    await crearNuevoArchivo(nombreOriginal,uuidGenerado,urlDescarga,historial.id);
 
-    res.redirect(`/`);
+    res.redirect(`/pacientes/historial-archivos`);
 
   } catch (error) {
     console.error('Error al subir archivo:', error);
@@ -323,28 +320,25 @@ const subirArchivo = async (req, res) => {
 
 
 
+
+// Este controlador lista todos los archivos del paciente -> pero solamente desde el usuario Paciente
 const listarArchivosHistorial = async (req, res) => {
   try {
-    const pacienteId = req.user.id;
+    let pacienteId;
+    const rol = req.user.rolNombre;
 
-    const paciente = await prisma.paciente.findUnique({
-      where: { userId: pacienteId },
-      include: {
-        historial: {
-          include: {
-            archivosAdjuntos: {
-              orderBy: { fechaCarga: 'desc' }
-            }
-          }
-        }
+    if (rol === 'PACIENTE') {
+      pacienteId = req.user.id;
+    } else if (rol === 'ACOMPAÑANTE') {
+      const acompanante = await obtenerInformacionAcompanante(req.user.id);
+
+      if (!acompanante || !acompanante.pacienteId) {
+        return res.status(404).send('No tienes un paciente asociado.');
       }
-    });
-
-    if (!paciente) {
-      return res.status(404).send('Paciente no encontrado');
+      pacienteId = acompanante.pacienteId;
     }
 
-    console.log ("Paciente datos" , paciente.historial.archivosAdjuntos)
+    const paciente = await obtenerArchivosPaciente(pacienteId);
 
     res.render('pacientes/historial-archivos', {
       paciente,
@@ -354,6 +348,27 @@ const listarArchivosHistorial = async (req, res) => {
   } catch (error) {
     console.error('Error al listar archivos:', error);
     res.status(500).send('Error al cargar el historial de archivos');
+  }
+};
+
+// Realiza lo mismo que el controlador de arriba -> pero para que medico y admin puedan verlo
+const listarArchivosDePaciente = async (req, res) => {
+  try {
+    const pacienteId = req.params.id;
+    const rol = req.user.rolNombre;
+
+    paciente =  await obtenerArchivosPaciente(pacienteId);
+
+    if (!paciente) return res.status(404).send('Paciente no encontrado');
+
+    res.render('pacientes/historial-archivos', {
+      paciente,
+      title: `Historial de Archivos - ${paciente.nombre}`
+    });
+
+  } catch (error) {
+    console.error('Error al listar archivos del paciente:', error);
+    res.status(500).send('Error al cargar el historial');
   }
 };
 
@@ -388,5 +403,6 @@ module.exports = {
   mostrarFormularioArchivo,
   subirArchivo,
   listarArchivosHistorial,
-  eliminarArchivo
+  listarArchivosDePaciente,
+  eliminarArchivo,
 };

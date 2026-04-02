@@ -10,4 +10,13 @@ const obtenerIdPaciente = async (idAcompanante) => {
 
 };
 
-module.exports = { obtenerIdPaciente } ;
+
+const obtenerInformacionAcompanante = async (idAcompanante) => {
+
+  return await prisma.acompanante.findUnique({
+    where: { userId: idAcompanante }
+  });
+
+}
+
+module.exports = { obtenerIdPaciente,obtenerInformacionAcompanante } ;

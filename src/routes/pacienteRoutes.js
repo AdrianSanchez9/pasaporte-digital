@@ -25,7 +25,8 @@ const {
   mostrarEscaner,
   mostrarFormularioArchivo,
   subirArchivo,
-  listarArchivosHistorial
+  listarArchivosHistorial,
+  listarArchivosDePaciente
 } = require('../controllers/paciente/pacienteController');
 
 router.get('/escanear', auth, requireRole('MEDICO', 'ADMIN', 'ENFERMERO'), mostrarEscaner);
@@ -53,10 +54,14 @@ router.get('/qr-paciente',
   requireRole('PACIENTE', 'ACOMPAÑANTE'),
   verQRPaciente
 );
-router.get('/historial-archivos', auth , requireRole('PACIENTE') , listarArchivosHistorial);
+
+
+router.get('/historial-archivos', auth , requireRole('PACIENTE','ACOMPAÑANTE') , listarArchivosHistorial);
+
 
 // Ruta para la carga de archivos del paciente
 router.get('/archivos', auth, mostrarFormularioArchivo);
+
 router.post('/archivos', auth, upload.single('archivoPdf'), subirArchivo);
 
 router.post('/archivos/:archivoId/eliminar',
@@ -64,6 +69,9 @@ router.post('/archivos/:archivoId/eliminar',
   requireRole('PACIENTE'),
   eliminarArchivo
 );
+
+
+router.get('/:id/historial-archivos', auth , requireRole( 'MEDICO' , 'ADMIN') , listarArchivosDePaciente);
 
 
 router.get( '/:id', auth,
