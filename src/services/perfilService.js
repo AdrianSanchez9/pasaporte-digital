@@ -111,6 +111,46 @@ const obtenerPerfilCompleto = async (userId) => {
   return perfilCompleto;
 };
 
+const datosUsuario = async (userId) => {
+  return await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      rol: true,
+      // Usamos los nombres que Prisma nos marcó con el signo "?" en el error
+      datosMedico: true,
+      datosAcompanante: {
+        include: {
+          paciente: {
+            include: { user: true }
+          }
+        }
+      }
+    }
+  });
+};
+
+const actualizarDatosPersonales = async (userId, datos) => {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: {
+      nombre: datos.nombre,
+      apellido: datos.apellido
+    }
+  });
+};
+
+const actualizarPassword = async (userId, hashedPassword) => {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: {
+      password: hashedPassword
+    }
+  });
+};
+
 module.exports = {
   obtenerPerfilCompleto,
+  actualizarPassword,
+  actualizarDatosPersonales,
+  datosUsuario,
 };

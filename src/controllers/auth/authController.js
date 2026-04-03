@@ -1,6 +1,8 @@
 const { z } = require('zod');
 const authService = require('../../services/authService');
 const pacienteService = require('../../services/pacienteService');
+const emailService = require('../../services/emailService');
+const generarContrasena = require('../../utils/generarContrasena');
 const {
   verificarEmailDisponible,
   verificarRolExiste,
@@ -12,8 +14,12 @@ const {
   refreshTokenSchema,
 } = require('../../schemas/authSchemas');
 
+
+
 const registroNuevo = async (req, res) => {
   try {
+
+    console.log ("Datos del body :  " , req.body)
     const datosValidados = registroSchema.parse(req.body);
 
     const { email, nombre, apellido, password, rolNombre, especialidad, pacienteId } = datosValidados;
@@ -34,11 +40,15 @@ const registroNuevo = async (req, res) => {
       await verificarPacienteExiste(pacienteId);
     }
 
-    const hashedPassword = await authService.hashPassword(password);
+    const passwordAleatoria = generarContrasena.generarContrasenaTemporal();
+
+    const hashedPassword = await authService.hashPassword(passwordAleatoria);
 
     const user = await authService.crearUsuarioCompleto({
       email, nombre, apellido, hashedPassword, rolId: rol.id, rolNombre, especialidad, pacienteId
     });
+
+    await emailService.enviarCredencialesAlta(user.email, passwordAleatoria);
 
     return res.redirect('/auth/registro?success=true');
 

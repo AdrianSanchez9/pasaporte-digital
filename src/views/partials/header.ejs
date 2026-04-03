@@ -40,7 +40,7 @@
       <div class="flex items-center space-x-4 md:space-x-6">
         <% if (locals.user && locals.user.nombre) { %>
           <div class="text-sm text-slate-600 hidden sm:block text-right">
-            <span class="font-medium text-slate-800 block"><%= locals.user.nombre %> <%= locals.user.apellido %></span>
+              <a href="/perfil/cuenta" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi cuenta</a>
           </div>
           <button id="logoutBtn" class="text-sm font-medium text-slate-500 hover:text-red-600 transition-colors">Salir</button>
         <% } else { %>
@@ -56,6 +56,9 @@
 
     </div>
   </div>
+
+
+
 
   <div id="menuMovil" class="hidden md:hidden border-t border-slate-100 bg-white shadow-lg absolute w-full">
     <nav class="px-4 pt-2 pb-4 space-y-1">

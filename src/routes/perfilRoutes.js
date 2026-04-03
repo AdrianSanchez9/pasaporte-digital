@@ -8,11 +8,21 @@ const {
   renderPerfilPaciente
 } = require('../controllers/perfilController');
 
+const perfilController = require('../controllers/perfilController');
+
+
 router.get(
   '/',
   auth,
   obtenerMiPerfil
 );
+
+router.get(
+  '/cuenta',
+  auth,
+  perfilController.datosUsuario
+);
+
 
 router.get(
   '/paciente-asociado',
@@ -27,5 +37,8 @@ router.get(
   requireRole('MEDICO', 'ADMIN' , 'EXTERNO' , 'ENFERMERO'),
   verPerfilCompletoPaciente
 );
+
+router.put('/actualizar-datos', auth, perfilController.actualizarDatos);
+router.put('/actualizar-contrasena', auth, perfilController.actualizarContrasena);
 
 module.exports = router;

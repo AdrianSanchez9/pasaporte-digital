@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const path = require('path');
+const methodOverride = require('method-override');
 const expressLayouts = require('express-ejs-layouts');
 const authRoutes = require('./src/routes/authRoutes');
 const pacienteRoutes = require('./src/routes/pacienteRoutes');
@@ -43,7 +44,7 @@ app.use(
 app.use(expressLayouts);
 app.use(express.static(path.join(__dirname, 'src', 'public')));
 app.set('layout', 'layouts/main');
-
+app.use(methodOverride('_method'));
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
