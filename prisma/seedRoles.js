@@ -45,7 +45,7 @@ async function main() {
     });
   }
 
-  console.log(`✅ ${permisos.length} permisos creados/actualizados`);
+  console.log(`${permisos.length} permisos creados/actualizados`);
 
   // ─── 2. Obtener IDs de permisos ─────────────────────────────────────────────
   const getPermissionId = async (accion) => {
@@ -182,7 +182,7 @@ async function main() {
     skipDuplicates: true,
   });
 
-  console.log('✅ 6 roles creados: PACIENTE, ACOMPAÑANTE, MEDICO, ENFERMERO, USUARIO_EXTERNO, ADMIN');
+  console.log('roles creados: PACIENTE, ACOMPAÑANTE, MEDICO, ENFERMERO, USUARIO_EXTERNO, ADMIN');
 
   // ─── 4. Crear usuario admin por defecto ────────────────────────────────────
   const bcrypt = require('bcryptjs');
@@ -200,10 +200,9 @@ async function main() {
     },
   });
 
-  console.log('✅ Usuario admin creado: admin@sistema.com / admin123');
-  console.log('⚠️  CAMBIAR ESTA CONTRASEÑA EN PRODUCCIÓN');
+  console.log('Usuario admin creado: admin@sistema.com / admin123');
 
-  console.log('\n🎉 Seed completado exitosamente');
+  console.log('\nSeed completado exitosamente');
 }
 
 main()
