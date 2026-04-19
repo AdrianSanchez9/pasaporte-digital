@@ -2,7 +2,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-async function main() {
+async function seedRoles() {
   console.log('Cargando los datos...');
 
   // ─── 1. Crear Permisos ──────────────────────────────────────────────────────
@@ -205,11 +205,4 @@ async function main() {
   console.log('\nSeed completado exitosamente');
 }
 
-main()
-  .catch((e) => {
-    console.error('❌ Error en el seed:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+module.exports = seedRoles;

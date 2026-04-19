@@ -1,8 +1,17 @@
 <div class="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4">
   <div class="max-w-xl w-full">
 
+      <div class="mb-6">
+          <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Volver al inicio
+          </a>
+      </div>
+
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Escanear Paciente</h1>
+      <h1 class="text-3xl font-bitter text-slate-800 tracking-tight">Escanear Paciente</h1>
       <p class="text-slate-500 mt-2">Acercá el código QR del paciente a la cámara web para abrir su Pasaporte Médico.</p>
     </div>
 
@@ -13,12 +22,6 @@
     <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200">
 
       <div id="lector-qr" class="w-full rounded-2xl overflow-hidden border-2 border-slate-100"></div>
-
-      <div class="mt-6 flex justify-center">
-        <a href="/pacientes" class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
-          Volver al directorio manual
-        </a>
-      </div>
     </div>
 
   </div>

@@ -1,53 +1,48 @@
-<header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+<header class="bg-[#2D4764] font-serif border-b border-slate-700/50 sticky top-0 z-50 shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16 items-center">
 
       <div class="flex-shrink-0 flex items-center">
-        <a href="/" class="text-xl font-semibold text-slate-800 tracking-tight">Pasaporte Médico</a>
+        <img src="/img/asociacionAzul.png" alt="Fundación Azul" class="h-24 w-auto">
       </div>
 
       <nav class="hidden md:flex space-x-8">
         <% if (locals.user) { %>
-          <a href="/" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Inicio</a>
+          <a href="/" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Inicio</a>
         <% } %>
 
         <% if (locals.user && locals.user.rolNombre === 'PACIENTE') { %>
-          <a href="/perfil" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi Perfil</a>
-          <a href="/pacientes/historial-archivos" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Documentos</a>
-          <a href="/pacientes/qr-paciente" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi QR</a>
+          <a href="/perfil" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Mi Perfil</a>
+          <a href="/pacientes/historial-archivos" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Documentos</a>
+          <a href="/pacientes/qr-paciente" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Mi QR</a>
         <% } %>
 
-        <% if (locals.user && (locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
-          <a href="/pacientes" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Pacientes</a>
-          <a href="/escanear" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Escanear QR</a>
+        <% if (locals.user && (locals.user.rolNombre === 'ADMIN' || locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
+          <a href="/pacientes" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Listado de pacientes</a>
+          <a href="/pacientes/escanear" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Escanear QR</a>
         <% } %>
 
         <% if (locals.user && locals.user.rolNombre === 'ADMIN') { %>
-          <a href="/admin/usuarios" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Usuarios</a>
-          <a href="/auth/registro" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Registrar usuarios</a>
-        <% } %>
-
-        <% if (locals.user && (locals.user.rolNombre === 'ADMIN'|| locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
-          <a href="/pacientes" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Listado pacientes</a>
+          <a href="/auth/registro" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Registrar usuarios</a>
         <% } %>
 
         <% if (locals.user && locals.user.rolNombre === 'ACOMPAÑANTE') { %>
-          <a href="/perfil/paciente-asociado" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Perfil Paciente asociado</a>
-          <a href="/pacientes/historial-archivos" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Documentos del paciente</a>
-          <% } %>
+          <a href="/perfil/paciente-asociado" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Perfil Paciente asociado</a>
+          <a href="/pacientes/historial-archivos" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Documentos del paciente</a>
+        <% } %>
       </nav>
 
       <div class="flex items-center space-x-4 md:space-x-6">
         <% if (locals.user && locals.user.nombre) { %>
-          <div class="text-sm text-slate-600 hidden sm:block text-right">
-              <a href="/perfil/cuenta" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Mi cuenta</a>
+          <div class="hidden sm:block text-right">
+              <a href="/perfil/cuenta" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-bitter transition-colors">Mi cuenta</a>
           </div>
-          <button id="logoutBtn" class="text-sm font-medium text-slate-500 hover:text-red-600 transition-colors">Salir</button>
+          <button id="logoutBtn" class="text-lg font-medium text-red-300 hover:text-red-500 transition-colors">Salir</button>
         <% } else { %>
-          <a href="/auth/login" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">Iniciar Sesión</a>
+          <a href="/auth/login" class="text-sm font-medium text-blue-200 hover:text-white transition-colors">Iniciar Sesión</a>
         <% } %>
 
-        <button id="btnMenuMovil" class="md:hidden text-slate-500 hover:text-slate-700 focus:outline-none">
+        <button id="btnMenuMovil" class="md:hidden text-white hover:text-blue-200 focus:outline-none">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
@@ -57,38 +52,33 @@
     </div>
   </div>
 
-
-
-
-  <div id="menuMovil" class="hidden md:hidden border-t border-slate-100 bg-white shadow-lg absolute w-full">
+  <div id="menuMovil" class="hidden md:hidden border-t border-slate-700/50 bg-[#2D4764] shadow-lg absolute w-full font-serif">
     <nav class="px-4 pt-2 pb-4 space-y-1">
+
       <% if (locals.user) { %>
-        <a href="/" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Inicio</a>
+        <a href="/perfil/cuenta" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors sm:hidden">Mi cuenta</a>
       <% } %>
 
       <% if (locals.user && locals.user.rolNombre === 'PACIENTE') { %>
-        <a href="/perfil" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi Perfil</a>
-        <a href="/pacientes/historial-archivos" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Documentos</a>
-        <a href="/pacientes/qr-paciente" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi QR</a>
-      <% } %>
-
-      <% if (locals.user && (locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
-        <a href="/pacientes" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Pacientes</a>
-        <a href="/escanear" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Escanear QR</a>
-      <% } %>
-
-      <% if (locals.user && locals.user.rolNombre === 'ADMIN') { %>
-        <a href="/admin/usuarios" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Usuarios</a>
-        <a href="/auth/registro" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Registrar usuarios</a>
+        <a href="/perfil" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi Perfil</a>
+        <a href="/pacientes/historial-archivos" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Documentos</a>
+        <a href="/pacientes/qr-paciente" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi QR</a>
       <% } %>
 
       <% if (locals.user && (locals.user.rolNombre === 'ADMIN'|| locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
-        <a href="/pacientes" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Listado pacientes</a>
+        <a href="/pacientes" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Listado de pacientes</a>
+        <a href="/pacientes/escanear" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Escanear QR</a>
+      <% } %>
+
+      <% if (locals.user && locals.user.rolNombre === 'ADMIN') { %>
+        <a href="/auth/registro" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Registrar usuarios</a>
       <% } %>
 
       <% if (locals.user && locals.user.rolNombre === 'ACOMPAÑANTE') { %>
-        <a href="/perfil/paciente-asociado" class="block text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-lg text-base font-medium transition-colors">Perfil Paciente asociado</a>
+        <a href="/perfil/paciente-asociado" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Perfil Paciente asociado</a>
+        <a href="/pacientes/historial-archivos" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Documentos del paciente</a>
       <% } %>
+
     </nav>
   </div>
 </header>

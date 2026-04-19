@@ -86,7 +86,7 @@ const medicamentos = [
   'Complejo B',
 ];
 
-async function main() {
+async function seedMedicamentos() {
   console.log('Iniciando seed de medicamentos...');
 
   let creados = 0;
@@ -118,11 +118,4 @@ async function main() {
   console.log('\n Seed de medicamentos completado');
 }
 
-main()
-  .catch((e) => {
-    console.error('❌ Error en el seed de medicamentos:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+module.exports = seedMedicamentos;

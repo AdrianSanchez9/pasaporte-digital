@@ -1,9 +1,17 @@
 <div class="min-h-screen bg-slate-50 px-4 pt-8 pb-12 md:pt-12">
   <div class="max-w-6xl mx-auto">
 
-    <!-- Header -->
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Listado de pacientes</h1>
+        <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Volver al inicio
+        </a>
+    </div>
+
+    <div class="mb-6">
+      <h1 class="text-3xl text-azulFundacion font-bitter  text-slate-900 tracking-tight">Listado de pacientes</h1>
       <p class="text-sm text-slate-500 mt-1">Buscá y accedé rápidamente a las historias clínicas.</p>
     </div>
 
@@ -28,10 +36,10 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-bold">
-              <th class="px-6 py-4">Nombre y apellido</th>
-              <th class="px-6 py-4">Apodo</th>
-              <th class="px-6 py-4">Fecha Nacimiento</th>
-              <th class="px-6 py-4 text-right">Acción</th>
+              <th class="text-colorAzulFundacion px-6 py-4">Nombre y apellido</th>
+              <th class="text-colorAzulFundacion px-6 py-4">Apodo</th>
+              <th class="text-colorAzulFundacion px-6 py-4">Fecha Nacimiento</th>
+              <th class="text-colorAzulFundacion px-6 py-4 text-right">Acción</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -63,7 +71,7 @@
 
                   <td class="px-6 py-4 text-right">
                     <a href="/pacientes/<%= p.userId || p.id %>"
-                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-all">
+                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 text-s font-bitter rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-all">
                       Ver detalle
                       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
