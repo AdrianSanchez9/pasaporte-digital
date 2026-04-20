@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { auth } = require('../middleware/auth');
-const { requireRole } = require('../middleware/authorize');
-const { validateSchema } = require('../middleware/validateSchema');
+const { auth } = require("../middleware/auth");
+const { requireRole } = require("../middleware/authorize");
+const { validateSchema } = require("../middleware/validateSchema");
 const {
   actualizarCuidadoPersonalSchema,
   actualizarPerfilComunicacionSchema,
   actualizarEmocionesSchema,
   crearGustoSchema,
   actualizarGustoSchema,
-} = require('../schemas/perfilCompletoSchemas');
+} = require("../schemas/perfilCompletoSchemas");
 const {
   obtenerCuidadoPersonal,
   actualizarCuidadoPersonal,
@@ -21,85 +21,81 @@ const {
   crearGusto,
   actualizarGusto,
   eliminarGusto,
-} = require('../controllers/perfilCompletoController');
-
+} = require("../controllers/perfilCompletoController");
 
 router.get(
-  '/:id/cuidado-personal',
+  "/:id/cuidado-personal",
   auth,
-  requireRole('MEDICO', 'ENFERMERO', 'PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
-  obtenerCuidadoPersonal
+  requireRole("MEDICO", "ENFERMERO", "PACIENTE", "ACOMPAÑANTE", "ADMIN"),
+  obtenerCuidadoPersonal,
 );
 
 router.put(
-  '/:id/cuidado-personal',
+  "/:id/cuidado-personal",
   auth,
-  requireRole('PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
+  requireRole("PACIENTE", "ACOMPAÑANTE", "ADMIN"),
   validateSchema(actualizarCuidadoPersonalSchema),
-  actualizarCuidadoPersonal
+  actualizarCuidadoPersonal,
 );
 
-
 router.get(
-  '/:id/perfil-comunicacion',
+  "/:id/perfil-comunicacion",
   auth,
-  requireRole('MEDICO', 'ENFERMERO', 'PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
-  obtenerPerfilComunicacion
+  requireRole("MEDICO", "ENFERMERO", "PACIENTE", "ACOMPAÑANTE", "ADMIN"),
+  obtenerPerfilComunicacion,
 );
 
 router.put(
-  '/:id/perfil-comunicacion',
+  "/:id/perfil-comunicacion",
   auth,
-  requireRole('PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
+  requireRole("PACIENTE", "ACOMPAÑANTE", "ADMIN"),
   validateSchema(actualizarPerfilComunicacionSchema),
-  actualizarPerfilComunicacion
+  actualizarPerfilComunicacion,
 );
 
-
 router.get(
-  '/:id/emociones',
+  "/:id/emociones",
   auth,
-  requireRole('MEDICO', 'ENFERMERO', 'PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
-  obtenerEmociones
+  requireRole("PACIENTE", "ACOMPAÑANTE"),
+  obtenerEmociones,
 );
 
 router.put(
-  '/:id/emociones',
+  "/:id/emociones",
   auth,
-  requireRole('PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
+  requireRole("PACIENTE", "ACOMPAÑANTE", "ADMIN"),
   validateSchema(actualizarEmocionesSchema),
-  actualizarEmociones
+  actualizarEmociones,
 );
 
-
 router.get(
-  '/:id/gustos',
+  "/:id/gustos",
   auth,
-  requireRole('MEDICO', 'ENFERMERO', 'PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
-  listarGustos
+  requireRole("MEDICO", "ENFERMERO", "PACIENTE", "ACOMPAÑANTE", "ADMIN"),
+  listarGustos,
 );
 
 router.post(
-  '/:id/gustos',
+  "/:id/gustos",
   auth,
-  requireRole('PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
+  requireRole("PACIENTE", "ACOMPAÑANTE", "ADMIN"),
   validateSchema(crearGustoSchema),
-  crearGusto
+  crearGusto,
 );
 
 router.put(
-  '/:id/gustos/:gustoId',
+  "/:id/gustos/:gustoId",
   auth,
-  requireRole('PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
+  requireRole("PACIENTE", "ACOMPAÑANTE", "ADMIN"),
   validateSchema(actualizarGustoSchema),
-  actualizarGusto
+  actualizarGusto,
 );
 
 router.delete(
-  '/:id/gustos/:gustoId',
+  "/:id/gustos/:gustoId",
   auth,
-  requireRole('PACIENTE', 'ACOMPAÑANTE', 'ADMIN'),
-  eliminarGusto
+  requireRole("PACIENTE", "ACOMPAÑANTE", "ADMIN"),
+  eliminarGusto,
 );
 
 module.exports = router;

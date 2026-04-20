@@ -1,5 +1,4 @@
-const prisma = require('../config/database');
-
+const prisma = require("../config/database");
 
 const obtenerCuidadoPersonal = async (pacienteId) => {
   let cuidado = await prisma.cuidadoPersonal.findUnique({
@@ -48,12 +47,12 @@ const actualizarPerfilComunicacion = async (pacienteId, datos) => {
 };
 
 const obtenerEmociones = async (pacienteId) => {
-  let emociones = await prisma.emociones.findUnique({
+  let emociones = await prisma.emocionesGustos.findUnique({
     where: { pacienteId },
   });
 
   if (!emociones) {
-    emociones = await prisma.emociones.create({
+    emociones = await prisma.emocionesGustos.create({
       data: { pacienteId },
     });
   }
@@ -64,61 +63,9 @@ const obtenerEmociones = async (pacienteId) => {
 const actualizarEmociones = async (pacienteId, datos) => {
   await obtenerEmociones(pacienteId);
 
-  return await prisma.emociones.update({
+  return await prisma.emocionesGustos.update({
     where: { pacienteId },
     data: datos,
-  });
-};
-
-const listarGustos = async (pacienteId) => {
-  return await prisma.gustoPaciente.findMany({
-    where: { pacienteId },
-    orderBy: { createdAt: 'desc' },
-  });
-};
-
-const crearGusto = async (pacienteId, datos) => {
-  return await prisma.gustoPaciente.create({
-    data: {
-      ...datos,
-      pacienteId,
-    },
-  });
-};
-
-const actualizarGusto = async (gustoId, pacienteId, datos) => {
-  // Verificar que el gusto pertenece al paciente
-  const gusto = await prisma.gustoPaciente.findFirst({
-    where: {
-      id: gustoId,
-      pacienteId,
-    },
-  });
-
-  if (!gusto) {
-    throw new Error('Gusto no encontrado');
-  }
-
-  return await prisma.gustoPaciente.update({
-    where: { id: gustoId },
-    data: datos,
-  });
-};
-
-const eliminarGusto = async (gustoId, pacienteId) => {
-  const gusto = await prisma.gustoPaciente.findFirst({
-    where: {
-      id: gustoId,
-      pacienteId,
-    },
-  });
-
-  if (!gusto) {
-    throw new Error('Gusto no encontrado');
-  }
-
-  return await prisma.gustoPaciente.delete({
-    where: { id: gustoId },
   });
 };
 
@@ -129,8 +76,4 @@ module.exports = {
   actualizarPerfilComunicacion,
   obtenerEmociones,
   actualizarEmociones,
-  listarGustos,
-  crearGusto,
-  actualizarGusto,
-  eliminarGusto,
 };

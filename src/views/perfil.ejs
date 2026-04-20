@@ -61,6 +61,11 @@
                 <input type="text" name="direccion" value="<%= locals.paciente?.direccion || '' %>"
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Calle, número, ciudad">
               </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">Nacionalidad</label>
+                <input type="text" name="nacionalidad" value="<%= locals.paciente?.nacionalidad || '' %>"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all">
+              </div>
               <div class="md:col-span-2">
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Religión</label>
                 <select name="religion" id="selectReligion"
@@ -347,6 +352,27 @@
                 </div>
               </div>
 
+              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="tieneOtrasCrisis" name="tieneOtrasCrisis" <%= locals.historial?.tieneOtrasCrisis ? 'checked' : '' %>
+                    class="w-5 h-5 rounded border-slate-300 text-slate-800 focus:ring-slate-400 cursor-pointer">
+                    <label for="tieneOtrasCrisis" class="text-base font-bold text-slate-800 cursor-pointer select-none">¿Tiene otro tipo de crisis? (Sensoriales, conductuales, etc.)</label>
+                </div>
+                <div id="campo-otras-crisis" class="mt-4 <%= locals.historial?.tieneOtrasCrisis ? '' : 'hidden' %>">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Descripción de la crisis</label>
+                    <textarea name="descripcionOtrasCrisis" rows="2"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-base text-slate-800 focus:ring-4 focus:ring-red-50 focus:border-red-400 outline-none transition-all resize-none"
+                    placeholder="Describí cómo son estas crisis y qué las desencadena..."><%= locals.historial?.descripcionOtrasCrisis || '' %></textarea>
+                    </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-slate-700 mb-2">Manera de darme la medicacion</label>
+                  <textarea name="posicionAdministracion" rows="3"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-red-50 focus:border-red-400 outline-none transition-all resize-none"
+                    placeholder="Manera de tomar la medicacion: sentado, de pie, acostado"><%= locals.historial?.posicionAdministracion || '' %></textarea>
+                </div>
+
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Datos extras</label>
                 <textarea name="datosExtras" rows="3"
@@ -492,7 +518,8 @@
                 { name: 'maneraParaComer', label: 'Manera para comer', placeholder: 'Cómo preferís o necesitás comer' },
                 { name: 'maneraParaBeber', label: 'Manera para beber', placeholder: 'Cómo preferís o necesitás beber' },
                 { name: 'miSeguridad', label: 'Mi seguridad', placeholder: 'Qué necesitás para sentirte seguro/a físicamente' },
-                { name: 'rutinaDescanso', label: 'Rutina de descanso', placeholder: 'Describí tu rutina para dormir y descansar' }
+                { name: 'rutinaDescanso', label: 'Rutina de descanso', placeholder: 'Describí tu rutina para dormir y descansar' },
+                { name: 'problemasVistaAudicion', label: 'Problemas de Vista y/o Audición', placeholder: 'Menciona si utilizás anteojos, audífonos, etc.' }
               ].forEach(campo => { %>
                 <div>
                   <label class="block text-sm font-semibold text-slate-700 mb-2"><%= campo.label %></label>
@@ -524,6 +551,12 @@
         <div class="accordion-content hidden px-6 pb-8 pt-2">
           <form id="form-comunicacion" class="space-y-6">
             <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">Lenguajes que habla</label>
+                <input type="text" name="lenguajesQueHabla" value="<%= locals.perfilComunicacion?.lenguajesQueHabla || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-amber-50 focus:border-amber-400 outline-none transition-all"
+                    placeholder="Ej: Español, Inglés, Lengua de Señas Argentina...">
+            </div>
+            <div>
               <label class="block text-sm font-semibold text-slate-700 mb-2">Asistente de comunicación</label>
               <input type="text" name="asistenteComunicacion" value="<%= locals.perfilComunicacion?.asistenteComunicacion || '' %>"
                 class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-amber-50 focus:border-amber-400 outline-none transition-all"
@@ -535,6 +568,22 @@
                 class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-amber-50 focus:border-amber-400 outline-none transition-all resize-none"
                 placeholder="Describí detalladamente cómo te comunicás y qué debe saber el personal médico para entenderte mejor"><%= locals.perfilComunicacion?.ayudaComunicacion || '' %></textarea>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="flex items-center p-4 rounded-xl border border-slate-200 bg-slate-50/50 cursor-pointer hover:bg-white hover:border-amber-300 transition-all">
+                      <input type="checkbox" name="necesitaAsistente"
+                        class="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-400"
+                        <%= locals.perfilComunicacion?.necesitaAsistente ? 'checked' : '' %>>
+                      <span class="ml-3 text-sm font-medium text-slate-700">¿Necesita asistente para comunicarse?</span>
+                    </label>
+
+                    <label class="flex items-center p-4 rounded-xl border border-slate-200 bg-slate-50/50 cursor-pointer hover:bg-white hover:border-amber-300 transition-all">
+                      <input type="checkbox" name="necesitaPersonaApoyo"
+                        class="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-400"
+                        <%= locals.perfilComunicacion?.necesitaPersonaApoyo ? 'checked' : '' %>>
+                      <span class="ml-3 text-sm font-medium text-slate-700">¿Necesita persona de apoyo en consulta?</span>
+                    </label>
+                  </div>
             <div class="flex justify-end pt-4">
               <button type="submit" class="btn-guardar w-full md:w-auto px-8 py-3.5 bg-colorAzulFundacion hover:bg-slate-900 text-white text-base font-bitter rounded-xl transition-all shadow-md active:scale-95">
                 Guardar perfil
@@ -564,7 +613,9 @@
                 { name: 'descripcionAnsioso', label: 'Cuando estoy ansioso/a', placeholder: 'Ej: Me muevo mucho, me froto las manos...' },
                 { name: 'descripcionDolor', label: 'Cuando tengo dolor', placeholder: 'Ej: Lloro, aprieto los dientes, me aíslo...' },
                 { name: 'descripcionAsustado', label: 'Cuando estoy asustado/a', placeholder: 'Ej: Busco a mi acompañante, grito...' },
-                { name: 'descripcionEnojado', label: 'Cuando estoy enojado/a', placeholder: 'Ej: Frunzo el ceño, no quiero hablar...' }
+                { name: 'descripcionEnojado', label: 'Cuando estoy enojado/a', placeholder: 'Ej: Frunzo el ceño, no quiero hablar...' },
+                { name: 'loQueMeGusta', label: 'Por favos hagan esto:', placeholder: 'Lo que me gusta Ej: mirar la tv, leer, música, etc.' },
+                { name: 'loQueNoMeGusta', label: 'Por favos no me hagan esto:', placeholder: 'Lo que no quiero que me hagan Ej: los gritos, contacto fisico, etc.' }
               ].forEach(campo => { %>
                 <div>
                   <label class="block text-sm font-semibold text-slate-700 mb-2"><%= campo.label %></label>
@@ -633,6 +684,10 @@ document.querySelectorAll('.toggle-password').forEach(btn => {
 // ── Epilepsia toggle ───────────────────────────────────
 document.getElementById('tieneEpilepsia')?.addEventListener('change', function() {
   document.getElementById('campo-tipo-crisis').classList.toggle('hidden', !this.checked);
+});
+
+document.getElementById('tieneOtrasCrisis')?.addEventListener('change', function() {
+  document.getElementById('campo-otras-crisis').classList.toggle('hidden', !this.checked);
 });
 
 // ── Médico de cabecera: editar / cancelar ──────────────
@@ -819,6 +874,11 @@ Object.entries(endpoints).forEach(([formId, config]) => {
     if (formId === 'form-historial') {
       const checkEpilepsia = document.getElementById('tieneEpilepsia');
       if (checkEpilepsia) data.tieneEpilepsia = checkEpilepsia.checked;
+    }
+
+    if (formId === 'form-historial') {
+      const checkOtraCrisis = document.getElementById('tieneOtrasCrisis');
+      if (checkOtraCrisis) data.tieneOtrasCrisis = checkOtraCrisis.checked;
     }
 
     try {
