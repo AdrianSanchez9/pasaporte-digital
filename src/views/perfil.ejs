@@ -21,9 +21,9 @@
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
-              <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
-            </div>
+              <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
+                <img src="/img/datosin.png" alt="Ícono de datos paciente" class="w-12 h-12 object-contain drop-shadow-sm">
+              </div>
             <span class="text-lg font-bold text-slate-800">Mis datos personales</span>
           </div>
           <svg class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -42,8 +42,8 @@
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Como te llaman">
               </div>
               <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Fecha de nacimiento</label>
-                <input type="date" name="fechaNacimiento" value="<%= locals.paciente?.fechaNacimiento ? new Date(locals.paciente.fechaNacimiento).toISOString().split('T')[0] : '' %>"
+                <label for="fechaNacimiento" class="block text-sm font-semibold text-slate-700 mb-2">Fecha de nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" value="<%= locals.paciente?.fechaNacimiento ? new Date(locals.paciente.fechaNacimiento).toISOString().split('T')[0] : '' %>"
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all">
               </div>
               <div>
@@ -61,8 +61,13 @@
                 <input type="text" name="direccion" value="<%= locals.paciente?.direccion || '' %>"
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Calle, número, ciudad">
               </div>
+              <div>
+                <label for="nacionalidad" class="block text-sm font-semibold text-slate-700 mb-2">Nacionalidad</label>
+                <input type="text" id="nacionalidad" name="nacionalidad" value="<%= locals.paciente?.nacionalidad || '' %>"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all">
+              </div>
               <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Religión</label>
+                <label for="selectReligion" class="block text-sm font-semibold text-slate-700 mb-2">Religión</label>
                 <select name="religion" id="selectReligion"
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all cursor-pointer">
                   <option value="">Seleccioná una opción...</option>
@@ -104,9 +109,9 @@
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center border border-emerald-100">
-              <svg class="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            </div>
+              <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
+                <img src="/img/medicoCabecerasin.png" alt="Ícono de medico" class="w-12 h-12 object-contain drop-shadow-sm">
+              </div>
             <span class="text-lg font-bold text-slate-800">Médico de cabecera</span>
           </div>
           <svg class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -115,9 +120,9 @@
           <% if (locals.paciente?.medicoCabecera) { %>
             <div class="bg-emerald-50/50 border-2 border-emerald-100 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div>
-                <h4 class="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">
+                <h1 class="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">
                   <%= locals.paciente.medicoCabecera.nombre %> <%= locals.paciente.medicoCabecera.apellido %>
-                </h4>
+                </h1>
                 <div class="space-y-1 mt-3">
                   <% if (locals.paciente.medicoCabecera.telefono) { %>
                     <p class="text-sm font-medium text-slate-600 flex items-center gap-2">
@@ -179,11 +184,9 @@
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
               <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
                 <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center border border-orange-100">
-                    <svg class="w-6 h-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                  </div>
+                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
+                      <img src="/img/contactosin.png" alt="Ícono de cuidados" class="w-12 h-12 object-contain drop-shadow-sm">
+                    </div>
                   <span class="text-lg font-bold text-slate-800">Contactos de emergencia</span>
                 </div>
                 <svg class="accordion-chevron w-6 h-6 shrink-0 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -193,7 +196,7 @@
               <div class="accordion-content hidden px-6 pb-8 pt-2">
 
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                  <h3 class="text-xl font-bold text-slate-800">Directorio de contactos</h3>
+                  <h2 class="text-xl font-bold text-slate-800">Listado de contactos</h2>
                   <button id="btn-agregar-contacto" class="w-full sm:w-auto px-5 py-2.5 bg-colorAzulFundacion text-white font-bitter border border-slate-900 rounded-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     Agregar contacto
@@ -207,9 +210,9 @@
 
                         <div class="contacto-vista">
                           <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-5">
-                            <h4 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                            <h3 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
                                 <%= c.nombre %> (<%= c.relacion || '' %>)
-                            </h4>
+                            </h3>
                             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                               <button class="btn-editar-contacto px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bitter rounded-lg text-sm border border-slate-200 transition-all">Editar</button>
                               <button class="btn-eliminar-contacto group flex items-center gap-2 px-3 py-2 rounded-lg bg-red-50 hover:bg-red-500 text-red-600 hover:text-white transition-all text-sm font-bitter border border-red-100" data-id="<%= c.id %>" title="Eliminar contacto">
@@ -223,11 +226,11 @@
 
                           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 rounded-xl p-4 border border-slate-100">
                             <div>
-                              <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Teléfono</span>
+                              <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono</span>
                               <span class="font-semibold text-slate-800 text-base"><%= c.telefono || '-' %></span>
                             </div>
                             <div>
-                              <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Dirección</span>
+                              <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Dirección</span>
                               <span class="font-semibold text-slate-800 text-base"><%= c.direccion || '-' %></span>
                             </div>
                           </div>
@@ -303,9 +306,9 @@
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center border border-red-100">
-              <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-            </div>
+              <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
+                <img src="/img/historialsin.png" alt="Ícono de historial" class="w-12 h-12 object-contain drop-shadow-sm">
+              </div>
             <span class="text-lg font-bold text-slate-800">Historial médico y Medicación</span>
           </div>
           <svg class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -347,6 +350,27 @@
                 </div>
               </div>
 
+              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="tieneOtrasCrisis" name="tieneOtrasCrisis" <%= locals.historial?.tieneOtrasCrisis ? 'checked' : '' %>
+                    class="w-5 h-5 rounded border-slate-300 text-slate-800 focus:ring-slate-400 cursor-pointer">
+                    <label for="tieneOtrasCrisis" class="text-base font-bold text-slate-800 cursor-pointer select-none">¿Tiene otro tipo de crisis? (Sensoriales, conductuales, etc.)</label>
+                </div>
+                <div id="campo-otras-crisis" class="mt-4 <%= locals.historial?.tieneOtrasCrisis ? '' : 'hidden' %>">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Descripción de la crisis</label>
+                    <textarea name="descripcionOtrasCrisis" rows="2"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-base text-slate-800 focus:ring-4 focus:ring-red-50 focus:border-red-400 outline-none transition-all resize-none"
+                    placeholder="Describí cómo son estas crisis y qué las desencadena..."><%= locals.historial?.descripcionOtrasCrisis || '' %></textarea>
+                    </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-slate-700 mb-2">Manera de darme la medicacion</label>
+                  <textarea name="posicionAdministracion" rows="3"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-red-50 focus:border-red-400 outline-none transition-all resize-none"
+                    placeholder="Manera de tomar la medicacion: sentado, de pie, acostado"><%= locals.historial?.posicionAdministracion || '' %></textarea>
+                </div>
+
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Datos extras</label>
                 <textarea name="datosExtras" rows="3"
@@ -363,12 +387,20 @@
           </form>
 
           <div class="my-10 border-t-2 border-dashed border-slate-200 relative">
-            <span class="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Sección de Medicación</span>
+            <span class="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-4 text-xs font-bold text-slate-800 uppercase tracking-widest">Sección de Medicación</span>
           </div>
 
           <div>
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <h3 class="text-xl font-bold text-slate-800">Medicamentos actuales</h3>
+
+                <div class="flex items-center gap-3">
+
+                      <div class="w-12 h-12  rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0">
+                          <img src="/img/medicacionsin.png" alt="Ícono de medicamentos" class="w-12 h-12 object-contain">
+                      </div>
+
+                      <h2 class="text-xl font-bold text-slate-800">Medicación actual</h2>
+                    </div>
               <button id="btn-agregar-medicamento" class="w-full sm:w-auto px-5 py-2.5 bg-colorAzulFundacion text-white font-bitter border border-indigo-100 rounded-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Agregar medicamento
@@ -381,9 +413,9 @@
                   <div class="medicamento-item relative bg-white rounded-2xl p-5 md:p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow" data-id="<%= med.id %>">
 
                     <div class="flex justify-between items-start mb-5">
-                      <h4 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                      <h3 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
                          <%= med.medicamento?.nombre || med.medicamentoPersonalizado || 'Sin nombre' %>
-                      </h4>
+                      </h3>
                       <button class="btn-eliminar-medicamento group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-500 text-red-600 hover:text-white transition-all text-sm font-bitter border border-red-100" data-id="<%= med.id %>" title="Eliminar medicamento">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         <span class="hidden sm:inline">Eliminar</span>
@@ -392,19 +424,19 @@
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 rounded-xl p-4 border border-slate-100">
                       <div>
-                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Dosis</span>
+                        <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Dosis</span>
                         <span class="font-semibold text-slate-800 text-base"><%= med.dosis || '-' %></span>
                       </div>
                       <div>
-                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Forma</span>
+                        <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Forma</span>
                         <span class="font-semibold text-slate-800 text-base"><%= med.formaMedicamento || '-' %></span>
                       </div>
                       <div>
-                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Horarios</span>
+                        <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Horarios</span>
                         <span class="font-semibold text-slate-800 text-base"><%= med.horarios || '-' %></span>
                       </div>
                       <div class="col-span-2 md:col-span-1">
-                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Ingesta</span>
+                        <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ingesta</span>
                         <span class="font-semibold text-slate-800 text-base"><%= med.momentoIngesta || '-' %></span>
                       </div>
                     </div>
@@ -465,9 +497,9 @@
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center border border-violet-100">
-              <svg class="w-6 h-6 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            </div>
+              <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
+                <img src="/img/cuidadosin.png" alt="Ícono de cuidado personal" class="w-12 h-12 object-contain drop-shadow-sm">
+              </div>
             <span class="text-lg font-bold text-slate-800">Cuidado personal</span>
           </div>
           <svg class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -476,8 +508,8 @@
           <form id="form-cuidado-personal" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Tipo de movilidad</label>
-                <select name="tipoMovilidad"
+                <label for="tipoMovilidadSelect" class="block text-sm font-semibold text-slate-700 mb-2">Tipo de movilidad</label>
+                <select id="tipoMovilidadSelect" name="tipoMovilidad"
                   class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all cursor-pointer">
                   <option value="">Seleccioná una opción...</option>
                   <option value="Independiente" <%= locals.cuidadoPersonal?.tipoMovilidad === 'Independiente' ? 'selected' : '' %>>Independiente</option>
@@ -492,7 +524,8 @@
                 { name: 'maneraParaComer', label: 'Manera para comer', placeholder: 'Cómo preferís o necesitás comer' },
                 { name: 'maneraParaBeber', label: 'Manera para beber', placeholder: 'Cómo preferís o necesitás beber' },
                 { name: 'miSeguridad', label: 'Mi seguridad', placeholder: 'Qué necesitás para sentirte seguro/a físicamente' },
-                { name: 'rutinaDescanso', label: 'Rutina de descanso', placeholder: 'Describí tu rutina para dormir y descansar' }
+                { name: 'rutinaDescanso', label: 'Rutina de descanso', placeholder: 'Describí tu rutina para dormir y descansar' },
+                { name: 'problemasVistaAudicion', label: 'Problemas de Vista y/o Audición', placeholder: 'Menciona si utilizás anteojos, audífonos, etc.' }
               ].forEach(campo => { %>
                 <div>
                   <label class="block text-sm font-semibold text-slate-700 mb-2"><%= campo.label %></label>
@@ -514,15 +547,21 @@
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center border border-amber-100">
-              <svg class="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-            </div>
+              <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
+                <img src="/img/comunicacionsin.png" alt="Ícono de comunicacion" class="w-12 h-12 object-contain drop-shadow-sm">
+              </div>
             <span class="text-lg font-bold text-slate-800">Perfil de comunicación</span>
           </div>
           <svg class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
         <div class="accordion-content hidden px-6 pb-8 pt-2">
           <form id="form-comunicacion" class="space-y-6">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">Lenguajes que habla</label>
+                <input type="text" name="lenguajesQueHabla" value="<%= locals.perfilComunicacion?.lenguajesQueHabla || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-amber-50 focus:border-amber-400 outline-none transition-all"
+                    placeholder="Ej: Español, Inglés, Lengua de Señas Argentina...">
+            </div>
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-2">Asistente de comunicación</label>
               <input type="text" name="asistenteComunicacion" value="<%= locals.perfilComunicacion?.asistenteComunicacion || '' %>"
@@ -535,6 +574,22 @@
                 class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-amber-50 focus:border-amber-400 outline-none transition-all resize-none"
                 placeholder="Describí detalladamente cómo te comunicás y qué debe saber el personal médico para entenderte mejor"><%= locals.perfilComunicacion?.ayudaComunicacion || '' %></textarea>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="flex items-center p-4 rounded-xl border border-slate-200 bg-slate-50/50 cursor-pointer hover:bg-white hover:border-amber-300 transition-all">
+                      <input type="checkbox" name="necesitaAsistente"
+                        class="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-400"
+                        <%= locals.perfilComunicacion?.necesitaAsistente ? 'checked' : '' %>>
+                      <span class="ml-3 text-sm font-medium text-slate-700">¿Necesita asistente para comunicarse?</span>
+                    </label>
+
+                    <label class="flex items-center p-4 rounded-xl border border-slate-200 bg-slate-50/50 cursor-pointer hover:bg-white hover:border-amber-300 transition-all">
+                      <input type="checkbox" name="necesitaPersonaApoyo"
+                        class="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-400"
+                        <%= locals.perfilComunicacion?.necesitaPersonaApoyo ? 'checked' : '' %>>
+                      <span class="ml-3 text-sm font-medium text-slate-700">¿Necesita persona de apoyo en consulta?</span>
+                    </label>
+                  </div>
             <div class="flex justify-end pt-4">
               <button type="submit" class="btn-guardar w-full md:w-auto px-8 py-3.5 bg-colorAzulFundacion hover:bg-slate-900 text-white text-base font-bitter rounded-xl transition-all shadow-md active:scale-95">
                 Guardar perfil
@@ -547,9 +602,9 @@
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center border border-pink-100">
-              <svg class="w-6 h-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
+              <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
+                <img src="/img/emocionsin.png" alt="Ícono de emociones y gustos" class="w-12 h-12 object-contain drop-shadow-sm">
+              </div>
             <span class="text-lg font-bold text-slate-800">Emociones y gustos</span>
           </div>
           <svg class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -564,7 +619,9 @@
                 { name: 'descripcionAnsioso', label: 'Cuando estoy ansioso/a', placeholder: 'Ej: Me muevo mucho, me froto las manos...' },
                 { name: 'descripcionDolor', label: 'Cuando tengo dolor', placeholder: 'Ej: Lloro, aprieto los dientes, me aíslo...' },
                 { name: 'descripcionAsustado', label: 'Cuando estoy asustado/a', placeholder: 'Ej: Busco a mi acompañante, grito...' },
-                { name: 'descripcionEnojado', label: 'Cuando estoy enojado/a', placeholder: 'Ej: Frunzo el ceño, no quiero hablar...' }
+                { name: 'descripcionEnojado', label: 'Cuando estoy enojado/a', placeholder: 'Ej: Frunzo el ceño, no quiero hablar...' },
+                { name: 'loQueMeGusta', label: 'Me gusta, por favor hagan esto:', placeholder: 'Lo que me gusta Ej: mirar la tv, leer, música, etc.' },
+                { name: 'loQueNoMeGusta', label: 'No me gusta, por favor no me hagan esto:', placeholder: 'Lo que no quiero que me hagan Ej: los gritos, contacto fisico, etc.' }
               ].forEach(campo => { %>
                 <div>
                   <label class="block text-sm font-semibold text-slate-700 mb-2"><%= campo.label %></label>
@@ -633,6 +690,10 @@ document.querySelectorAll('.toggle-password').forEach(btn => {
 // ── Epilepsia toggle ───────────────────────────────────
 document.getElementById('tieneEpilepsia')?.addEventListener('change', function() {
   document.getElementById('campo-tipo-crisis').classList.toggle('hidden', !this.checked);
+});
+
+document.getElementById('tieneOtrasCrisis')?.addEventListener('change', function() {
+  document.getElementById('campo-otras-crisis').classList.toggle('hidden', !this.checked);
 });
 
 // ── Médico de cabecera: editar / cancelar ──────────────
@@ -819,6 +880,11 @@ Object.entries(endpoints).forEach(([formId, config]) => {
     if (formId === 'form-historial') {
       const checkEpilepsia = document.getElementById('tieneEpilepsia');
       if (checkEpilepsia) data.tieneEpilepsia = checkEpilepsia.checked;
+    }
+
+    if (formId === 'form-historial') {
+      const checkOtraCrisis = document.getElementById('tieneOtrasCrisis');
+      if (checkOtraCrisis) data.tieneOtrasCrisis = checkOtraCrisis.checked;
     }
 
     try {

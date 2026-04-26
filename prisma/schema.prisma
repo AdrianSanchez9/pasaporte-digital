@@ -84,6 +84,7 @@ model Paciente {
   medicoCabeceraId      String?
   religion              String?
   necesidadesReligiosas String?       @db.Text
+  nacionalidad          String?       @db.Text
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
@@ -94,8 +95,7 @@ model Paciente {
   historial  HistorialPaciente?
   cuidadoPersonal       CuidadoPersonal?
   perfilComunicacion    PerfilComunicacion?
-  emociones             Emociones?
-  gustos                GustoPaciente[]
+  emociones             EmocionesGustos?
 
   @@index([userId])
 
@@ -215,9 +215,12 @@ model HistorialPaciente {
   alergias              String?                    @db.Text
   metodosIntervencion   String?                    @db.Text
   metodoLiquidosSolidos String?                    @db.Text
+  posicionAdministracion String?                   @db.Text
   datosExtras           String?                    @db.Text
   tieneEpilepsia        Boolean                    @default(false)
   tipoCrisis            String?
+  tieneOtrasCrisis      Boolean  @default(false)
+  descripcionOtrasCrisis String? @db.Text
   createdAt             DateTime                   @default(now())
   updatedAt             DateTime                   @updatedAt
 
@@ -253,6 +256,7 @@ model CuidadoPersonal {
   miSeguridad       String?  @db.Text
   usoBano           String?  @db.Text
   rutinaDescanso    String?  @db.Text
+  problemasVistaAudicion  String?  @db.Text
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -267,6 +271,11 @@ model PerfilComunicacion {
   pacienteId              String   @unique  // 1:1 con Paciente
   asistenteComunicacion   String?  // "Tablero de comunicación", "SAAC", "Lenguaje de señas"
   ayudaComunicacion       String?  @db.Text
+
+  lenguajesQueHabla     String?  @db.Text
+  necesitaAsistente     Boolean  @default(false)
+  necesitaPersonaApoyo  Boolean  @default(false)
+
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
 
@@ -276,31 +285,19 @@ model PerfilComunicacion {
 }
 
 // ─── Modelo de Emociones (1:1) ────────────────────────────────────────────────
-model Emociones {
+model EmocionesGustos {
   id                    String   @id @default(uuid())
   pacienteId            String   @unique  // 1:1 con Paciente
   descripcionAnsioso    String?  @db.Text
   descripcionDolor      String?  @db.Text
   descripcionAsustado   String?  @db.Text
   descripcionEnojado    String?  @db.Text
+
+  loQueMeGusta          String?  @db.Text
+  loQueNoMeGusta        String?  @db.Text
+
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
-
-  paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
-
-  @@index([pacienteId])
-}
-
-// ─── Modelo de Gustos del Paciente (1:N) ─────────────────────────────────────
-model GustoPaciente {
-  id          String   @id @default(uuid())
-  pacienteId  String
-  tipo        String?  // "Comida favorita", "Música preferida", "Actividad favorita"
-  descripcion String?  @db.Text
-  notas       String?  @db.Text
-  sitios      String?  @db.Text  // "Lugares que le gusta visitar"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   paciente Paciente @relation(fields: [pacienteId], references: [userId], onDelete: Cascade)
 

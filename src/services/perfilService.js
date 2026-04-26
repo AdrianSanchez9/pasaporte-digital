@@ -1,4 +1,4 @@
-const prisma = require('../config/database');
+const prisma = require("../config/database");
 
 const obtenerPerfilCompleto = async (userId) => {
   const user = await prisma.user.findUnique({
@@ -9,7 +9,7 @@ const obtenerPerfilCompleto = async (userId) => {
   });
 
   if (!user) {
-    throw new Error('Usuario no encontrado');
+    throw new Error("Usuario no encontrado");
   }
 
   let perfilCompleto = {
@@ -24,12 +24,12 @@ const obtenerPerfilCompleto = async (userId) => {
     },
   };
 
-  if (user.rol.nombre === 'PACIENTE') {
+  if (user.rol.nombre === "PACIENTE") {
     const paciente = await prisma.paciente.findUnique({
       where: { userId },
       include: {
         contactos: {
-          orderBy: { createdAt: 'desc' },
+          orderBy: { createdAt: "desc" },
         },
 
         medicoCabecera: true,
@@ -40,11 +40,11 @@ const obtenerPerfilCompleto = async (userId) => {
               include: {
                 medicamento: true,
               },
-              orderBy: { createdAt: 'desc' },
+              orderBy: { createdAt: "desc" },
             },
             archivosAdjuntos: {
-              orderBy: { fechaCarga: 'desc' }
-            }
+              orderBy: { fechaCarga: "desc" },
+            },
           },
         },
 
@@ -53,10 +53,6 @@ const obtenerPerfilCompleto = async (userId) => {
         perfilComunicacion: true,
 
         emociones: true,
-
-        gustos: {
-          orderBy: { createdAt: 'desc' },
-        },
 
         acompanantes: {
           include: {
@@ -77,7 +73,7 @@ const obtenerPerfilCompleto = async (userId) => {
   }
 
   // 4. Si es MEDICO, traer su información
-  if (user.rol.nombre === 'MEDICO') {
+  if (user.rol.nombre === "MEDICO") {
     const medico = await prisma.medico.findUnique({
       where: { userId },
     });
@@ -86,7 +82,7 @@ const obtenerPerfilCompleto = async (userId) => {
   }
 
   // 5. Si es ACOMPAÑANTE, traer su información y paciente asociado
-  if (user.rol.nombre === 'ACOMPAÑANTE') {
+  if (user.rol.nombre === "ACOMPAÑANTE") {
     const acompanante = await prisma.acompañante.findUnique({
       where: { userId },
       include: {
@@ -121,11 +117,11 @@ const datosUsuario = async (userId) => {
       datosAcompanante: {
         include: {
           paciente: {
-            include: { user: true }
-          }
-        }
-      }
-    }
+            include: { user: true },
+          },
+        },
+      },
+    },
   });
 };
 
@@ -134,8 +130,8 @@ const actualizarDatosPersonales = async (userId, datos) => {
     where: { id: userId },
     data: {
       nombre: datos.nombre,
-      apellido: datos.apellido
-    }
+      apellido: datos.apellido,
+    },
   });
 };
 
@@ -143,8 +139,8 @@ const actualizarPassword = async (userId, hashedPassword) => {
   return await prisma.user.update({
     where: { id: userId },
     data: {
-      password: hashedPassword
-    }
+      password: hashedPassword,
+    },
   });
 };
 
