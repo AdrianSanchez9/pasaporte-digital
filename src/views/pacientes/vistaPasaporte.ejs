@@ -12,21 +12,16 @@
   <div class="max-w-4xl mx-auto space-y-6">
 
     <div class="bg-white rounded-3xl shadow-sm border border-slate-300 overflow-hidden">
-
       <div class="px-6 py-8 sm:px-10 border-b border-slate-200">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div class="w-full">
             <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 break-words">
               <%= locals.usuarioPaciente?.nombre %> <%= locals.usuarioPaciente?.apellido %>
             </h1>
+
             <div class="flex flex-wrap items-center gap-3 mt-4 text-sm md:text-base font-medium">
               <% if (locals.paciente?.apodo) { %>
                 <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-300 font-bold break-words max-w-full">"<%= locals.paciente.apodo %>"</span>
-              <% } %>
-              <% if (locals.paciente?.dni) { %>
-                <span class="flex items-center gap-1.5 bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-300 break-words">
-                  <span class="text-slate-400 text-xs uppercase tracking-wider font-bold">DNI</span> <%= locals.paciente.dni %>
-                </span>
               <% } %>
               <% if (locals.paciente?.nroObraSocial) { %>
                 <span class="flex items-center gap-1.5 bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-300 break-words">
@@ -44,18 +39,24 @@
       </div>
 
       <% const tieneEpilepsia = locals.historial?.tieneEpilepsia; %>
+      <% const tieneOtrasCrisis = locals.historial?.tieneOtrasCrisis; %>
       <% const tieneAlergias = locals.historial?.alergias && locals.historial.alergias.trim() !== ''; %>
-
-      <% if (tieneEpilepsia || tieneAlergias) { %>
+      <% if (tieneEpilepsia || tieneOtrasCrisis || tieneAlergias) { %>
         <div class="px-6 py-6 sm:px-10 bg-white">
           <h2 class="text-xs font-bold text-red-500 uppercase tracking-widest mb-4">Alertas Médicas Críticas</h2>
-
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <% if (tieneEpilepsia) { %>
               <div class="rounded-xl p-4 border border-red-300 bg-red-50/50 flex flex-col justify-center overflow-hidden">
                 <h3 class="font-bold text-red-700 text-base">Paciente con Epilepsia</h3>
                 <p class="text-red-900/80 text-sm mt-1 font-medium break-words"><span class="font-bold text-red-700/80">Crisis:</span> <%= locals.historial?.tipoCrisis || 'No especificado' %></p>
               </div>
+            <% } %>
+
+            <% if (tieneOtrasCrisis) { %>
+                <div class="rounded-xl p-4 border border-red-300 bg-red-50/50 flex flex-col justify-center overflow-hidden">
+                <h3 class="font-bold text-red-700 text-base">Alerta de Crisis (Otro tipo)</h3>
+                <p class="text-red-900/80 text-sm mt-1 font-medium break-words whitespace-pre-wrap"><span class="font-bold text-red-700/80">Descripción:</span> <%= locals.historial?.descripcionOtrasCrisis || 'No especificada' %></p>
+                </div>
             <% } %>
 
             <% if (tieneAlergias) { %>
@@ -69,13 +70,51 @@
       <% } %>
     </div>
 
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-300 break-inside-avoid overflow-hidden">
+      <h2 class="text-lg font-bold text-slate-800 mb-5 border-b pb-3 border-slate-200">Datos Personales</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <% if (locals.paciente?.dni) { %>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">DNI</p>
+            <p class="text-sm font-medium text-slate-700"><%= locals.paciente.dni %></p>
+          </div>
+        <% } %>
+        <% if (locals.paciente?.telefono) { %>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Teléfono</p>
+            <p class="text-sm font-medium text-slate-700"><%= locals.paciente.telefono %></p>
+          </div>
+        <% } %>
+        <% if (locals.paciente?.direccion) { %>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 sm:col-span-2">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Dirección</p>
+            <p class="text-sm font-medium text-slate-700 break-words"><%= locals.paciente.direccion %></p>
+          </div>
+        <% } %>
+        <% if (locals.paciente?.nacionalidad) { %>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nacionalidad</p>
+            <p class="text-sm font-medium text-slate-700"><%= locals.paciente.nacionalidad %></p>
+          </div>
+        <% } %>
+        <% if (locals.paciente?.religion) { %>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Religión</p>
+            <p class="text-sm font-medium text-slate-700"><%= locals.paciente.religion %></p>
+          </div>
+        <% } %>
+        <% if (locals.paciente?.necesidadesReligiosas) { %>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 sm:col-span-2">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Necesidades Religiosas</p>
+            <p class="text-sm font-medium text-slate-700 break-words whitespace-pre-wrap"><%= locals.paciente.necesidadesReligiosas %></p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 break-inside-avoid">
-
       <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-300 overflow-hidden">
-        <h2 class="text-lg font-bold text-slate-800 mb-5 border-b pb-3 border-slate-200">
-          Contactos de Emergencia
-        </h2>
-
+        <h2 class="text-lg font-bold text-slate-800 mb-5 border-b pb-3 border-slate-200">Contactos de Emergencia</h2>
         <div class="space-y-3">
           <% if (locals.paciente?.contactos?.length > 0) { %>
             <% locals.paciente.contactos.forEach(c => { %>
@@ -96,16 +135,12 @@
       </div>
 
       <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-300 overflow-hidden">
-        <h2 class="text-lg font-bold text-slate-800 mb-5 border-b pb-3 border-slate-200">
-          Médico cabecera
-        </h2>
-
+        <h2 class="text-lg font-bold text-slate-800 mb-5 border-b pb-3 border-slate-200">Médico cabecera</h2>
         <% if (locals.paciente?.medicoCabecera) { %>
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col sm:flex-row sm:items-start justify-between gap-4 overflow-hidden">
             <div class="min-w-0 flex-1">
               <p class="font-bold text-slate-800 text-base break-words"><%= locals.paciente.medicoCabecera.nombre %> <%= locals.paciente.medicoCabecera.apellido %></p>
               <p class="text-slate-500 font-medium text-sm mt-0.5 break-words">Médico Cabecera</p>
-
               <% if (locals.paciente.medicoCabecera.direccion) { %>
                 <div class="mt-4">
                   <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Consultorio</p>
@@ -113,7 +148,6 @@
                 </div>
               <% } %>
             </div>
-
             <div class="text-left sm:text-right shrink-0 mt-2 sm:mt-0">
               <% if (locals.paciente.medicoCabecera.telefono) { %>
                 <p class="text-base text-slate-800 sm:text-slate-600 font-bold break-words"><%= locals.paciente.medicoCabecera.telefono %></p>
@@ -127,10 +161,7 @@
     </div>
 
     <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-300 break-inside-avoid overflow-hidden">
-      <h2 class="text-lg font-bold text-slate-800 mb-6 border-b pb-3 border-slate-200">
-        Medicación Actual
-      </h2>
-
+      <h2 class="text-lg font-bold text-slate-800 mb-6 border-b pb-3 border-slate-200">Medicación Actual</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <% if (locals.historial?.medicamentos?.length > 0) { %>
           <% locals.historial.medicamentos.forEach(med => { %>
@@ -169,9 +200,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
       <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-300 break-inside-avoid overflow-hidden">
-        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">
-          Historial Clínico Extra
-        </h2>
+        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">Historial Clínico Extra</h2>
         <div class="space-y-4">
           <% if (locals.historial?.metodosIntervencion) { %>
             <div>
@@ -179,28 +208,36 @@
               <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.historial.metodosIntervencion %></p>
             </div>
           <% } %>
+
+          <% if (locals.historial?.metodoLiquidosSolidos) { %>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ingesta de Líquidos/Sólidos</p>
+              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.historial.metodoLiquidosSolidos %></p>
+            </div>
+          <% } %>
+
+          <% if (locals.historial?.maneraAdministrarMedicacion) { %>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Manera de dar la medicación</p>
+              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.historial.maneraAdministrarMedicacion %></p>
+            </div>
+          <% } %>
+
           <% if (locals.historial?.datosExtras) { %>
             <div>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Datos Extras Relevantes</p>
               <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.historial.datosExtras %></p>
             </div>
           <% } %>
-          <% if (locals.paciente?.necesidadesReligiosas) { %>
-            <div>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Necesidades Religiosas</p>
-              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.paciente.necesidadesReligiosas %></p>
-            </div>
-          <% } %>
-          <% if (!locals.historial?.metodosIntervencion && !locals.historial?.datosExtras && !locals.paciente?.necesidadesReligiosas) { %>
+
+          <% if (!locals.historial?.metodosIntervencion && !locals.historial?.metodoLiquidosSolidos && !locals.historial?.maneraAdministrarMedicacion && !locals.historial?.datosExtras) { %>
             <p class="text-sm text-slate-400 italic">No hay información extra cargada.</p>
           <% } %>
         </div>
       </div>
 
       <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-300 break-inside-avoid overflow-hidden">
-        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">
-          Cuidado y Movilidad
-        </h2>
+        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">Cuidado y Movilidad</h2>
         <div class="space-y-4">
           <% if (locals.cuidadoPersonal?.tipoMovilidad) { %>
             <div>
@@ -208,28 +245,42 @@
               <p class="text-sm font-bold text-slate-700 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 inline-block break-words max-w-full"><%= locals.cuidadoPersonal.tipoMovilidad %></p>
             </div>
           <% } %>
-          <% if (locals.historial?.metodoLiquidosSolidos) { %>
-            <div>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ingesta de Líquidos/Sólidos</p>
-              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.historial.metodoLiquidosSolidos %></p>
-            </div>
-          <% } %>
           <% if (locals.cuidadoPersonal?.cuidadoPersonal || locals.cuidadoPersonal?.usoBano) { %>
             <div>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Asistencia en Higiene</p>
-              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap">
-                <%= [locals.cuidadoPersonal?.cuidadoPersonal, locals.cuidadoPersonal?.usoBano].filter(Boolean).join(' | ') %>
-              </p>
+              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= [locals.cuidadoPersonal?.cuidadoPersonal, locals.cuidadoPersonal?.usoBano].filter(Boolean).map(s => s.trim()).join(' | ') %></p>
+            </div>
+          <% } %>
+          <% if (locals.cuidadoPersonal?.rutinaDescanso) { %>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Rutina de Descanso</p>
+              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.cuidadoPersonal.rutinaDescanso %></p>
+            </div>
+          <% } %>
+          <% if (locals.cuidadoPersonal?.seguridad) { %>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pautas de Seguridad</p>
+              <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.cuidadoPersonal.seguridad %></p>
+            </div>
+          <% } %>
+          <% if (locals.cuidadoPersonal?.problemaVisionAudicion) { %>
+            <div class="mt-2 bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+              <p class="text-[10px] font-bold text-yellow-600 uppercase tracking-wider mb-1">Visión / Audición</p>
+              <p class="text-sm font-medium text-yellow-800 break-words whitespace-pre-wrap"><%= locals.cuidadoPersonal.problemaVisionAudicion %></p>
             </div>
           <% } %>
         </div>
       </div>
 
       <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-300 break-inside-avoid overflow-hidden">
-        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">
-          Perfil de Comunicación
-        </h2>
+        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">Perfil de Comunicación</h2>
         <div class="space-y-4">
+          <% if (locals.perfilComunicacion?.idiomas) { %>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Lenguajes que habla</p>
+              <p class="text-sm font-bold text-slate-700 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 inline-block break-words max-w-full"><%= locals.perfilComunicacion.idiomas %></p>
+            </div>
+          <% } %>
           <% if (locals.perfilComunicacion?.asistenteComunicacion) { %>
             <div>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Dispositivo o Asistente</p>
@@ -242,16 +293,30 @@
               <p class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words whitespace-pre-wrap"><%= locals.perfilComunicacion.ayudaComunicacion %></p>
             </div>
           <% } %>
-          <% if (!locals.perfilComunicacion?.asistenteComunicacion && !locals.perfilComunicacion?.ayudaComunicacion) { %>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <% if (locals.perfilComunicacion?.necesitaAsistente) { %>
+              <div class="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-2 rounded-lg border border-indigo-100">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                <span class="text-xs font-bold">Necesita Asistente</span>
+              </div>
+            <% } %>
+            <% if (locals.perfilComunicacion?.personaApoyo) { %>
+              <div class="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-2 rounded-lg border border-indigo-100">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                <span class="text-xs font-bold">Requiere Persona de Apoyo</span>
+              </div>
+            <% } %>
+          </div>
+
+          <% if (!locals.perfilComunicacion) { %>
              <p class="text-sm text-slate-400 italic">No hay información de comunicación cargada.</p>
           <% } %>
         </div>
       </div>
 
       <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-300 break-inside-avoid overflow-hidden">
-        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">
-          Indicadores Conductuales
-        </h2>
+        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">Emociones y Gustos</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <% const emociones = [
             { titulo: 'Ansiedad', valor: locals.emociones?.descripcionAnsioso },
@@ -269,57 +334,60 @@
             <% } %>
           <% }) %>
 
-          <% if (!emociones.some(e => e.valor)) { %>
+          <% if (locals.emociones?.loQueMeGusta) { %>
+            <div class="col-span-full bg-slate-50 rounded-xl p-3 border border-slate-200 mt-2">
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Cosas que le gustan</p>
+              <p class="text-sm font-medium text-slate-700 leading-tight break-words whitespace-pre-wrap"><%= locals.emociones.loQueMeGusta %></p>
+            </div>
+          <% } %>
+
+          <% if (locals.emociones?.loQueNoMeGusta) { %>
+            <div class="col-span-full bg-slate-50 rounded-xl p-3 border border-slate-200 mt-2">
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Cosas que le disgustan / molestan</p>
+              <p class="text-sm font-medium text-slate-700 leading-tight break-words whitespace-pre-wrap"><%= locals.emociones.loQueNoMeGusta %></p>
+            </div>
+          <% } %>
+
+          <% if (!emociones.some(e => e.valor) && !locals.emociones?.loQueMeGusta && !locals.emociones?.loQueNoMeGusta) { %>
             <div class="col-span-full">
-              <p class="text-sm text-slate-400 italic">No hay indicadores de conducta cargados.</p>
+              <p class="text-sm text-slate-400 italic">No hay registros de emociones o gustos cargados.</p>
             </div>
           <% } %>
         </div>
       </div>
 
       <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-300 break-inside-avoid flex flex-col overflow-hidden">
-        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">
-          Estudios y Documentos
-        </h2>
-
+        <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-3 border-slate-200">Estudios y Documentos</h2>
         <div class="space-y-3 mb-5 flex-grow">
           <% if (locals.historial?.archivosAdjuntos && locals.historial.archivosAdjuntos.length > 0) { %>
-
             <% const ultimosArchivos = locals.historial.archivosAdjuntos.slice(0, 3); %>
-
             <% ultimosArchivos.forEach(archivo => { %>
               <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-slate-300 transition-colors group">
-
                 <div class="flex items-center gap-3 overflow-hidden">
                   <div class="w-8 h-8 rounded-lg bg-slate-200 text-slate-600 flex items-center justify-center text-[10px] font-bold uppercase shrink-0">
                     <%= archivo.url.split('.').pop() %>
                   </div>
-
                   <div class="truncate min-w-0">
                     <p class="text-sm font-bold text-slate-700 truncate group-hover:text-slate-900 transition-colors"><%= archivo.nombreArchivo %></p>
                     <p class="text-[10px] font-medium text-slate-400 mt-0.5 truncate"><%= new Date(archivo.fechaCarga).toLocaleDateString('es-AR') %></p>
                   </div>
                 </div>
-
                 <a href="<%= archivo.url %>" target="_blank" rel="noopener noreferrer" class="ml-2 text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-200 transition-colors shrink-0" title="Ver archivo">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                 </a>
               </div>
             <% }) %>
-
           <% } else { %>
             <div class="h-full flex flex-col items-center justify-center py-6 border border-slate-200 rounded-2xl bg-slate-50">
               <p class="text-sm text-slate-500 font-medium">No hay documentos recientes.</p>
             </div>
           <% } %>
         </div>
-
         <a href="/pacientes/<%= locals.paciente.userId %>/historial-archivos" class="mt-auto block w-full text-center py-3 px-4 bg-colorAzulFundacion border border-slate-300 hover:bg-slate-900 text-white text-sm font-bitter rounded-xl transition-colors">
           Ver historial completo
         </a>
       </div>
 
     </div>
-
   </div>
 </div>

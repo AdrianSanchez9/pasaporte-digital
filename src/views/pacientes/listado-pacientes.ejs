@@ -115,8 +115,8 @@
                 ← Anterior
               </a>
             <% } else { %>
-              <span class="px-3 py-1.5 text-xs font-medium text-slate-300 border border-slate-100 rounded-lg cursor-not-allowed">← Anterior</span>
-            <% } %>
+              <button disabled aria-disabled="true" class="px-3 py-1.5 text-xs font-medium text-slate-300 border border-slate-100 rounded-lg cursor-not-allowed">← Anterior</button>
+              <% } %>
 
             <!-- Números de página -->
             <% for (let i = 1; i <= locals.totalPaginas; i++) { %>
@@ -144,8 +144,8 @@
                 Siguiente →
               </a>
             <% } else { %>
-              <span class="px-3 py-1.5 text-xs font-medium text-slate-300 border border-slate-100 rounded-lg cursor-not-allowed">Siguiente →</span>
-            <% } %>
+              <button disabled aria-disabled="true" class="px-3 py-1.5 text-xs font-medium text-slate-300 border border-slate-100 rounded-lg cursor-not-allowed">Siguiente →</button>
+              <% } %>
           </div>
 
         </div>
