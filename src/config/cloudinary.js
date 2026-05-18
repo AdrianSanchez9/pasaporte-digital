@@ -24,8 +24,6 @@ const storageEstudios = new CloudinaryStorage({
   params: {
     folder: "ong_pasaporte_pacientes/estudios",
     resource_type: "auto",
-    // Al sacarle el public_id, Cloudinary le inventa uno 100% seguro y corto.
-    // Adiós al error "is too long" o "is invalid".
   },
 });
 

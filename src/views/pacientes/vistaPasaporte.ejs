@@ -12,31 +12,39 @@
   <div class="max-w-4xl mx-auto space-y-6">
 
     <div class="bg-white rounded-3xl shadow-sm border border-slate-300 overflow-hidden">
-      <div class="px-6 py-8 sm:px-10 border-b border-slate-200">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div class="w-full">
-            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 break-words">
-              <%= locals.usuarioPaciente?.nombre %> <%= locals.usuarioPaciente?.apellido %>
-            </h1>
+        <div class="px-6 py-8 sm:px-10 border-b border-slate-200">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
 
-            <div class="flex flex-wrap items-center gap-3 mt-4 text-sm md:text-base font-medium">
-              <% if (locals.paciente?.apodo) { %>
-                <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-300 font-bold break-words max-w-full">"<%= locals.paciente.apodo %>"</span>
-              <% } %>
-              <% if (locals.paciente?.nroObraSocial) { %>
-                <span class="flex items-center gap-1.5 bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-300 break-words">
-                  <span class="text-slate-400 text-xs uppercase tracking-wider font-bold">O. Social</span> <%= locals.paciente.nroObraSocial %>
-                </span>
-              <% } %>
-              <% if (locals.paciente?.fechaNacimiento) { %>
-                <span class="flex items-center gap-1.5 bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-300">
-                  <span class="text-slate-400 text-xs uppercase tracking-wider font-bold">Nacimiento</span> <%= new Date(locals.paciente.fechaNacimiento).toLocaleDateString('es-AR') %>
-                </span>
-              <% } %>
-            </div>
-          </div>
-        </div>
-      </div>
+                  <div class="shrink-0 relative">
+                    <img src="<%= locals.paciente?.fotoPerfil ? locals.paciente.fotoPerfil.replace('/upload/', '/upload/c_fill,g_face,w_256,h_256,q_auto,f_auto/') : '/img/default-avatar.svg' %>"
+                         alt="Foto de perfil de <%= locals.usuarioPaciente?.nombre %>"
+                         class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-50 shadow-md bg-slate-200">
+                  </div>
+
+                  <div class="w-full text-center sm:text-left flex flex-col justify-center min-h-[8rem]">
+                    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 break-words">
+                      <%= locals.usuarioPaciente?.nombre %> <%= locals.usuarioPaciente?.apellido %>
+                    </h1>
+
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-4 text-sm md:text-base font-medium">
+                      <% if (locals.paciente?.apodo) { %>
+                        <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-300 font-bold break-words max-w-full">"<%= locals.paciente.apodo %>"</span>
+                      <% } %>
+                      <% if (locals.paciente?.nroObraSocial) { %>
+                        <span class="flex items-center gap-1.5 bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-300 break-words">
+                          <span class="text-slate-400 text-xs uppercase tracking-wider font-bold">O. Social</span> <%= locals.paciente.nroObraSocial %>
+                        </span>
+                      <% } %>
+                      <% if (locals.paciente?.fechaNacimiento) { %>
+                        <span class="flex items-center gap-1.5 bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-300">
+                          <span class="text-slate-400 text-xs uppercase tracking-wider font-bold">Nacimiento</span> <%= new Date(locals.paciente.fechaNacimiento).toLocaleDateString('es-AR') %>
+                        </span>
+                      <% } %>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
 
       <% const tieneEpilepsia = locals.historial?.tieneEpilepsia; %>
       <% const tieneOtrasCrisis = locals.historial?.tieneOtrasCrisis; %>
