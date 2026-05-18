@@ -2,7 +2,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 mt-4 gap-4">
 
         <div class="mb-4">
-            <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">
+            <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-1">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -10,15 +10,13 @@
             </a>
         </div>
 
-        <h1 class="text-2xl font-bitter text-slate-800 tracking-tight">Historial de Archivos</h1>
+        <h1 class="text-2xl font-bitter text-slate-800 tracking-tight" tabindex="0">Historial de Archivos</h1>
 
         <% if (locals.user && (locals.user.rolNombre === 'PACIENTE' || locals.user.rolNombre === 'ACOMPAÑANTE')) { %>
-            <a href="/pacientes/archivos" class="font-serif px-5 py-2.5 bg-colorAzulFundacion text-white text-sm font-medium rounded-lg hover:bg-slate-900 transition-all shadow-sm text-center">
+            <a href="/pacientes/archivos" class="font-serif px-5 py-2.5 bg-colorAzulFundacion text-white text-sm font-medium rounded-lg hover:bg-slate-900 transition-all shadow-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
             Subir archivo
             </a>
         <% } %>
-
-
     </div>
 
 <% if (paciente.historial && paciente.historial.archivosAdjuntos && paciente.historial.archivosAdjuntos.length > 0) { %>
@@ -28,7 +26,7 @@
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </div>
-      <input type="text" id="inputBuscador" placeholder="Buscar por nombre..." class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors">
+      <input type="text" id="inputBuscador" placeholder="Buscar por nombre..." aria-label="Buscar archivo por nombre" class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors">
     </div>
 
     <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -57,13 +55,15 @@
       <tbody id="tablaArchivosBody" class="divide-y divide-slate-100">
         <% if (paciente.historial && paciente.historial.archivosAdjuntos && paciente.historial.archivosAdjuntos.length > 0) { %>
           <% paciente.historial.archivosAdjuntos.forEach(archivo => { %>
-            <tr class="hover:bg-slate-50/70 transition-colors fila-archivo"
+            <tr class="hover:bg-slate-50/70 transition-colors fila-archivo focus:outline-none focus:bg-slate-50 focus:ring-inset focus:ring-2 focus:ring-indigo-500/50"
+                tabindex="0"
+                aria-label="Archivo: <%= archivo.nombreArchivo %>, <%= archivo.url.split('.').pop().toLowerCase() === 'pdf' ? 'Documento PDF' : 'Imagen' %>, cargado el <%= new Date(archivo.fechaCarga).toLocaleDateString('es-AR') %>"
                 data-nombre="<%= archivo.nombreArchivo.toLowerCase() %>"
                 data-fecha="<%= new Date(archivo.fechaCarga).getTime() %>">
 
               <td class="px-6 py-4">
                 <div class="flex items-center gap-4">
-                  <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold uppercase shrink-0">
+                  <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold uppercase shrink-0" aria-hidden="true">
                     <%= archivo.url.split('.').pop() %>
                   </div>
                   <span class="text-sm font-bold text-slate-800 truncate max-w-[200px] md:max-w-xs"><%= archivo.nombreArchivo %></span>
@@ -84,21 +84,21 @@
 
               <td class="px-6 py-4 text-right">
                 <div class="inline-block text-left dropdown-container">
-                  <button type="button" class="dropdown-btn inline-flex items-center justify-center border border-slate-200 rounded-lg px-4 py-2 text-sm font-bitter text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors bg-white shadow-sm focus:outline-none">
+                  <button type="button" aria-label="Opciones para el archivo <%= archivo.nombreArchivo %>" aria-haspopup="true" aria-expanded="false" class="dropdown-btn inline-flex items-center justify-center border border-slate-200 rounded-lg px-4 py-2 text-sm font-bitter text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     Opciones
-                    <svg class="ml-2 -mr-1 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <svg class="ml-2 -mr-1 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                   </button>
 
-                  <div class="dropdown-menu hidden fixed z-[150] w-48 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
-                    <a href="<%= archivo.url %>" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-sm font-bitter text-slate-700 hover:bg-slate-50 hover:text-colorAzulFundacion border-b border-slate-50">
+                  <div class="dropdown-menu hidden fixed z-[150] w-48 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden" role="menu">
+                    <a href="<%= archivo.url %>" target="_blank" rel="noopener noreferrer" role="menuitem" class="block px-4 py-3 text-sm font-bitter text-slate-700 hover:bg-slate-50 hover:text-colorAzulFundacion border-b border-slate-50 focus:bg-slate-50 focus:outline-none">
                       Visualizar archivo
                     </a>
-                    <a href="<%= archivo.url.replace('/upload/', '/upload/fl_attachment/') %>" class="block px-4 py-3 text-sm font-bitter text-slate-700 hover:bg-slate-50 hover:text-colorAzulFundacion border-b border-slate-50">
+                    <a href="<%= archivo.url.replace('/upload/', '/upload/fl_attachment/') %>" role="menuitem" class="block px-4 py-3 text-sm font-bitter text-slate-700 hover:bg-slate-50 hover:text-colorAzulFundacion border-b border-slate-50 focus:bg-slate-50 focus:outline-none">
                       Descargar PDF
                     </a>
                     <% if (locals.user && (locals.user.rolNombre === 'PACIENTE' || locals.user.rolNombre === 'ACOMPAÑANTE')) { %>
                       <form action="/pacientes/archivos/<%= archivo.id %>/eliminar" method="POST" onsubmit="return confirm('¿Eliminar este archivo permanentemente?');" class="m-0">
-                        <button type="button" data-id="<%= archivo.id %>" class="btn-abrir-modal-eliminar w-full text-left block px-4 py-3 text-sm font-bitter text-red-600 hover:bg-red-50 transition-colors">
+                        <button type="button" data-id="<%= archivo.id %>" role="menuitem" class="btn-abrir-modal-eliminar w-full text-left block px-4 py-3 text-sm font-bitter text-red-600 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors">
                           Eliminar
                         </button>
                       </form>
@@ -111,14 +111,14 @@
 
           <tr id="filaSinResultados" class="hidden">
             <td colspan="4" class="px-6 py-16 text-center">
-              <span class="text-sm font-medium text-slate-500">No se encontraron archivos con ese nombre.</span>
+              <span class="text-sm font-medium text-slate-500" tabindex="0">No se encontraron archivos con ese nombre.</span>
             </td>
           </tr>
 
         <% } else { %>
           <tr>
             <td colspan="4" class="px-6 py-24 text-center">
-              <div class="flex flex-col items-center justify-center whitespace-normal">
+              <div class="flex flex-col items-center justify-center whitespace-normal" tabindex="0">
                 <span class="text-sm font-medium text-slate-500 mb-1">Aún no hay documentos adjuntos.</span>
                 <span class="text-xs text-slate-400">Hacé clic en "Subir archivo" para empezar.</span>
               </div>
@@ -131,17 +131,17 @@
   </div>
 </div>
 
-<div id="modalEliminar" class="hidden fixed inset-0 z-[200] flex items-center justify-center">
+<div id="modalEliminar" class="hidden fixed inset-0 z-[200] flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
   <div id="backdropModal" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity cursor-pointer"></div>
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 relative z-10 p-6 transform transition-all">
     <div class="mb-6 text-center">
-      <h3 class="text-xl font-bold text-slate-800 tracking-tight mb-2">¿Desea eliminar el archivo?</h3>
+      <h3 id="modalTitulo" class="text-xl font-bold text-slate-800 tracking-tight mb-2">¿Desea eliminar el archivo?</h3>
       <p class="text-sm text-slate-500 leading-relaxed">El documento será eliminado permanentemente.</p>
     </div>
     <div class="flex gap-3">
-      <button type="button" id="btnCancelarModal" class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors focus:outline-none">Cancelar</button>
+      <button type="button" id="btnCancelarModal" class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400">Cancelar</button>
       <form id="formEliminar" method="POST" class="flex-1 m-0">
-        <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm focus:outline-none">Aceptar</button>
+        <button type="submit" class="w-full px-4 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1">Aceptar</button>
       </form>
     </div>
   </div>
@@ -215,10 +215,14 @@
         const menu = btn.nextElementSibling;
         const isHidden = menu.classList.contains('hidden');
 
-        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+        document.querySelectorAll('.dropdown-menu').forEach(m => {
+          m.classList.add('hidden');
+          m.previousElementSibling.setAttribute('aria-expanded', 'false');
+        });
 
         if (isHidden) {
           menu.classList.remove('hidden');
+          btn.setAttribute('aria-expanded', 'true');
           const rect = btn.getBoundingClientRect();
           menu.style.top = `${rect.bottom + 4}px`;
           menu.style.left = `${rect.right - menu.offsetWidth}px`;
@@ -229,12 +233,14 @@
     document.addEventListener('click', () => {
       document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.classList.add('hidden');
+        menu.previousElementSibling.setAttribute('aria-expanded', 'false');
       });
     });
 
     window.addEventListener('scroll', () => {
       document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.classList.add('hidden');
+        menu.previousElementSibling.setAttribute('aria-expanded', 'false');
       });
     }, true);
 
@@ -252,7 +258,10 @@
         modalEliminar.classList.remove('hidden');
 
         const menuPadre = boton.closest('.dropdown-menu');
-        if(menuPadre) menuPadre.classList.add('hidden');
+        if(menuPadre) {
+          menuPadre.classList.add('hidden');
+          menuPadre.previousElementSibling.setAttribute('aria-expanded', 'false');
+        }
       });
     });
 

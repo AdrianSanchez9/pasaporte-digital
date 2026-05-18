@@ -36,12 +36,7 @@ router.get(
   mostrarEscaner,
 );
 
-router.get(
-  "/",
-  auth,
-  requireRole("MEDICO", "ENFERMERO", "ADMIN"),
-  listarPacientes,
-);
+router.get("/", auth, requireRole("ADMIN"), listarPacientes);
 
 router.put(
   "/mi-medico-cabecera",
@@ -87,7 +82,12 @@ router.get(
 );
 
 // Ruta para la carga de archivos del paciente
-router.get("/archivos", auth, requireRole("PACIENTE", "ACOMPAÑANTE"),  mostrarFormularioArchivo);
+router.get(
+  "/archivos",
+  auth,
+  requireRole("PACIENTE", "ACOMPAÑANTE"),
+  mostrarFormularioArchivo,
+);
 
 router.post("/archivos", auth, upload.single("archivoPdf"), subirArchivo);
 

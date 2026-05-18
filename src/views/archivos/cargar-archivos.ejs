@@ -1,37 +1,39 @@
 <div class="min-h-screen bg-slate-50 py-12 px-4 flex justify-center items-start pt-20">
   <div class="max-w-md w-full">
 
-    <a href="/" class="group flex items-center gap-2 text-slate-800 hover:text-slate-700 font-medium text-sm transition-colors mb-8 w-fit">
-      <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+    <span class="sr-only">Estás en el módulo de carga de archivos médicos.</span>
+
+    <a href="/" aria-label="Volver al perfil del paciente" class="group flex items-center gap-2 text-slate-800 hover:text-slate-700 font-medium text-sm transition-colors mb-8 w-fit focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-1">
+      <svg aria-hidden="true" class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
       Volver al perfil
     </a>
 
     <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
       <div class="mb-8 text-center">
-        <h1 class="text-2xl font-bitter text-slate-800 tracking-tight">Nuevo Documento</h1>
-        <p class="text-slate-500 text-sm mt-2 leading-relaxed">Agregá estudios o certificados al historial médico.</p>
+        <h1 tabindex="0" class="text-2xl font-bitter text-slate-800 tracking-tight">Nuevo Documento</h1>
+        <p tabindex="0" class="text-slate-500 text-sm mt-2 leading-relaxed">Agregá estudios o certificados al historial médico.</p>
       </div>
 
       <form id="uploadForm" action="/pacientes/archivos" method="POST" enctype="multipart/form-data" class="flex flex-col gap-6">
 
         <div>
-          <label class="block text-sm font-semibold text-slate-600 mb-2 ml-1">Título del archivo</label>
-          <input type="text" name="nombreOriginal" placeholder="Ej: Receta médica" required
+          <label for="nombreOriginal" class="block text-sm font-semibold text-slate-600 mb-2 ml-1">Título del archivo</label>
+          <input type="text" id="nombreOriginal" name="nombreOriginal" placeholder="Ej: Receta médica" required
             class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-2xl px-4 py-3.5 focus:bg-white focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 outline-none transition-all placeholder:text-slate-400">
         </div>
 
         <div>
           <label for="fileInput" class="block text-sm font-semibold text-slate-600 mb-2 ml-1">Documento adjunto</label>
 
-          <div id="dropzone" class="relative group border border-dashed border-slate-300 rounded-2xl p-8 text-center hover:bg-slate-50 hover:border-indigo-300 transition-all cursor-pointer">
-            <svg class="mx-auto h-8 w-8 text-slate-400 group-hover:text-indigo-500 mb-3 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-            <span id="fileNameText" class="text-sm font-medium text-slate-500 group-hover:text-indigo-600 transition-colors block px-4 truncate">Seleccionar PDF o imagen</span>
+          <div id="dropzone" class="relative group border border-dashed border-slate-300 rounded-2xl p-8 text-center hover:bg-slate-50 hover:border-indigo-300 transition-all cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-transparent">
+            <svg aria-hidden="true" class="mx-auto h-8 w-8 text-slate-400 group-hover:text-indigo-500 mb-3 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            <span id="fileNameText" class="text-sm font-medium text-slate-500 group-hover:text-indigo-600 transition-colors block px-4 truncate" aria-hidden="true">Seleccionar PDF o imagen</span>
 
-            <input type="file" id="fileInput" name="archivoPdf" accept=".pdf, image/*" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <input type="file" id="fileInput" name="archivoPdf" accept=".pdf, image/*" aria-label="Seleccionar archivo desde tu computadora" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
           </div>
         </div>
 
-        <button type="submit" id="submitBtn" class="w-full mt-2 bg-colorAzulFundacion text-white py-4 rounded-2xl font-bitter  hover:bg-slate-900 transition-all shadow-sm active:scale-95 flex justify-center items-center gap-2">
+        <button type="submit" id="submitBtn" class="w-full mt-2 bg-colorAzulFundacion text-white py-4 rounded-2xl font-bitter hover:bg-slate-900 transition-all shadow-sm active:scale-95 flex justify-center items-center gap-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
           Guardar archivo
         </button>
       </form>
@@ -54,12 +56,17 @@
       fileNameText.classList.add('font-bold');
       dropzone.classList.replace('border-slate-300', 'border-indigo-400');
       dropzone.classList.add('bg-indigo-50/50');
+
+      // Opcional: anunciarle al lector que el archivo se cargó
+      fileInput.setAttribute('aria-label', `Archivo seleccionado: ${nombreArchivo}. Clic para cambiar.`);
     } else {
       fileNameText.textContent = 'Seleccionar PDF o imagen';
       fileNameText.classList.replace('text-indigo-600', 'text-slate-500');
       fileNameText.classList.remove('font-bold');
       dropzone.classList.replace('border-indigo-400', 'border-slate-300');
       dropzone.classList.remove('bg-indigo-50/50');
+
+      fileInput.setAttribute('aria-label', 'Seleccionar archivo desde tu computadora');
     }
   });
 </script>

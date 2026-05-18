@@ -18,11 +18,12 @@
         <% } %>
 
         <% if (locals.user && (locals.user.rolNombre === 'ADMIN' || locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
-          <a href="/pacientes" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Listado de pacientes</a>
+
           <a href="/pacientes/escanear" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Escanear QR</a>
         <% } %>
 
         <% if (locals.user && locals.user.rolNombre === 'ADMIN') { %>
+            <a href="/pacientes" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Listado de pacientes</a>
           <a href="/auth/registro" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Registrar usuarios</a>
         <% } %>
 
