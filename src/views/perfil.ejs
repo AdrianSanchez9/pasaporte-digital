@@ -13,93 +13,120 @@
 
     <div class="space-y-5">
 
-      <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
-        <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50" aria-expanded="false">
-          <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden">
-                <img src="/img/datosin.png" alt="" class="w-12 h-12 object-contain drop-shadow-sm">
-              </div>
-            <span class="text-lg font-bold text-slate-800">Mis datos personales</span>
-          </div>
-          <svg class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="accordion-content hidden px-6 pb-8 pt-2">
-          <form id="form-datos-personales" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">DNI</label>
-                <input type="text" name="dni" value="<%= locals.paciente?.dni || '' %>"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Ingresa su dni">
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Apodo</label>
-                <input type="text" name="apodo" value="<%= locals.paciente?.apodo || '' %>"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Como te llaman">
-              </div>
-              <div>
-                <label for="fechaNacimiento" class="block text-sm font-semibold text-slate-700 mb-2">Fecha de nacimiento</label>
-                <input type="date" id="fechaNacimiento" name="fechaNacimiento" value="<%= locals.paciente?.fechaNacimiento ? new Date(locals.paciente.fechaNacimiento).toISOString().split('T')[0] : '' %>"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all">
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
-                <input type="tel" name="telefono" value="<%= locals.paciente?.telefono || '' %>"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Ingrese su número de telefono">
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Nro. Obra Social</label>
-                <input type="text" name="nroObraSocial" value="<%= locals.paciente?.nroObraSocial || '' %>"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Número de afiliado">
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Dirección</label>
-                <input type="text" name="direccion" value="<%= locals.paciente?.direccion || '' %>"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Calle, número, ciudad">
-              </div>
-              <div>
-                <label for="nacionalidad" class="block text-sm font-semibold text-slate-700 mb-2">Nacionalidad</label>
-                <input type="text" id="nacionalidad" name="nacionalidad" value="<%= locals.paciente?.nacionalidad || '' %>"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all">
-              </div>
-              <div class="md:col-span-2">
-                <label for="selectReligion" class="block text-sm font-semibold text-slate-700 mb-2">Religión</label>
-                <select name="religion" id="selectReligion"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all cursor-pointer">
-                  <option value="">Seleccioná una opción...</option>
-                  <option value="Católica"                <%= locals.paciente?.religion === 'Católica' ? 'selected' : '' %>>Católica</option>
-                      <option value="Cristiana evangélica"    <%= locals.paciente?.religion === 'Cristiana evangélica' ? 'selected' : '' %>>Cristiana evangélica</option>
-                      <option value="Cristiana protestante"   <%= locals.paciente?.religion === 'Cristiana protestante' ? 'selected' : '' %>>Cristiana protestante</option>
-                      <option value="Judía"                   <%= locals.paciente?.religion === 'Judía' ? 'selected' : '' %>>Judía</option>
-                      <option value="Islámica"                <%= locals.paciente?.religion === 'Islámica' ? 'selected' : '' %>>Islámica</option>
-                      <option value="Budista"                 <%= locals.paciente?.religion === 'Budista' ? 'selected' : '' %>>Budista</option>
-                      <option value="Hinduista"               <%= locals.paciente?.religion === 'Hinduista' ? 'selected' : '' %>>Hinduista</option>
-                      <option value="Testigos de Jehová"      <%= locals.paciente?.religion === 'Testigos de Jehová' ? 'selected' : '' %>>Testigos de Jehová</option>
-                      <option value="Mormona"                 <%= locals.paciente?.religion === 'Mormona' ? 'selected' : '' %>>Mormona</option>
-                      <option value="Adventista"              <%= locals.paciente?.religion === 'Adventista' ? 'selected' : '' %>>Adventista</option>
-                      <option value="Sin religión"            <%= locals.paciente?.religion === 'Sin religión' ? 'selected' : '' %>>Sin religión</option>
-                      <option value="Otra"                    <%= locals.paciente?.religion === 'Otra' ? 'selected' : '' %>>Otra...</option>
-                </select>
-
-                <input type="text" name="religionPersonalizada" id="religionPersonalizada"
-                  class="hidden mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all"
-                  placeholder="Escribí tu religión...">
-              </div>
-
-              <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Necesidades religiosas</label>
-                <textarea name="necesidadesReligiosas" rows="3"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all resize-none"
-                  placeholder="Descripción de necesidades o prácticas religiosas (opcional)"><%= locals.paciente?.necesidadesReligiosas || '' %></textarea>
-              </div>
+    <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
+      <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50 focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-expanded="false">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-violet-100 overflow-hidden" aria-hidden="true">
+              <img src="/img/datosin.png" alt="" class="w-12 h-12 object-contain drop-shadow-sm">
             </div>
-            <div class="flex justify-end pt-6">
-              <button type="submit" class="btn-guardar w-full md:w-auto px-8 py-3.5 bg-colorAzulFundacion hover:bg-slate-900 text-white text-base font-bitter rounded-xl transition-all shadow-md active:scale-95">
-                Guardar datos personales
-              </button>
-            </div>
-          </form>
+          <span class="text-lg font-bold text-slate-800">Mis datos personales</span>
         </div>
+        <svg aria-hidden="true" class="accordion-chevron w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="accordion-content hidden px-6 pb-8 pt-2">
+        <form id="form-datos-personales" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="dni" class="block text-sm font-semibold text-slate-700 mb-2">DNI</label>
+              <input type="text" id="dni" name="dni" value="<%= locals.paciente?.dni || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Ingresá tu DNI">
+            </div>
+            <div>
+              <label for="apodo" class="block text-sm font-semibold text-slate-700 mb-2">Apodo</label>
+              <input type="text" id="apodo" name="apodo" value="<%= locals.paciente?.apodo || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Cómo te llaman">
+            </div>
+            <div>
+              <label for="fechaNacimiento" class="block text-sm font-semibold text-slate-700 mb-2">Fecha de nacimiento</label>
+              <input type="date" id="fechaNacimiento" name="fechaNacimiento" value="<%= locals.paciente?.fechaNacimiento ? new Date(locals.paciente.fechaNacimiento).toISOString().split('T')[0] : '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all">
+            </div>
+            <div>
+              <label for="telefono" class="block text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
+              <input type="tel" id="telefono" name="telefono" value="<%= locals.paciente?.telefono || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Ingresá tu número de teléfono">
+            </div>
+            <div>
+              <label for="nroObraSocial" class="block text-sm font-semibold text-slate-700 mb-2">Nro. Obra Social</label>
+              <input type="text" id="nroObraSocial" name="nroObraSocial" value="<%= locals.paciente?.nroObraSocial || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Número de afiliado">
+            </div>
+            <div>
+              <label for="direccion" class="block text-sm font-semibold text-slate-700 mb-2">Dirección</label>
+              <input type="text" id="direccion" name="direccion" value="<%= locals.paciente?.direccion || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all" placeholder="Calle, número, ciudad">
+            </div>
+            <div>
+              <label for="nacionalidad" class="block text-sm font-semibold text-slate-700 mb-2">Nacionalidad</label>
+              <input type="text" id="nacionalidad" name="nacionalidad" value="<%= locals.paciente?.nacionalidad || '' %>"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all">
+            </div>
+            <div class="md:col-span-2">
+              <label for="selectReligion" class="block text-sm font-semibold text-slate-700 mb-2">Religión</label>
+              <select name="religion" id="selectReligion"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all cursor-pointer">
+                <option value="">Seleccioná una opción...</option>
+                <option value="Católica"                <%= locals.paciente?.religion === 'Católica' ? 'selected' : '' %>>Católica</option>
+                <option value="Cristiana evangélica"    <%= locals.paciente?.religion === 'Cristiana evangélica' ? 'selected' : '' %>>Cristiana evangélica</option>
+                <option value="Cristiana protestante"   <%= locals.paciente?.religion === 'Cristiana protestante' ? 'selected' : '' %>>Cristiana protestante</option>
+                <option value="Judía"                   <%= locals.paciente?.religion === 'Judía' ? 'selected' : '' %>>Judía</option>
+                <option value="Islámica"                <%= locals.paciente?.religion === 'Islámica' ? 'selected' : '' %>>Islámica</option>
+                <option value="Budista"                 <%= locals.paciente?.religion === 'Budista' ? 'selected' : '' %>>Budista</option>
+                <option value="Hinduista"               <%= locals.paciente?.religion === 'Hinduista' ? 'selected' : '' %>>Hinduista</option>
+                <option value="Testigos de Jehová"      <%= locals.paciente?.religion === 'Testigos de Jehová' ? 'selected' : '' %>>Testigos de Jehová</option>
+                <option value="Mormona"                 <%= locals.paciente?.religion === 'Mormona' ? 'selected' : '' %>>Mormona</option>
+                <option value="Adventista"              <%= locals.paciente?.religion === 'Adventista' ? 'selected' : '' %>>Adventista</option>
+                <option value="Sin religión"            <%= locals.paciente?.religion === 'Sin religión' ? 'selected' : '' %>>Sin religión</option>
+                <option value="Otra"                    <%= locals.paciente?.religion === 'Otra' ? 'selected' : '' %>>Otra...</option>
+              </select>
+
+              <input type="text" name="religionPersonalizada" id="religionPersonalizada" aria-label="Escribí tu religión personalizada"
+                class="hidden mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-violet-50 focus:border-violet-400 outline-none transition-all"
+                placeholder="Escribí tu religión...">
+            </div>
+
+            <div class="md:col-span-2">
+              <label for="necesidadesReligiosas" class="block text-sm font-semibold text-slate-700 mb-2">Necesidades religiosas</label>
+              <textarea id="necesidadesReligiosas" name="necesidadesReligiosas" rows="3"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 outline-none transition-all resize-none"
+                placeholder="Descripción de necesidades o prácticas religiosas (opcional)"><%= locals.paciente?.necesidadesReligiosas || '' %></textarea>
+            </div>
+
+            <div class="md:col-span-2 mt-2 pt-6 border-t border-slate-100">
+              <h3 class="text-base font-bold text-slate-800 mb-4" tabindex="0">Foto de Perfil</h3>
+
+              <div class="flex flex-col sm:flex-row items-center gap-6 bg-slate-50/50 p-6 rounded-2xl border border-slate-200">
+
+                <div class="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0">
+                  <img id="img-perfil"
+                       src="<%= locals.paciente?.fotoPerfil ? locals.paciente.fotoPerfil.replace('/upload/', '/upload/c_fill,g_face,w_256,h_256,q_auto,f_auto/') : '/img/default-avatar.png' %>"
+                       alt="Foto de perfil actual"
+                       class="w-full h-full rounded-full object-cover border-4 border-white shadow-sm bg-slate-200">
+
+                  <label for="input-foto" class="absolute bottom-0 right-0 bg-colorAzulFundacion text-white p-2 rounded-full cursor-pointer hover:bg-slate-900 transition-all shadow-md focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500" aria-label="Seleccionar nueva foto de perfil">
+                    <svg aria-hidden="true" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  </label>
+
+                  <input type="file" id="input-foto" class="hidden" accept="image/*">
+                </div>
+
+                <div class="text-center sm:text-left">
+                  <p class="text-sm font-semibold text-slate-700 mb-1" tabindex="0">Actualizá tu foto</p>
+                  <p class="text-xs text-slate-500 max-w-xs" tabindex="0">Al elegir una imagen, se guardará automáticamente de forma segura.</p>
+                  <p id="texto-subiendo" class="text-sm font-bold text-indigo-600 mt-2 hidden" role="status" aria-live="polite">Subiendo foto, por favor esperá...</p>
+                </div>
+
+              </div>
+            </div>
+            </div>
+          <div class="flex justify-end pt-6">
+            <button type="submit" class="btn-guardar w-full md:w-auto px-8 py-3.5 bg-colorAzulFundacion hover:bg-slate-900 text-white text-base font-bitter rounded-xl transition-all shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              Guardar datos personales
+            </button>
+          </div>
+        </form>
       </div>
+    </div>
 
       <div class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-slate-300">
         <button class="accordion-trigger w-full flex items-center justify-between px-6 py-6 text-left focus:outline-none focus:bg-slate-50" aria-expanded="false">
@@ -647,6 +674,43 @@
             </div>
 
 <script>
+// ── Foto de Perfil (Subida automática) ─────────────────
+document.getElementById('input-foto')?.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('foto', file);
+
+  const textoSubiendo = document.getElementById('texto-subiendo');
+  if (textoSubiendo) textoSubiendo.classList.remove('hidden');
+
+  try {
+    // Hacemos el POST directo a la ruta que configuraste con Multer-Cloudinary
+    const res = await fetch(`/pacientes/foto`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!res.ok) throw new Error('Error al subir la foto');
+
+    const data = await res.json();
+
+    // Le aplicamos el recorte de Cloudinary al vuelo para mostrarla al instante
+    const urlOptimizada = data.url.replace('/upload/', '/upload/c_fill,g_face,w_256,h_256,q_auto,f_auto/');
+
+    const imgPerfil = document.getElementById('img-perfil');
+    if (imgPerfil) imgPerfil.src = urlOptimizada;
+
+    showToast('Foto de perfil actualizada con éxito');
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    if (textoSubiendo) textoSubiendo.classList.add('hidden');
+  }
+});
+
+
 document.querySelectorAll('.accordion-trigger').forEach(trigger => {
   trigger.addEventListener('click', () => {
     const content = trigger.nextElementSibling;

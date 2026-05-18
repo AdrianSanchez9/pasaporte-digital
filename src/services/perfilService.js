@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const cloudinary = require("cloudinary").v2;
 
 const obtenerPerfilCompleto = async (userId) => {
   const user = await prisma.user.findUnique({

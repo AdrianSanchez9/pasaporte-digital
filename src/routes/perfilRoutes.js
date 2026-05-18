@@ -1,44 +1,38 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { auth } = require('../middleware/auth');
-const { requireRole } = require('../middleware/authorize');
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
+const { auth } = require("../middleware/auth");
+const { requireRole } = require("../middleware/authorize");
 const {
   obtenerMiPerfil,
   verPerfilCompletoPaciente,
-  renderPerfilPaciente
-} = require('../controllers/perfilController');
+  renderPerfilPaciente,
+} = require("../controllers/perfilController");
 
-const perfilController = require('../controllers/perfilController');
+const perfilController = require("../controllers/perfilController");
 
+router.get("/cuenta", auth, perfilController.datosUsuario);
 
 router.get(
-  '/',
+  "/paciente-asociado",
   auth,
-  obtenerMiPerfil
+  requireRole("ACOMPAÑANTE"),
+  renderPerfilPaciente,
 );
 
 router.get(
-  '/cuenta',
+  "/:id/perfil-paciente/",
   auth,
-  perfilController.datosUsuario
+  requireRole("MEDICO", "ADMIN", "EXTERNO", "ENFERMERO"),
+  verPerfilCompletoPaciente,
 );
 
-
-router.get(
-  '/paciente-asociado',
+router.put("/actualizar-datos", auth, perfilController.actualizarDatos);
+router.put(
+  "/actualizar-contrasena",
   auth,
-  requireRole( 'ACOMPAÑANTE'),
-  renderPerfilPaciente
+  perfilController.actualizarContrasena,
 );
-
-router.get(
-  '/:id/perfil-paciente/',
-  auth,
-  requireRole('MEDICO', 'ADMIN' , 'EXTERNO' , 'ENFERMERO'),
-  verPerfilCompletoPaciente
-);
-
-router.put('/actualizar-datos', auth, perfilController.actualizarDatos);
-router.put('/actualizar-contrasena', auth, perfilController.actualizarContrasena);
 
 module.exports = router;

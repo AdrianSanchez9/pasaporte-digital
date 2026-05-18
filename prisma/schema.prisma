@@ -83,6 +83,7 @@ model Paciente {
   telefono              String?
   medicoCabeceraId      String?
   religion              String?
+  fotoPerfil            String?
   necesidadesReligiosas String?       @db.Text
   nacionalidad          String?       @db.Text
   createdAt             DateTime      @default(now())

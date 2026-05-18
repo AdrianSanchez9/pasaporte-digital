@@ -1,7 +1,7 @@
-const cloudinary = require('cloudinary');
-const  CloudinaryStorage  = require('multer-storage-cloudinary');
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
+const cloudinary = require("cloudinary");
+const CloudinaryStorage = require("multer-storage-cloudinary");
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,35 +9,27 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = CloudinaryStorage({
+//STORAGE PARA PERFILES
+const storagePerfil = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'ong_pasaporte_pacientes',
-
-    resource_type: 'auto',
-
-    params: async (req, file) => {
-
-        // 1. Armamos nuestras variables acá afuera
-        const pacienteId = req.params.id || 'sin-id';
-        const miUuid = uuidv4().substring(0, 6);
-
-        // 2. Limpiamos el nombre original (le sacamos la extensión y reemplazamos espacios por guiones bajos)
-        // Esto evita que si suben "Mi Receta (1).pdf" se rompa la URL
-        const nombreOriginalLimpio = file.originalname
-          .replace(/\.[^/.]+$/, "")
-          .replace(/[^a-zA-Z0-9]/g, "_");
-
-        // 3. Devolvemos el objeto de configuración totalmente masticado y en formato texto
-        return {
-          folder: 'ong_pasaporte_pacientes',
-          resource_type: 'auto',
-          public_id: `${pacienteId}_${miUuid}_${nombreOriginalLimpio}`
-        };
-      },
+    folder: "ong_pasaporte_pacientes/perfiles",
+    resource_type: "image",
   },
 });
 
-const upload = multer({ storage: storage });
+//STORAGE PARA ESTUDIOS MÉDICOS
+const storageEstudios = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "ong_pasaporte_pacientes/estudios",
+    resource_type: "auto",
+    // Al sacarle el public_id, Cloudinary le inventa uno 100% seguro y corto.
+    // Adiós al error "is too long" o "is invalid".
+  },
+});
 
-module.exports = upload;
+module.exports = {
+  uploadPerfil: multer({ storage: storagePerfil }),
+  uploadEstudios: multer({ storage: storageEstudios }),
+};

@@ -409,6 +409,32 @@ const eliminarArchivo = async (req, res) => {
   }
 };
 
+const subirFotoPerfil = async (req, res) => {
+  try {
+    // 1. Tomamos el pacienteId directamente de los parámetros de la URL
+    const pacienteId = req.user.id;
+    console.log("Id del pacinete", pacienteId);
+    // 2. Validación de seguridad básica de Multer
+    if (!req.file) {
+      return res.status(400).json({ mensaje: "No se detectó ninguna imagen." });
+    }
+
+    // 3. Tu middleware de Cloudinary guarda la URL pública en req.file.path
+    const urlCloudinary = req.file.secure_url;
+
+    // 4. Llamamos a tu servicio pasándole la URL para actualizar Prisma
+    await pacienteService.actualizarFotoPerfil(pacienteId, urlCloudinary);
+
+    // 5. Devolvemos la URL como respuesta JSON para que el fetch del frontend la dibuje al instante
+    return res.json({ url: urlCloudinary });
+  } catch (error) {
+    console.error("Error al subir la foto de perfil:", error);
+    return res
+      .status(500)
+      .json({ mensaje: "Hubo un problema al guardar la foto de perfil." });
+  }
+};
+
 module.exports = {
   listarPacientes,
   verPaciente,
@@ -428,4 +454,5 @@ module.exports = {
   listarArchivosHistorial,
   listarArchivosDePaciente,
   eliminarArchivo,
+  subirFotoPerfil,
 };

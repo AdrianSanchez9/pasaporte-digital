@@ -1,4 +1,5 @@
-const prisma = require('../config/database');
+const prisma = require("../config/database");
+const cloudinary = require("cloudinary").v2;
 
 const listarPacientes = async ({ search, limit = 10, offset = 0 }) => {
   const where = search
@@ -37,7 +38,7 @@ const listarPacientes = async ({ search, limit = 10, offset = 0 }) => {
       skip: offset,
       orderBy: {
         user: {
-          apellido: 'asc',
+          apellido: "asc",
         },
       },
     }),
@@ -56,16 +57,14 @@ const mostrarPacientes = async ({ search }) => {
         select: {
           nombre: true,
           apellido: true,
-        }
-      }
+        },
+      },
     },
     orderBy: {
-      user: { nombre: 'asc' }
-    }
+      user: { nombre: "asc" },
+    },
   });
 };
-
-
 
 const buscarPacientePorId = async (userId) => {
   return await prisma.paciente.findUnique({
@@ -82,7 +81,7 @@ const buscarPacientePorId = async (userId) => {
       },
       medicoCabecera: true,
       contactos: {
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       },
       acompanantes: {
         include: {
@@ -120,7 +119,7 @@ const actualizarPerfil = async (userId, datos) => {
 const listarContactos = async (pacienteId) => {
   return await prisma.contactoPaciente.findMany({
     where: { pacienteId },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
   });
 };
 
@@ -130,7 +129,7 @@ const asignarMedicoCabecera = async (pacienteId, medicoCabeceraId) => {
   });
 
   if (!medico) {
-    throw new Error('Médico de cabecera no encontrado');
+    throw new Error("Médico de cabecera no encontrado");
   }
 
   return await prisma.paciente.update({
@@ -166,38 +165,68 @@ const actualizarMiContacto = async (pacienteId, datos) => {
   });
 };
 
-
 const crearContacto = async (pacienteId, datos) => {
   return await prisma.contactoPaciente.create({
     data: {
       ...datos,
-      pacienteId
-
-    }
+      pacienteId,
+    },
   });
 };
 
 const actualizarContacto = async (contactoId, pacienteId, datos) => {
   const contacto = await prisma.contactoPaciente.findFirst({
-    where: { id: contactoId, pacienteId } // ← directo
+    where: { id: contactoId, pacienteId }, // ← directo
   });
-  if (!contacto) throw new Error('Contacto no encontrado');
+  if (!contacto) throw new Error("Contacto no encontrado");
 
   return await prisma.contactoPaciente.update({
     where: { id: contactoId },
-    data: datos
+    data: datos,
   });
 };
 
 const eliminarContacto = async (contactoId, pacienteId) => {
   const contacto = await prisma.contactoPaciente.findFirst({
-    where: { id: contactoId, pacienteId }
+    where: { id: contactoId, pacienteId },
   });
-  if (!contacto) throw new Error('Contacto no encontrado');
+  if (!contacto) throw new Error("Contacto no encontrado");
 
   return await prisma.contactoPaciente.delete({
-    where: { id: contactoId }
+    where: { id: contactoId },
   });
+};
+
+const actualizarFotoPerfil = async (pacienteId, urlCloudinary) => {
+  const paciente = await prisma.paciente.findUnique({
+    where: { userId: pacienteId },
+  });
+
+  if (paciente && paciente.fotoPerfil) {
+    try {
+      const urlVieja = paciente.fotoPerfil;
+      const partes = urlVieja.split("/upload/");
+
+      if (partes.length === 2) {
+        const rutaLimpia = partes[1].replace(/^v\d+\//, "");
+        const publicIdViejo = rutaLimpia.substring(
+          0,
+          rutaLimpia.lastIndexOf("."),
+        );
+
+        await cloudinary.uploader.destroy(publicIdViejo);
+      }
+    } catch (error) {
+      console.error("Error al intentar borrar la foto vieja:", error);
+    }
+  }
+
+  await prisma.paciente.update({
+    where: { userId: pacienteId },
+    data: { fotoPerfil: urlCloudinary },
+  });
+
+  return urlCloudinary;
 };
 
 module.exports = {
@@ -212,5 +241,6 @@ module.exports = {
   crearContacto,
   actualizarContacto,
   eliminarContacto,
-  mostrarPacientes
+  mostrarPacientes,
+  actualizarFotoPerfil,
 };

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../config/cloudinary");
+const { uploadPerfil, uploadEstudios } = require("../config/cloudinary");
 const { auth } = require("../middleware/auth");
 const { requireRole } = require("../middleware/authorize");
 const { validateSchema } = require("../middleware/validateSchema");
@@ -27,6 +27,7 @@ const {
   subirArchivo,
   listarArchivosHistorial,
   listarArchivosDePaciente,
+  subirFotoPerfil,
 } = require("../controllers/paciente/pacienteController");
 
 router.get(
@@ -89,7 +90,14 @@ router.get(
   mostrarFormularioArchivo,
 );
 
-router.post("/archivos", auth, upload.single("archivoPdf"), subirArchivo);
+router.post(
+  "/archivos",
+  auth,
+  uploadEstudios.single("archivoPdf"),
+  subirArchivo,
+);
+
+router.post("/foto", auth, uploadPerfil.single("foto"), subirFotoPerfil);
 
 router.post(
   "/archivos/:archivoId/eliminar",
