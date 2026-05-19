@@ -1,15 +1,11 @@
-1- Agregar foto del paciente.
-    1.1 - Mostrar la foto en el pasaporte.
+1- Agregar foto del paciente. LISTO
+    1.1 - Mostrar la foto en el pasaporte. LISTO
 2- Poder recuperar la contraseña.
+
 3- Agrandar las letras.
+
 4- Poner los pictogramas.
+
 5- Un paciente tiene a varios personas de apoyos asociadas. Cambiar esto, cuando se
     registra el usuario.
         -> Consultar: Entonces el paciente es quien le asigna la persona de apoyo?
-
-"Preguntar esto: En la charla se hablo que se pueden registrar cualquier medico.
-El tema de eso, es que yo hice para que el administrador solamente tenga esa funcion.
-Dado que si es un registro publico, cualquier persona ya sea medico o que no sea personal
-de salud, se puede registrar al sistema.
-Yo creo que lo ideal, para evitar esto es que solamente los administradores puedan hacerlo, mas que nada por cuestiones de seguridad, lo iba a comentar en la meet del viernes, pero se me paso la verdad.
-No se que opinas vos, dado que si es un registro publico, ademas tendriamos que hacer validaciones mas complejas, sobre si la persona realmente es ella, si realmente es un medico, etc."

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Nueva Contraseña - ONG Pasaporte</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-100 font-sans">
+
+  <div class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-sm border border-slate-200 p-8 sm:p-10">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-100">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        </div>
+        <h1 class="text-2xl font-extrabold text-slate-800">Nueva contraseña</h1>
+        <p class="text-sm text-slate-500 mt-2">Creá una nueva contraseña segura para tu cuenta.</p>
+      </div>
+
+      <form id="form-reset" class="space-y-5">
+        <input type="hidden" id="token" value="<%= token %>">
+
+        <div>
+          <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">Nueva contraseña</label>
+          <input type="password" id="password" required minlength="8"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-slate-800 focus:bg-white focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none transition-all"
+            placeholder="Mínimo 8 carac. (A-z, 0-9)">
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-semibold text-slate-700 mb-2">Confirmar contraseña</label>
+          <input type="password" id="confirmPassword" required minlength="8"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-slate-800 focus:bg-white focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none transition-all"
+            placeholder="Repetí la contraseña">
+        </div>
+
+        <div id="mensaje-box" class="hidden rounded-xl p-4 text-sm font-medium text-center"></div>
+
+        <button type="submit" id="btn-submit" class="w-full py-3.5 bg-slate-800 hover:bg-slate-900 text-white text-base font-bold rounded-xl transition-all shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 mt-2">
+          Guardar nueva contraseña
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    document.getElementById('form-reset').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn = document.getElementById('btn-submit');
+      const mensajeBox = document.getElementById('mensaje-box');
+
+      const token = document.getElementById('token').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        mensajeBox.textContent = 'Las contraseñas no coinciden.';
+        mensajeBox.className = 'rounded-xl p-4 text-sm font-medium text-center bg-red-50 text-red-700 border border-red-200';
+        mensajeBox.classList.remove('hidden');
+        return;
+      }
+
+      btn.textContent = 'Guardando...';
+      btn.disabled = true;
+      mensajeBox.classList.add('hidden');
+
+      try {
+        const res = await fetch(`/auth/restaurar-contrasena/${token}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password: password,
+            confirmPassword: confirmPassword
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.mensaje || 'Error al restablecer la contraseña');
+
+        mensajeBox.textContent = data.mensaje;
+        mensajeBox.className = 'rounded-xl p-4 text-sm font-medium text-center bg-green-50 text-green-700 border border-green-200';
+        mensajeBox.classList.remove('hidden');
+
+        btn.classList.add('hidden');
+
+        setTimeout(() => {
+          window.location.href = '/auth/login';
+        }, 2000);
+
+      } catch (error) {
+        mensajeBox.textContent = error.message;
+        mensajeBox.className = 'rounded-xl p-4 text-sm font-medium text-center bg-red-50 text-red-700 border border-red-200';
+        mensajeBox.classList.remove('hidden');
+        btn.textContent = 'Guardar nueva contraseña';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

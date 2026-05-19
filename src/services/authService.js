@@ -1,13 +1,15 @@
+const bcrypt = require("bcryptjs");
+const prisma = require("../config/database");
+const emailService = require("./emailService");
+const crypto = require("crypto");
 
-const bcrypt = require('bcryptjs');
-const prisma = require('../config/database');
 const {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
   getExpirationDate,
   JWT_REFRESH_EXPIRES_IN,
-} = require('../config/jwt');
+} = require("../config/jwt");
 
 const hashPassword = async (password) => {
   const rounds = parseInt(process.env.BCRYPT_ROUNDS) || 10;
@@ -19,15 +21,24 @@ const verifyPassword = async (password, hashedPassword) => {
 };
 
 const crearUsuarioCompleto = async (data) => {
-  const { email, nombre, apellido, hashedPassword, rolId, rolNombre, especialidad, pacienteId } = data;
+  const {
+    email,
+    nombre,
+    apellido,
+    hashedPassword,
+    rolId,
+    rolNombre,
+    especialidad,
+    pacienteId,
+  } = data;
 
   let datosPerfil = {};
 
-  if (rolNombre === 'PACIENTE') {
+  if (rolNombre === "PACIENTE") {
     datosPerfil = { datosPaciente: { create: {} } };
-  } else if (rolNombre === 'MEDICO') {
+  } else if (rolNombre === "MEDICO") {
     datosPerfil = { datosMedico: { create: { especialidad } } };
-  } else if (rolNombre === 'ACOMPANANTE') {
+  } else if (rolNombre === "ACOMPANANTE") {
     datosPerfil = { datosAcompanante: { create: { pacienteId } } };
   }
 
@@ -38,14 +49,13 @@ const crearUsuarioCompleto = async (data) => {
       nombre,
       apellido,
       rolId,
-      ...datosPerfil
+      ...datosPerfil,
     },
     include: {
-      rol: true
-    }
+      rol: true,
+    },
   });
 };
-
 
 const crearUsuario = async ({ email, hashedPassword, rolId }) => {
   const user = await prisma.user.create({
@@ -68,9 +78,9 @@ const crearPaciente = async (userId) => {
   return await prisma.paciente.create({
     data: {
       userId,
-      nombre: '',  // Se completa después en el perfil
-      apellido: '',
-      dni: '',
+      nombre: "", // Se completa después en el perfil
+      apellido: "",
+      dni: "",
     },
   });
 };
@@ -80,9 +90,9 @@ const crearMedico = async (userId) => {
   return await prisma.medico.create({
     data: {
       userId,
-      nombre: '',
-      apellido: '',
-      matricula: '',
+      nombre: "",
+      apellido: "",
+      matricula: "",
     },
   });
 };
@@ -92,8 +102,8 @@ const crearAcompañante = async (userId, pacienteId) => {
   return await prisma.acompañante.create({
     data: {
       userId,
-      nombre: '',
-      apellido: '',
+      nombre: "",
+      apellido: "",
       pacienteId,
     },
   });
@@ -117,23 +127,23 @@ const login = async ({ email, password }) => {
   });
 
   if (!user) {
-    throw new Error('Credenciales inválidas');
+    throw new Error("Credenciales inválidas");
   }
 
   if (!user.activo) {
-    throw new Error('Usuario deshabilitado. Contactá al administrador.');
+    throw new Error("Usuario deshabilitado. Contactá al administrador.");
   }
 
   const passwordValida = await verifyPassword(password, user.password);
 
   if (!passwordValida) {
-    throw new Error('Credenciales inválidas');
+    throw new Error("Credenciales inválidas");
   }
 
   const payload = {
     id: user.id,
     email: user.email,
-    nombre : user.nombre,
+    nombre: user.nombre,
     rolNombre: user.rol.nombre,
   };
 
@@ -168,7 +178,7 @@ const renovarToken = async (refreshToken) => {
   try {
     payload = verifyRefreshToken(refreshToken);
   } catch (error) {
-    throw new Error('Refresh token inválido o expirado');
+    throw new Error("Refresh token inválido o expirado");
   }
 
   const tokenEnDB = await prisma.refreshToken.findUnique({
@@ -183,15 +193,15 @@ const renovarToken = async (refreshToken) => {
   });
 
   if (!tokenEnDB) {
-    throw new Error('Refresh token no encontrado');
+    throw new Error("Refresh token no encontrado");
   }
 
   if (tokenEnDB.revoked) {
-    throw new Error('Refresh token revocado');
+    throw new Error("Refresh token revocado");
   }
 
   if (new Date() > tokenEnDB.expiresAt) {
-    throw new Error('Refresh token expirado');
+    throw new Error("Refresh token expirado");
   }
 
   const nuevoPayload = {
@@ -229,6 +239,56 @@ const logoutTodasLasSesiones = async (userId) => {
   });
 };
 
+const procesarSolicitudRecuperacion = async (email, host) => {
+  const usuario = await prisma.user.findUnique({ where: { email } });
+
+  if (!usuario) return true;
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiracion = new Date(Date.now() + 3600000);
+
+  await prisma.user.update({
+    where: { email },
+    data: { resetPasswordToken: token, resetPasswordExpires: expiracion },
+  });
+
+  const resetUrl = `http://${host}/auth/restaurar-contrasena/${token}`;
+
+  await emailService.enviarRecuperarContrasena(usuario.email, resetUrl);
+
+  return true;
+};
+
+const ejecutarCambioContrasena = async (token, nuevaPassword) => {
+  const usuario = await prisma.user.findFirst({
+    where: {
+      resetPasswordToken: token,
+      resetPasswordExpires: { gt: new Date() },
+    },
+  });
+
+  console.log("-----------------");
+  console.log(usuario);
+
+  if (!usuario) {
+    throw new Error("El enlace de recuperación es inválido o ha expirado.");
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const passwordHasheada = await bcrypt.hash(nuevaPassword, salt);
+
+  await prisma.user.update({
+    where: { id: usuario.id },
+    data: {
+      password: passwordHasheada,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    },
+  });
+
+  return true;
+};
+
 module.exports = {
   hashPassword,
   verifyPassword,
@@ -241,4 +301,6 @@ module.exports = {
   renovarToken,
   logout,
   logoutTodasLasSesiones,
+  procesarSolicitudRecuperacion,
+  ejecutarCambioContrasena,
 };

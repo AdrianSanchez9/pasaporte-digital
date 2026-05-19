@@ -1,41 +1,47 @@
-const { z } = require('zod');
-const authService = require('../../services/authService');
-const pacienteService = require('../../services/pacienteService');
-const emailService = require('../../services/emailService');
-const generarContrasena = require('../../utils/generarContrasena');
+const { z } = require("zod");
+const authService = require("../../services/authService");
+const pacienteService = require("../../services/pacienteService");
+const emailService = require("../../services/emailService");
+const generarContrasena = require("../../utils/generarContrasena");
 const {
   verificarEmailDisponible,
   verificarRolExiste,
   verificarPacienteExiste,
-} = require('../../utils/authValidations');
+} = require("../../utils/authValidations");
 const {
   registroSchema,
   loginSchema,
   refreshTokenSchema,
-} = require('../../schemas/authSchemas');
-
-
+  actualizacionContrasenaUsuarioSchema,
+} = require("../../schemas/authSchemas");
 
 const registroNuevo = async (req, res) => {
   try {
-
-    console.log ("Datos del body :  " , req.body)
+    console.log("Datos del body :  ", req.body);
     const datosValidados = registroSchema.parse(req.body);
 
-    const { email, nombre, apellido, password, rolNombre, especialidad, pacienteId } = datosValidados;
+    const {
+      email,
+      nombre,
+      apellido,
+      password,
+      rolNombre,
+      especialidad,
+      pacienteId,
+    } = datosValidados;
 
     await verificarEmailDisponible(email);
     const rol = await verificarRolExiste(rolNombre);
 
-    if (rolNombre === 'MEDICO') {
-      if (!especialidad || especialidad.trim() === '') {
-        throw new Error('La especialidad es obligatoria para médicos.');
+    if (rolNombre === "MEDICO") {
+      if (!especialidad || especialidad.trim() === "") {
+        throw new Error("La especialidad es obligatoria para médicos.");
       }
     }
 
-    if (rolNombre === 'ACOMPANANTE') {
+    if (rolNombre === "ACOMPANANTE") {
       if (!pacienteId) {
-        throw new Error('Debe seleccionar un paciente para el acompañante.');
+        throw new Error("Debe seleccionar un paciente para el acompañante.");
       }
       await verificarPacienteExiste(pacienteId);
     }
@@ -45,17 +51,23 @@ const registroNuevo = async (req, res) => {
     const hashedPassword = await authService.hashPassword(passwordAleatoria);
 
     const user = await authService.crearUsuarioCompleto({
-      email, nombre, apellido, hashedPassword, rolId: rol.id, rolNombre, especialidad, pacienteId
+      email,
+      nombre,
+      apellido,
+      hashedPassword,
+      rolId: rol.id,
+      rolNombre,
+      especialidad,
+      pacienteId,
     });
 
     await emailService.enviarCredencialesAlta(user.email, passwordAleatoria);
 
-    return res.redirect('/auth/registro?success=true');
-
+    return res.redirect("/auth/registro?success=true");
   } catch (error) {
-    console.error('Error en registro:', error);
+    console.error("Error en registro:", error);
 
-    let mensajeError = 'Ocurrió un error al procesar el registro.';
+    let mensajeError = "Ocurrió un error al procesar el registro.";
 
     if (error && error.errors && error.errors[0]) {
       mensajeError = error.errors[0].message;
@@ -65,9 +77,9 @@ const registroNuevo = async (req, res) => {
       mensajeError = error.message;
     }
 
-    return res.status(400).render('auth/registro', {
+    return res.status(400).render("auth/registro", {
       error: mensajeError,
-      formData: req.body
+      formData: req.body,
     });
   }
 };
@@ -81,30 +93,29 @@ const login = async (req, res) => {
       password,
     });
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict', // Protección CSRF
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict", // Protección CSRF
       maxAge: 15 * 60 * 1000, // 15 minutos
     });
 
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
     });
 
-    return res.redirect('/');
-
+    return res.redirect("/");
   } catch (error) {
-    console.error('Error en login:', error);
+    console.error("Error en login:", error);
 
-    return res.status(401).render('auth/login', {
-            title: 'Iniciar Sesión',
-            error: error.message || 'Credenciales inválidas',
-            user: null // Siempre pasamos user: null para que el header no explote
-        });
+    return res.status(401).render("auth/login", {
+      title: "Iniciar Sesión",
+      error: error.message || "Credenciales inválidas",
+      user: null, // Siempre pasamos user: null para que el header no explote
+    });
   }
 };
 
@@ -115,32 +126,31 @@ const refresh = async (req, res) => {
 
     if (!refreshToken) {
       return res.status(401).json({
-        error: 'No autenticado',
-        mensaje: 'No hay refresh token disponible',
+        error: "No autenticado",
+        mensaje: "No hay refresh token disponible",
       });
     }
 
     const { accessToken } = await authService.renovarToken(refreshToken);
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 15 * 60 * 1000, // 15 minutos
     });
 
     res.json({
-      mensaje: 'Token renovado exitosamente',
+      mensaje: "Token renovado exitosamente",
     });
-
   } catch (error) {
-    console.error('Error en refresh:', error);
+    console.error("Error en refresh:", error);
 
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
 
     res.status(401).json({
-      error: 'Error de renovación',
+      error: "Error de renovación",
       mensaje: error.message,
     });
   }
@@ -155,21 +165,20 @@ const logout = async (req, res) => {
       await authService.logout(refreshToken);
     }
 
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
 
     res.json({
-      mensaje: 'Logout exitoso',
+      mensaje: "Logout exitoso",
     });
-
   } catch (error) {
-    console.error('Error en logout:', error);
+    console.error("Error en logout:", error);
 
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
 
     res.status(500).json({
-      error: 'Error en logout',
+      error: "Error en logout",
       mensaje: error.message,
     });
   }
@@ -182,55 +191,87 @@ const logoutAll = async (req, res) => {
     await authService.logoutTodasLasSesiones(req.user.id);
 
     // Limpiar cookies de esta sesión
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
 
     res.json({
-      mensaje: 'Cerraste sesión en todos tus dispositivos',
+      mensaje: "Cerraste sesión en todos tus dispositivos",
     });
-
   } catch (error) {
-    console.error('Error en logoutAll:', error);
+    console.error("Error en logoutAll:", error);
 
     res.status(500).json({
-      error: 'Error al cerrar sesiones',
+      error: "Error al cerrar sesiones",
       mensaje: error.message,
     });
   }
 };
 
-
-const me = async (req, res) => {
+const recuperarContrasena = async (req, res) => {
   try {
-    res.json({
-      user: req.user,
+    const { email } = req.body;
+    const host = req.headers.host;
+
+    await authService.procesarSolicitudRecuperacion(email, host);
+
+    return res.json({
+      mensaje: "Se enviara un correo para reestablecer la contraseña.",
     });
   } catch (error) {
-    console.error('Error en me:', error);
+    console.error("Error en solicitarRecuperacion:", error);
+    return res.status(500).json({
+      mensaje: "Error interno del servidor al procesar la solicitud.",
+    });
+  }
+};
 
-    res.status(500).json({
-      error: 'Error al obtener información del usuario',
-      mensaje: error.message,
+const cambiarContrasenaRestauracion = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const { password, confirmPassword } = req.body;
+
+    const datosValidados = actualizacionContrasenaUsuarioSchema.parse({
+      password,
+      confirmPassword,
+    });
+
+    await authService.ejecutarCambioContrasena(token, datosValidados.password);
+
+    return res.json({
+      mensaje: "¡Contraseña actualizada con éxito! Ya podés iniciar sesión.",
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      if (error.issues && error.issues.length > 0) {
+        const primerError = error.issues[0].message;
+        return res.status(400).json({ mensaje: primerError });
+      }
+    }
+    return res.status(400).json({
+      mensaje:
+        error.message ||
+        "Hubo un problema al intentar restablecer la contraseña.",
     });
   }
 };
 
 const renderLoginForm = (req, res) => {
-  res.render('auth/login', {
-    title: 'Iniciar Sesión',
+  res.render("auth/login", {
+    title: "Iniciar Sesión",
     error: null,
-    query: req.query, // Para mensajes tipo ?registrado=true
+    query: req.query,
   });
 };
 
-const renderRegistroForm = async  (req, res) => {
-  const pacientes = await pacienteService.mostrarPacientes({})
-  console.log ('Pacientes ' , pacientes)
-  res.render('auth/registro', {
-    title: 'Registrarse',
+const renderRegistroForm = async (req, res) => {
+  const pacientes = await pacienteService.mostrarPacientes({});
+  console.log("Pacientes ", pacientes);
+  res.render("auth/registro", {
+    title: "Registrarse",
     error: null,
     formData: {},
-    pacientes
+    pacientes,
   });
 };
 
@@ -240,7 +281,9 @@ module.exports = {
   refresh,
   logout,
   logoutAll,
-  me,
+  recuperarContrasena,
   renderLoginForm,
-  renderRegistroForm
+  renderRegistroForm,
+  recuperarContrasena,
+  cambiarContrasenaRestauracion,
 };
