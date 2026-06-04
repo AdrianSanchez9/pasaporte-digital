@@ -16,6 +16,7 @@
     gap: 1.25rem;
   }
 
+  /* ── HEADER CARD: credencial horizontal ── */
   .cred-card {
     background: #fff;
     border: 0.5px solid #cbd5e1;
@@ -28,6 +29,7 @@
     min-height: 160px;
   }
 
+  /* Panel izquierdo — slate suave */
   .cred-panel {
     width: 200px;
     flex-shrink: 0;
@@ -50,7 +52,9 @@
     flex-shrink: 0;
   }
 
-  .cred-name-block { text-align: center; }
+  .cred-name-block {
+    text-align: center;
+  }
 
   .cred-fullname {
     color: #f8fafc;
@@ -67,6 +71,7 @@
     margin-top: 3px;
   }
 
+  /* Panel derecho — datos + alertas */
   .cred-right {
     flex: 1;
     display: flex;
@@ -103,6 +108,7 @@
     font-weight: 600;
   }
 
+  /* Alertas dentro del cred-right */
   .cred-alerts {
     padding: 0.875rem 1.25rem;
     display: flex;
@@ -124,7 +130,10 @@
     gap: 5px;
   }
 
-  .alerts-title svg { width: 12px; height: 12px; }
+  .alerts-title svg {
+    width: 12px;
+    height: 12px;
+  }
 
   .alert-row {
     display: flex;
@@ -148,13 +157,29 @@
   }
 
   .alert-icon-wrap svg {
-    width: 14px; height: 14px;
-    color: #fff; stroke: #fff; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    width: 14px;
+    height: 14px;
+    color: #fff;
+    stroke: #fff;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  .alert-text-title { font-size: 12px; font-weight: 600; color: #991b1b; line-height: 1.2; }
-  .alert-text-desc  { font-size: 11px; color: #7f1d1d; line-height: 1.4; margin-top: 1px; }
+  .alert-text-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #991b1b;
+    line-height: 1.2;
+  }
+
+  .alert-text-desc {
+    font-size: 11px;
+    color: #7f1d1d;
+    line-height: 1.4;
+    margin-top: 1px;
+  }
 
   /* ── SECCIONES GENERALES ── */
   .section-card {
@@ -173,17 +198,24 @@
   }
 
   .section-header-icon {
-    width: 28px; height: 28px;
+    width: 28px;
+    height: 28px;
     border-radius: 8px;
     background: #f1f5f9;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
   }
 
   .section-header-icon svg {
-    width: 15px; height: 15px;
-    stroke: #64748b; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    width: 15px;
+    height: 15px;
+    stroke: #64748b;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .section-title {
@@ -194,7 +226,9 @@
     letter-spacing: 0.06em;
   }
 
-  .section-body { padding: 1rem 1.25rem; }
+  .section-body {
+    padding: 1rem 1.25rem;
+  }
 
   /* ── GRID DE CAMPOS ── */
   .fields-grid {
@@ -214,8 +248,11 @@
   }
 
   .field-img {
-    width: 40px; height: 40px;
-    object-fit: contain; flex-shrink: 0; border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 6px;
   }
 
   .field-label {
@@ -234,8 +271,13 @@
     word-break: break-word;
   }
 
-  .field-item.span2 { grid-column: span 2; }
-  @media (max-width: 600px) { .field-item.span2 { grid-column: span 1; } }
+  .field-item.span2 {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 600px) {
+    .field-item.span2 { grid-column: span 1; }
+  }
 
   /* ── DOS COLUMNAS ── */
   .two-col {
@@ -263,23 +305,49 @@
     padding: 0.75rem 1rem;
     margin-bottom: 8px;
   }
+
   .contact-row:last-child { margin-bottom: 0; }
 
   .contact-avatar {
-    width: 36px; height: 36px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: #e2e8f0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600; color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
     flex-shrink: 0;
   }
 
-  .contact-name  { font-size: 13px; font-weight: 600; color: #1e293b; }
-  .contact-rel   { font-size: 11px; color: #64748b; margin-top: 1px; }
-  .contact-tel   { font-size: 13px; font-weight: 600; color: #475569; font-family: 'DM Mono', monospace; white-space: nowrap; }
+  .contact-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .contact-rel {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 1px;
+  }
+
+  .contact-tel {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+  }
 
   /* ── MEDICACIÓN ── */
-  .meds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .meds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
 
   .med-card {
     background: #f8fafc;
@@ -289,199 +357,284 @@
   }
 
   .med-name {
-    font-size: 13px; font-weight: 600; color: #1e293b;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
     padding-bottom: 0.6rem;
     border-bottom: 0.5px solid #e2e8f0;
     margin-bottom: 0.75rem;
     word-break: break-word;
-    display: flex; align-items: center; gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .med-name svg {
-    width: 14px; height: 14px; stroke: #6366f1; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    stroke: #6366f1;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
   }
 
-  .med-details { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .med-detail-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #94a3b8; margin-bottom: 2px; }
-  .med-detail-value { font-size: 12px; font-weight: 600; color: #334155; word-break: break-word; }
+  .med-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .med-detail-label {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #94a3b8;
+    margin-bottom: 2px;
+  }
+
+  .med-detail-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    word-break: break-word;
+  }
 
   .med-time {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: #eef2ff; color: #4338ca;
-    border-radius: 99px; padding: 3px 9px;
-    font-size: 11px; font-weight: 600; font-family: 'DM Mono', monospace;
-  }
-  .med-time svg { width: 11px; height: 11px; stroke: #4338ca; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  .info-block {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: flex-start;
-  }
-  .info-block:last-child { margin-bottom: 0; }
-
-  .info-block-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .info-block-icon svg {
-    width: 14px; height: 14px;
-    fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-  }
-
-  .info-block-content {
-    flex: 1;
-    min-width: 0;
-    border-left: 2px solid #e2e8f0;
-    padding-left: 10px;
+    gap: 4px;
+    background: #eef2ff;
+    color: #4338ca;
+    border-radius: 99px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
   }
 
-  .info-block-label {
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #94a3b8;
-    margin-bottom: 3px;
+  .med-time svg {
+    width: 11px;
+    height: 11px;
+    stroke: #4338ca;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  .info-block-value {
+  /* ── TEXTO LIBRE ── */
+  .prose-block {
+    background: #f8fafc;
+    border: 0.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.65rem 0.875rem;
     font-size: 13px;
     font-weight: 400;
     color: #334155;
     line-height: 1.55;
     white-space: pre-wrap;
     word-break: break-word;
+    margin-top: 4px;
   }
 
-  /* Variantes de color por tipo */
-  .info-block.blue  .info-block-icon { background: #eff6ff; }
-  .info-block.blue  .info-block-icon svg { stroke: #3b82f6; }
-  .info-block.blue  .info-block-content { border-left-color: #bfdbfe; }
+  .field-group {
+    margin-bottom: 10px;
+  }
 
-  .info-block.green .info-block-icon { background: #f0fdf4; }
-  .info-block.green .info-block-icon svg { stroke: #22c55e; }
-  .info-block.green .info-block-content { border-left-color: #bbf7d0; }
+  .field-group:last-child { margin-bottom: 0; }
 
-  .info-block.amber .info-block-icon { background: #fffbeb; }
-  .info-block.amber .info-block-icon svg { stroke: #f59e0b; }
-  .info-block.amber .info-block-content { border-left-color: #fde68a; }
-
-  .info-block.slate .info-block-icon { background: #f8fafc; }
-  .info-block.slate .info-block-icon svg { stroke: #64748b; }
-  .info-block.slate .info-block-content { border-left-color: #cbd5e1; }
-
-  .info-block.indigo .info-block-icon { background: #eef2ff; }
-  .info-block.indigo .info-block-icon svg { stroke: #6366f1; }
-  .info-block.indigo .info-block-content { border-left-color: #c7d2fe; }
-
-  /* ── COMM TAGS ── */
+  /* ── COMUNICACIÓN TAGS ── */
   .comm-tag {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: #eef2ff; color: #4338ca;
-    border-radius: 8px; padding: 5px 10px;
-    font-size: 12px; font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #eef2ff;
+    color: #4338ca;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
     margin: 3px 3px 3px 0;
   }
-  .comm-tag svg { width: 13px; height: 13px; stroke: #4338ca; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ── EMOCIONES con color por tipo ── */
-  .emotions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .comm-tag svg {
+    width: 13px;
+    height: 13px;
+    stroke: #4338ca;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── EMOCIONES ── */
+  .emotions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
 
   .emotion-item {
-    border-radius: 12px;
-    padding: 0.75rem 0.875rem;
-    border: 0.5px solid transparent;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    background: #f8fafc;
+    border: 0.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.65rem 0.875rem;
   }
 
-  .emotion-item.ansioso  { background: #fffbeb; border-color: #fde68a; }
-  .emotion-item.dolor    { background: #fff7ed; border-color: #fed7aa; }
-  .emotion-item.miedo    { background: #eff6ff; border-color: #bfdbfe; }
-  .emotion-item.enojo    { background: #fef2f2; border-color: #fecaca; }
-  .emotion-item.gusta    { background: #f0fdf4; border-color: #bbf7d0; }
-  .emotion-item.nogusta  { background: #fdf4ff; border-color: #e9d5ff; }
-
-  .emotion-full { grid-column: span 2; }
-
-  .emotion-emoji { font-size: 20px; display: block; }
+  .emotion-emoji {
+    font-size: 20px;
+    display: block;
+    margin-bottom: 4px;
+  }
 
   .emotion-label {
-    font-size: 9px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.08em;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #94a3b8;
+    margin-bottom: 2px;
   }
-  .emotion-item.ansioso .emotion-label  { color: #92400e; }
-  .emotion-item.dolor   .emotion-label  { color: #9a3412; }
-  .emotion-item.miedo   .emotion-label  { color: #1e40af; }
-  .emotion-item.enojo   .emotion-label  { color: #991b1b; }
-  .emotion-item.gusta   .emotion-label  { color: #166534; }
-  .emotion-item.nogusta .emotion-label  { color: #6b21a8; }
 
   .emotion-desc {
-    font-size: 12px; font-weight: 500; color: #334155;
-    line-height: 1.45; white-space: pre-wrap; word-break: break-word;
+    font-size: 12px;
+    font-weight: 500;
+    color: #334155;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 
-  /* ── WARNING visión/audición ── */
-  .warning-block {
-    background: #fefce8; border: 0.5px solid #fde047;
-    border-radius: 10px; padding: 0.65rem 0.875rem; margin-top: 8px;
+  .emotion-full {
+    grid-column: span 2;
   }
-  .warning-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #a16207; margin-bottom: 2px; }
-  .warning-value { font-size: 12px; font-weight: 500; color: #713f12; white-space: pre-wrap; word-break: break-word; }
+
+  /* ── AUDICION/VISION ── */
+  .warning-block {
+    background: #fefce8;
+    border: 0.5px solid #fde047;
+    border-radius: 10px;
+    padding: 0.65rem 0.875rem;
+    margin-top: 8px;
+  }
+
+  .warning-label {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #a16207;
+    margin-bottom: 2px;
+  }
+
+  .warning-value {
+    font-size: 12px;
+    font-weight: 500;
+    color: #713f12;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 
   /* ── ARCHIVOS ── */
   .file-row {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: #f8fafc; border: 0.5px solid #e2e8f0; border-radius: 10px;
-    padding: 0.65rem 0.875rem; margin-bottom: 8px; transition: border-color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #f8fafc;
+    border: 0.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.65rem 0.875rem;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
   }
+
   .file-row:last-child { margin-bottom: 0; }
   .file-row:hover { border-color: #cbd5e1; }
 
   .file-ext {
-    width: 32px; height: 32px; border-radius: 6px; background: #e2e8f0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 9px; font-weight: 700; color: #475569; text-transform: uppercase; flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    flex-shrink: 0;
   }
-  .file-name { font-size: 12px; font-weight: 600; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .file-date { font-size: 10px; color: #94a3b8; margin-top: 1px; }
+
+  .file-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .file-date {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 1px;
+  }
 
   .file-link {
-    color: #94a3b8; padding: 6px; border-radius: 8px;
-    display: flex; align-items: center; text-decoration: none;
-    transition: background 0.15s, color 0.15s; flex-shrink: 0;
+    color: #94a3b8;
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
   }
+
   .file-link:hover { background: #e2e8f0; color: #475569; }
-  .file-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .file-link svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 
   /* ── BOTÓN ── */
   .btn-primary {
-    display: block; width: 100%; text-align: center;
-    padding: 0.75rem 1rem; background: #1e293b; color: #fff;
-    font-size: 13px; font-weight: 600; border-radius: 12px;
-    text-decoration: none; transition: background 0.15s; margin-top: 1rem;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    background: #1e293b;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background 0.15s;
+    margin-top: 1rem;
   }
-  .btn-primary:hover { background: #0f172a; }
 
-  /* ── FIELD GROUP ── */
-  .field-group { margin-bottom: 10px; }
-  .field-group:last-child { margin-bottom: 0; }
+  .btn-primary:hover { background: #0f172a; }
 
   /* ── EMPTY ── */
   .empty-msg {
-    font-size: 12px; color: #94a3b8; background: #f8fafc;
-    border: 0.5px solid #e2e8f0; border-radius: 10px; padding: 1rem; text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+    background: #f8fafc;
+    border: 0.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
   }
 
   @media print {
@@ -504,6 +657,7 @@
     <div class="cred-card">
       <div class="cred-top">
 
+        <!-- Panel izquierdo con avatar y nombre -->
         <div class="cred-panel">
           <img
             src="<%= locals.paciente?.fotoPerfil ? locals.paciente.fotoPerfil.replace('/upload/', '/upload/c_fill,g_face,w_256,h_256,q_auto,f_auto/') : '/img/default-avatar.svg' %>"
@@ -518,7 +672,10 @@
           </div>
         </div>
 
+        <!-- Panel derecho: meta pills + alertas -->
         <div class="cred-right">
+
+          <!-- Pills de metadata -->
           <div class="cred-meta">
             <% if (locals.paciente?.fechaNacimiento) { %>
               <span class="meta-pill">
@@ -540,18 +697,20 @@
             <% } %>
             <% if (locals.paciente?.nacionalidad) { %>
               <span class="meta-pill">
-                <span class="meta-pill-label">Nacionalidad</span>
+                <span class="meta-pill-label">Nac.</span>
                 <%= locals.paciente.nacionalidad %>
               </span>
             <% } %>
           </div>
 
+          <!-- Alertas críticas -->
           <% if (hayAlertas) { %>
             <div class="cred-alerts">
               <p class="alerts-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 Alertas médicas críticas
               </p>
+
               <% if (tieneEpilepsia) { %>
                 <div class="alert-row">
                   <div class="alert-icon-wrap">
@@ -563,6 +722,7 @@
                   </div>
                 </div>
               <% } %>
+
               <% if (tieneOtrasCrisis) { %>
                 <div class="alert-row">
                   <div class="alert-icon-wrap">
@@ -574,6 +734,7 @@
                   </div>
                 </div>
               <% } %>
+
               <% if (tieneAlergias) { %>
                 <div class="alert-row">
                   <div class="alert-icon-wrap">
@@ -591,9 +752,11 @@
               <p style="font-size:12px;color:#94a3b8;">Sin alertas médicas registradas.</p>
             </div>
           <% } %>
+
         </div>
       </div>
     </div>
+    <!-- fin header card -->
 
 
     <!-- ══ DATOS PERSONALES ══ -->
@@ -606,15 +769,19 @@
       </div>
       <div class="section-body">
         <div class="fields-grid">
+
           <% if (locals.paciente?.telefono) { %>
             <div class="field-item">
-              <img src="/img/telefono.png" alt="" class="field-img" onerror="this.style.display='none'">
+              <% if (true) { /* img opcional */ %>
+                <img src="/img/telefono.png" alt="" class="field-img" onerror="this.style.display='none'">
+              <% } %>
               <div>
                 <p class="field-label">Teléfono</p>
                 <p class="field-value"><%= locals.paciente.telefono %></p>
               </div>
             </div>
           <% } %>
+
           <% if (locals.paciente?.direccion) { %>
             <div class="field-item span2">
               <img src="/img/direccion.png" alt="" class="field-img" onerror="this.style.display='none'">
@@ -624,6 +791,7 @@
               </div>
             </div>
           <% } %>
+
           <% if (locals.paciente?.religion) { %>
             <div class="field-item">
               <img src="/img/religion.jpg" alt="" class="field-img" onerror="this.style.display='none'">
@@ -633,6 +801,7 @@
               </div>
             </div>
           <% } %>
+
           <% if (locals.paciente?.necesidadesReligiosas) { %>
             <div class="field-item span2">
               <img src="/img/religion.jpg" alt="" class="field-img" onerror="this.style.display='none'">
@@ -642,12 +811,13 @@
               </div>
             </div>
           <% } %>
+
         </div>
       </div>
     </div>
 
 
-    <!-- ══ CONTACTOS + MÉDICO CABECERA ══ -->
+    <!-- ══ CONTACTOS + MÉDICO CABECERA (dos columnas) ══ -->
     <div class="two-col">
 
       <div class="section-card">
@@ -689,11 +859,13 @@
                 <%= (locals.paciente.medicoCabecera.nombre || 'M')[0].toUpperCase() %>
               </div>
               <div style="flex:1;min-width:0;">
-                <p class="contact-name"><%= locals.paciente.medicoCabecera.nombre %> <%= locals.paciente.medicoCabecera.apellido %></p>
+                <p class="contact-name">
+                  <%= locals.paciente.medicoCabecera.nombre %> <%= locals.paciente.medicoCabecera.apellido %>
+                </p>
                 <p class="contact-rel">Médico Cabecera</p>
                 <% if (locals.paciente.medicoCabecera.direccion) { %>
                   <p class="field-label" style="margin-top:8px;">Consultorio</p>
-                  <p style="font-size:12px;font-weight:500;color:#334155;margin-top:2px;"><%= locals.paciente.medicoCabecera.direccion %></p>
+                  <p class="emotion-desc" style="margin-top:2px;"><%= locals.paciente.medicoCabecera.direccion %></p>
                 <% } %>
               </div>
               <% if (locals.paciente.medicoCabecera.telefono) { %>
@@ -770,50 +942,30 @@
         <div class="section-body">
 
           <% if (locals.historial?.metodosIntervencion) { %>
-            <div class="info-block blue">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Intervenciones Previas</p>
-                <p class="info-block-value"><%= locals.historial.metodosIntervencion %></p>
-              </div>
+            <div class="field-group">
+              <p class="field-label">Intervenciones Previas</p>
+              <p class="prose-block"><%= locals.historial.metodosIntervencion %></p>
             </div>
           <% } %>
 
           <% if (locals.historial?.metodoLiquidosSolidos) { %>
-            <div class="info-block green">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Ingesta de Líquidos/Sólidos</p>
-                <p class="info-block-value"><%= locals.historial.metodoLiquidosSolidos %></p>
-              </div>
+            <div class="field-group">
+              <p class="field-label">Ingesta de Líquidos/Sólidos</p>
+              <p class="prose-block"><%= locals.historial.metodoLiquidosSolidos %></p>
             </div>
           <% } %>
 
-          <% if (locals.historial?.maneraAdministrarMedicacion) { %>
-            <div class="info-block indigo">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0016.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 002 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Manera de dar la medicación</p>
-                <p class="info-block-value"><%= locals.historial.maneraAdministrarMedicacion %></p>
-              </div>
+          <% if (locals.historial?.manejaAdministrarMedicacion) { %>
+            <div class="field-group">
+              <p class="field-label">Manera de dar la medicación</p>
+              <p class="prose-block"><%= locals.historial.maneraAdministrarMedicacion %></p>
             </div>
           <% } %>
 
           <% if (locals.historial?.datosExtras) { %>
-            <div class="info-block slate">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Datos Extras Relevantes</p>
-                <p class="info-block-value"><%= locals.historial.datosExtras %></p>
-              </div>
+            <div class="field-group">
+              <p class="field-label">Datos Extras Relevantes</p>
+              <p class="prose-block"><%= locals.historial.datosExtras %></p>
             </div>
           <% } %>
 
@@ -844,43 +996,28 @@
           <% } %>
 
           <% if (locals.cuidadoPersonal?.cuidadoPersonal || locals.cuidadoPersonal?.usoBano) { %>
-            <div class="info-block blue">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3h-8v4h8V3z"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Asistencia en Higiene</p>
-                <p class="info-block-value"><%= [locals.cuidadoPersonal?.cuidadoPersonal, locals.cuidadoPersonal?.usoBano].filter(Boolean).map(s => s.trim()).join(' | ') %></p>
-              </div>
+            <div class="field-group">
+              <p class="field-label">Asistencia en Higiene</p>
+              <p class="prose-block"><%= [locals.cuidadoPersonal?.cuidadoPersonal, locals.cuidadoPersonal?.usoBano].filter(Boolean).map(s => s.trim()).join(' | ') %></p>
             </div>
           <% } %>
 
           <% if (locals.cuidadoPersonal?.rutinaDescanso) { %>
-            <div class="info-block green">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Rutina de Descanso</p>
-                <p class="info-block-value"><%= locals.cuidadoPersonal.rutinaDescanso %></p>
-              </div>
+            <div class="field-group">
+              <p class="field-label">Rutina de Descanso</p>
+              <p class="prose-block"><%= locals.cuidadoPersonal.rutinaDescanso %></p>
             </div>
           <% } %>
 
           <% if (locals.cuidadoPersonal?.seguridad) { %>
-            <div class="info-block amber">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Pautas de Seguridad</p>
-                <p class="info-block-value"><%= locals.cuidadoPersonal.seguridad %></p>
-              </div>
+            <div class="field-group">
+              <p class="field-label">Pautas de Seguridad</p>
+              <p class="prose-block"><%= locals.cuidadoPersonal.seguridad %></p>
             </div>
           <% } %>
 
           <% if (locals.cuidadoPersonal?.problemaVisionAudicion) { %>
-            <div class="warning-block" style="margin-top:10px;">
+            <div class="warning-block">
               <p class="warning-label">Visión / Audición</p>
               <p class="warning-value"><%= locals.cuidadoPersonal.problemaVisionAudicion %></p>
             </div>
@@ -925,18 +1062,13 @@
           <% } %>
 
           <% if (locals.perfilComunicacion?.ayudaComunicacion) { %>
-            <div class="info-block indigo">
-              <div class="info-block-icon">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-              </div>
-              <div class="info-block-content">
-                <p class="info-block-label">Pautas para comunicarse</p>
-                <p class="info-block-value"><%= locals.perfilComunicacion.ayudaComunicacion %></p>
-              </div>
+            <div class="field-group">
+              <p class="field-label">Pautas para comunicarse</p>
+              <p class="prose-block"><%= locals.perfilComunicacion.ayudaComunicacion %></p>
             </div>
           <% } %>
 
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
             <% if (locals.perfilComunicacion?.necesitaAsistente) { %>
               <span class="comm-tag">
                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -969,20 +1101,21 @@
 
           <%
             const emociones = [
-              { titulo: 'Ansiedad',  clase: 'ansioso', valor: locals.emociones?.descripcionAnsioso },
-              { titulo: 'Dolor',  clase: 'dolor',   valor: locals.emociones?.descripcionDolor },
-              { titulo: 'Miedo',   clase: 'miedo',   valor: locals.emociones?.descripcionAsustado },
-              { titulo: 'Enojo',   clase: 'enojo',   valor: locals.emociones?.descripcionEnojado }
+              { titulo: 'Ansiedad', emoji: '😰', valor: locals.emociones?.descripcionAnsioso },
+              { titulo: 'Dolor',    emoji: '😣', valor: locals.emociones?.descripcionDolor },
+              { titulo: 'Miedo',    emoji: '😨', valor: locals.emociones?.descripcionAsustado },
+              { titulo: 'Enojo',    emoji: '😠', valor: locals.emociones?.descripcionEnojado }
             ];
             const hayEmociones = emociones.some(e => e.valor);
           %>
 
           <% if (hayEmociones || locals.emociones?.loQueMeGusta || locals.emociones?.loQueNoMeGusta) { %>
-            <div class="emotions-grid">
 
+            <div class="emotions-grid">
               <% emociones.forEach(emo => { %>
                 <% if (emo.valor) { %>
-                  <div class="emotion-item <%= emo.clase %>">
+                  <div class="emotion-item">
+                    <span class="emotion-emoji"><%= emo.emoji %></span>
                     <p class="emotion-label"><%= emo.titulo %></p>
                     <p class="emotion-desc"><%= emo.valor %></p>
                   </div>
@@ -990,20 +1123,22 @@
               <% }) %>
 
               <% if (locals.emociones?.loQueMeGusta) { %>
-                <div class="emotion-item gusta emotion-full">
+                <div class="emotion-item emotion-full">
+                  <span class="emotion-emoji">💚</span>
                   <p class="emotion-label">Cosas que le gustan</p>
                   <p class="emotion-desc"><%= locals.emociones.loQueMeGusta %></p>
                 </div>
               <% } %>
 
               <% if (locals.emociones?.loQueNoMeGusta) { %>
-                <div class="emotion-item nogusta emotion-full">
+                <div class="emotion-item emotion-full">
+                  <span class="emotion-emoji">❌</span>
                   <p class="emotion-label">Cosas que le disgustan / molestan</p>
                   <p class="emotion-desc"><%= locals.emociones.loQueNoMeGusta %></p>
                 </div>
               <% } %>
-
             </div>
+
           <% } else { %>
             <p class="empty-msg">No hay registros de emociones o gustos cargados.</p>
           <% } %>
@@ -1023,6 +1158,7 @@
         <span class="section-title">Estudios y Documentos</span>
       </div>
       <div class="section-body">
+
         <% if (locals.historial?.archivosAdjuntos && locals.historial.archivosAdjuntos.length > 0) { %>
           <% const ultimosArchivos = locals.historial.archivosAdjuntos.slice(0, 3); %>
           <% ultimosArchivos.forEach(archivo => { %>
@@ -1040,9 +1176,11 @@
         <% } else { %>
           <p class="empty-msg">No hay documentos recientes.</p>
         <% } %>
+
         <a href="/pacientes/<%= locals.paciente.userId %>/historial-archivos" class="btn-primary">
-            Ver todos los documentos
+          Ver historial completo
         </a>
+
       </div>
     </div>
 
