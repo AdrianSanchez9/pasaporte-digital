@@ -229,6 +229,60 @@ const actualizarFotoPerfil = async (pacienteId, urlCloudinary) => {
   return urlCloudinary;
 };
 
+const vincularAcompanante = async (pacienteId, emailAcompanante) => {
+  const usuario = await prisma.user.findUnique({
+    where: { email: emailAcompanante },
+    include: {
+      datosAcompanante: true,
+      rol: true,
+    },
+  });
+
+  if (!usuario) {
+    throw new Error("No se encontró ningún usuario registrado con ese email.");
+  }
+
+  if (!usuario.datosAcompanante) {
+    throw new Error(
+      "El usuario encontrado no tiene un perfil de persona de apoyo.",
+    );
+  }
+
+  if (usuario.datosAcompanante.pacienteId) {
+    throw new Error("Este usuario ya está asignado a otro paciente.");
+  }
+
+  const acompananteVinculado = await prisma.acompanante.update({
+    where: { userId: usuario.id },
+    data: { pacienteId: pacienteId },
+  });
+
+  return acompananteVinculado;
+};
+
+const desvincularAcompanante = async (pacienteId, acompananteUserId) => {
+  const acompanante = await prisma.acompanante.findUnique({
+    where: { userId: acompananteUserId },
+  });
+
+  if (!acompanante) {
+    throw new Error("No se encontró a la persona de apoyo en el sistema.");
+  }
+
+  if (acompanante.pacienteId !== pacienteId) {
+    throw new Error(
+      "No tenés permisos para desvincular a esta persona de apoyo.",
+    );
+  }
+
+  const acompananteDesvinculado = await prisma.acompanante.update({
+    where: { userId: acompananteUserId },
+    data: { pacienteId: null },
+  });
+
+  return acompananteDesvinculado;
+};
+
 module.exports = {
   listarPacientes,
   buscarPacientePorId,
@@ -243,4 +297,6 @@ module.exports = {
   eliminarContacto,
   mostrarPacientes,
   actualizarFotoPerfil,
+  vincularAcompanante,
+  desvincularAcompanante,
 };

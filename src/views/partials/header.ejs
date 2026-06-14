@@ -15,7 +15,8 @@
           <a href="/perfil" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Mi Perfil</a>
           <a href="/pacientes/historial-archivos" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Documentos</a>
           <a href="/pacientes/qr-paciente" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Mi QR</a>
-        <% } %>
+          <a href="/pacientes/mis-acompanantes" class="text-blue-100 hover:text-white px-3 py-2 text-lg font-serif transition-colors">Gestionar mis personas de apoyo</a>
+          <% } %>
 
         <% if (locals.user && (locals.user.rolNombre === 'ADMIN' || locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
 
@@ -64,7 +65,8 @@
         <a href="/perfil" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi Perfil</a>
         <a href="/pacientes/historial-archivos" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Documentos</a>
         <a href="/pacientes/qr-paciente" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Mi QR</a>
-      <% } %>
+        <a href="/pacientes/mis-acompanantes" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Gestionar mis personas de apoyo</a>
+     <% } %>
 
       <% if (locals.user && (locals.user.rolNombre === 'ADMIN'|| locals.user.rolNombre === 'MEDICO' || locals.user.rolNombre === 'ENFERMERO')) { %>
         <a href="/pacientes" class="block text-blue-100 hover:text-white hover:bg-slate-800/30 px-3 py-2 rounded-lg text-base font-medium transition-colors">Listado de pacientes</a>

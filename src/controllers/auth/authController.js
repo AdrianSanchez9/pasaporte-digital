@@ -20,15 +20,8 @@ const registroNuevo = async (req, res) => {
     console.log("Datos del body :  ", req.body);
     const datosValidados = registroSchema.parse(req.body);
 
-    const {
-      email,
-      nombre,
-      apellido,
-      password,
-      rolNombre,
-      especialidad,
-      pacienteId,
-    } = datosValidados;
+    const { email, nombre, apellido, password, rolNombre, especialidad } =
+      datosValidados;
 
     await verificarEmailDisponible(email);
     const rol = await verificarRolExiste(rolNombre);
@@ -37,13 +30,6 @@ const registroNuevo = async (req, res) => {
       if (!especialidad || especialidad.trim() === "") {
         throw new Error("La especialidad es obligatoria para médicos.");
       }
-    }
-
-    if (rolNombre === "ACOMPANANTE") {
-      if (!pacienteId) {
-        throw new Error("Debe seleccionar un paciente para el acompañante.");
-      }
-      await verificarPacienteExiste(pacienteId);
     }
 
     const passwordAleatoria = generarContrasena.generarContrasenaTemporal();
@@ -58,7 +44,6 @@ const registroNuevo = async (req, res) => {
       rolId: rol.id,
       rolNombre,
       especialidad,
-      pacienteId,
     });
 
     await emailService.enviarCredencialesAlta(user.email, passwordAleatoria);

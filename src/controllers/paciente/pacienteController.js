@@ -348,7 +348,8 @@ const subirArchivo = async (req, res) => {
 // Este controlador lista todos los archivos del paciente -> pero solamente desde el usuario Paciente
 const listarArchivosHistorial = async (req, res) => {
   try {
-    let pacienteId;
+    let pacienteId = null;
+    let paciente = null;
     const rol = req.user.rolNombre;
 
     if (rol === "PACIENTE") {
@@ -356,21 +357,27 @@ const listarArchivosHistorial = async (req, res) => {
     } else if (rol === "ACOMPAÑANTE") {
       const acompanante = await obtenerInformacionAcompanante(req.user.id);
 
-      if (!acompanante || !acompanante.pacienteId) {
-        return res.status(404).send("No tienes un paciente asociado.");
+      // Si tiene acompañante pero no tiene pacienteId, pacienteId se queda en null
+      if (acompanante && acompanante.pacienteId) {
+        pacienteId = acompanante.pacienteId;
       }
-      pacienteId = acompanante.pacienteId;
     }
 
-    const paciente = await obtenerArchivosPaciente(pacienteId);
+    if (pacienteId) {
+      paciente = await obtenerArchivosPaciente(pacienteId);
+    }
 
     res.render("pacientes/historial-archivos", {
-      paciente,
-      title: `Historial de Archivos - ${paciente.nombre}`,
+      paciente: paciente,
+      title: paciente
+        ? `Historial de Archivos - ${paciente.nombre}`
+        : "Historial de Archivos",
     });
   } catch (error) {
     console.error("Error al listar archivos:", error);
-    res.status(500).send("Error al cargar el historial de archivos");
+    res
+      .status(500)
+      .render("error", { mensaje: "Error al cargar el historial de archivos" });
   }
 };
 
@@ -411,27 +418,86 @@ const eliminarArchivo = async (req, res) => {
 
 const subirFotoPerfil = async (req, res) => {
   try {
-    // 1. Tomamos el pacienteId directamente de los parámetros de la URL
     const pacienteId = req.user.id;
-    console.log("Id del pacinete", pacienteId);
-    // 2. Validación de seguridad básica de Multer
     if (!req.file) {
       return res.status(400).json({ mensaje: "No se detectó ninguna imagen." });
     }
 
-    // 3. Tu middleware de Cloudinary guarda la URL pública en req.file.path
     const urlCloudinary = req.file.secure_url;
 
-    // 4. Llamamos a tu servicio pasándole la URL para actualizar Prisma
     await pacienteService.actualizarFotoPerfil(pacienteId, urlCloudinary);
 
-    // 5. Devolvemos la URL como respuesta JSON para que el fetch del frontend la dibuje al instante
     return res.json({ url: urlCloudinary });
   } catch (error) {
     console.error("Error al subir la foto de perfil:", error);
     return res
       .status(500)
       .json({ mensaje: "Hubo un problema al guardar la foto de perfil." });
+  }
+};
+
+const vincularNuevaPersonaApoyo = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+    const { emailAcompanante } = req.body;
+
+    if (!emailAcompanante) {
+      return res
+        .status(400)
+        .json({ mensaje: "El email de la persona de apoyo es obligatorio." });
+    }
+
+    await pacienteService.vincularAcompanante(pacienteId, emailAcompanante);
+
+    return res
+      .status(200)
+      .json({ mensaje: "Persona de apoyo vinculada con éxito." });
+  } catch (error) {
+    return res.status(400).json({ mensaje: error.message });
+  }
+};
+
+const desvincularPersonaApoyo = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+
+    const { acompananteId } = req.params;
+
+    if (!acompananteId) {
+      return res
+        .status(400)
+        .json({ mensaje: "El ID de la persona de apoyo es obligatorio." });
+    }
+
+    await pacienteService.desvincularAcompanante(pacienteId, acompananteId);
+
+    return res
+      .status(200)
+      .json({ mensaje: "Persona de apoyo desvinculada exitosamente." });
+  } catch (error) {
+    return res.status(400).json({ mensaje: error.message });
+  }
+};
+
+const renderMisAcompanantes = async (req, res) => {
+  try {
+    const pacienteId = req.user.id;
+
+    const paciente = await prisma.paciente.findUnique({
+      where: { userId: pacienteId },
+      include: {
+        acompanantes: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    res.render("pacientes/mis-personas-apoyo", { paciente });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al cargar la página de personas de apoyo.");
   }
 };
 
@@ -455,4 +521,7 @@ module.exports = {
   listarArchivosDePaciente,
   eliminarArchivo,
   subirFotoPerfil,
+  vincularNuevaPersonaApoyo,
+  renderMisAcompanantes,
+  desvincularPersonaApoyo,
 };

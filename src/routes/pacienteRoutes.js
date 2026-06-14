@@ -28,6 +28,9 @@ const {
   listarArchivosHistorial,
   listarArchivosDePaciente,
   subirFotoPerfil,
+  renderMisAcompanantes,
+  vincularNuevaPersonaApoyo,
+  desvincularPersonaApoyo,
 } = require("../controllers/paciente/pacienteController");
 
 router.get(
@@ -38,6 +41,20 @@ router.get(
 );
 
 router.get("/", auth, requireRole("ADMIN"), listarPacientes);
+
+router.get(
+  "/mis-acompanantes",
+  auth,
+  requireRole("PACIENTE"),
+  renderMisAcompanantes,
+);
+
+router.post(
+  "/mis-acompanantes",
+  auth,
+  requireRole("PACIENTE"),
+  vincularNuevaPersonaApoyo,
+);
 
 router.put(
   "/mi-medico-cabecera",
@@ -54,11 +71,25 @@ router.put(
 );
 router.post("/mis-contactos", auth, requireRole("PACIENTE"), crearMiContacto);
 
+router.delete(
+  "/mis-acompanantes/:acompananteId",
+  auth,
+  requireRole("PACIENTE"),
+  desvincularPersonaApoyo,
+);
+
 router.put(
   "/mis-contactos/:contactoId",
   auth,
   requireRole("PACIENTE"),
   actualizarMiContacto,
+);
+
+router.post(
+  "/mis-acompanantes",
+  auth,
+  requireRole("PACIENTE"),
+  vincularNuevaPersonaApoyo,
 );
 
 router.delete(
@@ -116,7 +147,7 @@ router.get(
 router.get(
   "/:id",
   auth,
-  requireRole("MEDICO", "ENFERMERO", "PACIENTE", "ACOMPAÑANTE", "ADMIN"),
+  requireRole("MEDICO", "ENFERMERO", "ADMIN"),
   verPaciente,
 );
 

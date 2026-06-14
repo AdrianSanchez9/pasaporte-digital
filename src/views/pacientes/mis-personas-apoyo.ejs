@@ -1,0 +1,342 @@
+<div class="w-full bg-white text-slate-900 relative" role="region" aria-label="Sección de gestión de personas de apoyo">
+
+  <div id="anuncios-sr" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <main class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bitter text-slate-800 tracking-tight" tabindex="-1" id="titulo-principal">
+        Gestión de Personas de Apoyo
+      </h1>
+      <p class="text-slate-500 text-base mt-2" tabindex="0">
+        Vinculá a familiares o acompañantes para que puedan acceder a tu perfil médico rápidamente.
+      </p>
+    </div>
+
+    <section class="bg-indigo-50/50 p-6 sm:p-8 rounded-2xl border border-indigo-100 mb-8 shadow-sm" aria-labelledby="titulo-agregar">
+      <h2 id="titulo-agregar" class="text-2xl font-bitter text-slate-800 mb-4" tabindex="0">
+        Agregar a una nueva persona de apoyo
+      </h2>
+
+      <div id="alerta-exito-vinculacion" class="hidden mb-4 p-4 rounded-xl bg-green-50 border border-green-200 flex items-start gap-3" role="alert" aria-live="assertive">
+        <svg class="w-6 h-6 text-green-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <h3 class="text-green-800 font-bold">¡Vinculación exitosa!</h3>
+          <p class="text-green-700 text-sm mt-1" id="texto-exito-vinculacion">La persona fue agregada. Actualizando tu perfil...</p>
+        </div>
+      </div>
+
+      <div id="alerta-error-vinculacion" class="hidden mb-4 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3" role="alert" aria-live="assertive">
+        <svg class="w-6 h-6 text-red-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <h3 class="text-red-800 font-bold">No se pudo vincular</h3>
+          <p class="text-red-700 text-sm mt-1" id="texto-error-vinculacion"></p>
+        </div>
+      </div>
+
+      <form id="form-agregar-apoyo" class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1 relative">
+          <label for="emailAcompanante" class="sr-only">Ingrese el correo electrónico exacto de su persona de apoyo</label>
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none" aria-hidden="true">
+            <svg focusable="false" class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <input
+            type="email"
+            id="emailAcompanante"
+            name="emailAcompanante"
+            required
+            aria-required="true"
+            class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-300 bg-white text-base text-slate-800 focus:bg-white focus:ring-4 focus:ring-indigo-200 focus:border-indigo-600 outline-none transition-all"
+            placeholder="Ingrese el email exacto..."
+          >
+        </div>
+        <button
+          type="submit"
+          aria-label="Vincular nueva persona de apoyo"
+          class="shrink-0 px-8 py-3.5 bg-colorAzulFundacion hover:bg-slate-900 text-white text-base font-bitter rounded-xl transition-all shadow-md active:scale-95 focus:outline-none focus:ring-4 focus:ring-indigo-200"
+        >
+          Vincular
+        </button>
+      </form>
+    </section>
+
+    <section aria-labelledby="titulo-lista">
+      <h2 id="titulo-lista" class="text-xl font-bold text-slate-800 mb-4" tabindex="0">
+        Personas de apoyo vinculadas
+      </h2>
+
+      <div class="grid grid-cols-1 gap-4" role="list" aria-label="Lista de personas de apoyo">
+
+        <% if (paciente && paciente.acompanantes && paciente.acompanantes.length > 0) { %>
+          <% paciente.acompanantes.forEach(c => { %>
+            <article class="flex flex-col sm:flex-row items-center justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-sm focus-within:ring-2 focus-within:ring-indigo-200 transition-shadow" role="listitem">
+
+              <div class="flex items-center gap-4 w-full sm:w-auto mb-4 sm:mb-0">
+                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold text-lg shrink-0" aria-hidden="true">
+                  <%= c.user.nombre.charAt(0).toUpperCase() %><%= c.user.apellido.charAt(0).toUpperCase() %>
+                </div>
+                <div>
+                  <p class="text-base font-bold text-slate-800"><%= c.user.nombre %> <%= c.user.apellido %></p>
+                  <p class="text-sm text-slate-500"><%= c.user.email %></p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                data-id="<%= c.userId %>"
+                data-nombre="<%= c.user.nombre %> <%= c.user.apellido %>"
+                class="btn-abrir-modal-desvincular w-full sm:w-auto px-4 py-2 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white font-bitter rounded-lg transition-colors border border-red-100 focus:outline-none focus:ring-4 focus:ring-red-200 flex items-center justify-center gap-2"
+                aria-label="Desvincular a <%= c.user.nombre %> <%= c.user.apellido %> de tus personas de apoyo"
+              >
+                <svg focusable="false" aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                <span aria-hidden="true">Desvincular</span>
+              </button>
+
+            </article>
+          <% }) %>
+        <% } else { %>
+          <div class="bg-slate-50 rounded-2xl p-8 text-center border-2 border-dashed border-slate-200">
+            <div class="mx-auto w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
+              <svg class="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </div>
+            <p class="text-base font-medium text-slate-600" tabindex="0">
+              Aún no tenés personas de apoyo vinculadas.
+            </p>
+          </div>
+        <% } %>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div id="modal-desvincular" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-descripcion">
+
+    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" aria-hidden="true" id="modal-backdrop"></div>
+
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-200">
+
+          <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10" aria-hidden="true">
+                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3 class="text-lg font-bold leading-6 text-slate-900" id="modal-titulo">Desvincular persona de apoyo</h3>
+                <div class="mt-2">
+                  <p class="text-sm text-slate-500" id="modal-descripcion">
+                    ¿Estás seguro de que querés desvincular a <strong id="modal-nombre-persona" class="text-slate-700">esta persona</strong>? Dejará de tener acceso a tu pasaporte médico de forma inmediata.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-100">
+            <button type="button" id="btn-confirmar-modal" class="inline-flex w-full justify-center rounded-xl bg-red-600 px-3 py-2 text-sm font-bold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto focus:outline-none focus:ring-4 focus:ring-red-200 transition-all">
+              Sí, desvincular
+            </button>
+            <button type="button" id="btn-cancelar-modal" class="mt-3 inline-flex w-full justify-center rounded-xl bg-white px-3 py-2 text-sm font-bold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto focus:outline-none focus:ring-4 focus:ring-slate-200 transition-all">
+              Cancelar
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // 1. Utilidades de Lector de Pantalla y Toasts
+  const avisarLectorPantalla = (mensaje) => {
+    const srContainer = document.getElementById('anuncios-sr');
+    if(srContainer) srContainer.textContent = mensaje;
+  };
+
+  const mostrarMensaje = (mensaje, tipo) => {
+    avisarLectorPantalla(mensaje);
+    if (typeof showToast === 'function') {
+      showToast(mensaje, tipo);
+    } else {
+      if (tipo === 'error') alert(mensaje);
+    }
+  };
+
+  // 2. Lógica del Modal Accesible
+  const modal = document.getElementById('modal-desvincular');
+  const btnCancelarModal = document.getElementById('btn-cancelar-modal');
+  const btnConfirmarModal = document.getElementById('btn-confirmar-modal');
+  const modalNombrePersona = document.getElementById('modal-nombre-persona');
+
+  let idADesvincular = null;
+  let botonQueAbrioModal = null; // Para devolver el foco
+
+  const abrirModal = (id, nombre, btnActivador) => {
+    idADesvincular = id;
+    botonQueAbrioModal = btnActivador;
+    modalNombrePersona.textContent = nombre;
+
+    modal.classList.remove('hidden');
+    // Foco directo al cancelar por seguridad
+    btnCancelarModal.focus();
+    avisarLectorPantalla(`Diálogo de confirmación abierto. ¿Seguro que querés desvincular a ${nombre}?`);
+
+    // Escuchar la tecla escape
+    document.addEventListener('keydown', manejarEscape);
+  };
+
+  const cerrarModal = () => {
+    modal.classList.add('hidden');
+    idADesvincular = null;
+
+    // Devolvemos el foco al botón original (Regla clave de a11y)
+    if (botonQueAbrioModal) botonQueAbrioModal.focus();
+
+    document.removeEventListener('keydown', manejarEscape);
+    avisarLectorPantalla('Diálogo de confirmación cerrado.');
+  };
+
+  const manejarEscape = (e) => {
+    if (e.key === 'Escape') cerrarModal();
+  };
+
+  btnCancelarModal.addEventListener('click', cerrarModal);
+  // Cerrar también si hacen clic en el fondo gris
+  document.getElementById('modal-backdrop').addEventListener('click', cerrarModal);
+
+
+  // 3. Vincular Persona de Apoyo (Formulario con confirmación visual)
+  const formAgregarApoyo = document.getElementById('form-agregar-apoyo');
+  const alertaExitoVinculacion = document.getElementById('alerta-exito-vinculacion');
+  const alertaErrorVinculacion = document.getElementById('alerta-error-vinculacion'); // Referencia al cartel de error
+  const textoErrorVinculacion = document.getElementById('texto-error-vinculacion'); // Referencia al texto del error
+
+  if (formAgregarApoyo) {
+    formAgregarApoyo.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn = formAgregarApoyo.querySelector('button[type="submit"]');
+      const inputEmail = document.getElementById('emailAcompanante');
+      const emailAcompanante = inputEmail.value.trim();
+
+      if (!emailAcompanante) return;
+
+      // Ocultamos las alertas antes de un nuevo intento
+      alertaExitoVinculacion.classList.add('hidden');
+      if (alertaErrorVinculacion) alertaErrorVinculacion.classList.add('hidden');
+
+      const textoOriginal = btn.textContent;
+      btn.textContent = 'Buscando...';
+      btn.setAttribute('aria-disabled', 'true');
+      avisarLectorPantalla('Buscando y vinculando persona de apoyo...');
+
+      try {
+        const res = await fetch('/pacientes/mis-acompanantes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ emailAcompanante })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.mensaje || 'Error al vincular persona de apoyo.');
+        }
+
+        // Mostrar confirmación visual de éxito
+        alertaExitoVinculacion.classList.remove('hidden');
+        document.getElementById('texto-exito-vinculacion').textContent = `${data.mensaje} Actualizando lista...`;
+        avisarLectorPantalla('Vinculación exitosa. La página se actualizará en unos segundos.');
+
+        inputEmail.value = '';
+        inputEmail.disabled = true;
+        btn.disabled = true;
+
+        setTimeout(() => location.reload(), 2500); // 2.5 seg para que llegue a leer el cartel
+
+      } catch (error) {
+        // Mostramos el error directamente en el cartel rojo de la vista
+        if (textoErrorVinculacion) textoErrorVinculacion.textContent = error.message;
+        if (alertaErrorVinculacion) alertaErrorVinculacion.classList.remove('hidden');
+        avisarLectorPantalla(`Error: ${error.message}`);
+
+        btn.textContent = textoOriginal;
+        btn.removeAttribute('aria-disabled');
+      }
+    });
+  }
+
+  // 4. Activar el Modal de Desvinculación
+  const botonesAbrirModal = document.querySelectorAll('.btn-abrir-modal-desvincular');
+
+  botonesAbrirModal.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const acompananteId = btn.dataset.id;
+      const acompananteNombre = btn.dataset.nombre;
+      abrirModal(acompananteId, acompananteNombre, btn);
+    });
+  });
+
+  // 5. Confirmar Desvinculación desde el Modal
+  btnConfirmarModal.addEventListener('click', async () => {
+    if (!idADesvincular) return;
+
+    const textoOriginal = btnConfirmarModal.textContent;
+    btnConfirmarModal.textContent = 'Procesando...';
+    btnConfirmarModal.disabled = true;
+    avisarLectorPantalla('Procesando desvinculación...');
+
+    try {
+      const res = await fetch(`/pacientes/mis-acompanantes/${idADesvincular}`, {
+        method: 'DELETE'
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.mensaje || 'Error al desvincular.');
+      }
+
+      mostrarMensaje('Persona de apoyo desvinculada exitosamente.', 'ok');
+
+      // Animación de borrado antes de recargar
+      if (botonQueAbrioModal) {
+        const articulo = botonQueAbrioModal.closest('article');
+        articulo.style.opacity = '0';
+        setTimeout(() => {
+          articulo.remove();
+          cerrarModal();
+          if (document.querySelectorAll('.btn-abrir-modal-desvincular').length === 0) {
+            location.reload();
+          }
+        }, 300);
+      }
+
+    } catch (error) {
+      mostrarMensaje(error.message, 'error');
+      btnConfirmarModal.textContent = textoOriginal;
+      btnConfirmarModal.disabled = false;
+      cerrarModal();
+    }
+  });
+
+});
+</script>
